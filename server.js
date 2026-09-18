@@ -231,6 +231,21 @@ let AGENCY_ACCOUNTS = {};
 try {
   AGENCY_ACCOUNTS = readRuntimeData('agency-accounts.json', {});
   if (!AGENCY_ACCOUNTS || typeof AGENCY_ACCOUNTS !== 'object' || Array.isArray(AGENCY_ACCOUNTS)) throw new Error('Invalid account store');
+
+  // Auto-seed from assets if runtime data is empty (e.g. /tmp cleared on Render restart)
+  if (Object.keys(AGENCY_ACCOUNTS).length === 0) {
+    const _seedFilePath = path.join(__dirname, 'assets', 'agency-accounts.json');
+    if (fs.existsSync(_seedFilePath)) {
+      try {
+        const _seedData = JSON.parse(fs.readFileSync(_seedFilePath, 'utf8'));
+        if (_seedData && typeof _seedData === 'object' && !Array.isArray(_seedData) && Object.keys(_seedData).length > 0) {
+          AGENCY_ACCOUNTS = _seedData;
+          try { writeRuntimeData('agency-accounts.json', AGENCY_ACCOUNTS); } catch (_seedWriteErr) {}
+          console.log('[SEED] Auto-seeded ' + Object.keys(AGENCY_ACCOUNTS).length + ' accounts from assets seed file (runtime was empty).');
+        }
+      } catch (_seedErr) { console.warn('[SEED] Auto-seed from assets failed:', _seedErr.message); }
+    }
+  }
   console.log(`🔑 Loaded ${Object.keys(AGENCY_ACCOUNTS).length} agency accounts (National & Local).`);
 } catch (e) {
   if (process.env.NODE_ENV === 'production') {
