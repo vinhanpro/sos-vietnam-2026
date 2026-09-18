@@ -8613,8 +8613,10 @@ class DispatcherApp {
       }
     });
 
-    // Auto-select first incident only ONCE on initial page load if not explicitly closed by user
-    if (!this.hasInitialSelected && !this.isUserClosedDrawer && !this.selectedIncidentId && activeList.length > 0) {
+    // Auto-select first incident only ONCE on initial page load for DESKTOP (>= 993px)
+    // On mobile (< 993px), keep the clean overview/map/queue view without auto-selecting
+    const isDesktop = window.innerWidth > 992;
+    if (isDesktop && !this.hasInitialSelected && !this.isUserClosedDrawer && !this.selectedIncidentId && activeList.length > 0) {
       this.hasInitialSelected = true;
       this.selectIncident(activeList[0].id);
     } else if (!this.selectedIncidentId) {

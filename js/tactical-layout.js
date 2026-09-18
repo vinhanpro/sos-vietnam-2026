@@ -42,10 +42,13 @@
   }
 
   function isDrawerVisible() {
-    var d = els.drawer;
+    var d = els.drawer || $('activeIncidentDrawer');
     if (!d) return false;
+    // If no incident is actually selected in dispatcher, drawer is not considered visible
+    if (window.dispatcher && !window.dispatcher.selectedIncidentId) return false;
     var disp = d.style.display;
     if (disp === 'none') return false;
+    if (d.classList.contains('is-hidden')) return false;
     if (disp === 'block' || disp === 'flex') return true;
     return getComputedStyle(d).display !== 'none';
   }
@@ -127,15 +130,29 @@
     var body = $('tacticalDetailBody') || els.detailPanel;
     var empty = $('tacticalDetailEmpty');
     if (!drawer || !els.detailPanel || !els.drawerHome) return;
+
+    var hasSelected = Boolean(window.dispatcher && window.dispatcher.selectedIncidentId);
+
     if (toPanel) {
       if (drawer.parentNode !== body) body.appendChild(drawer);
-      if (empty) empty.style.display = isDrawerVisible() ? 'none' : 'flex';
+      if (empty) empty.style.display = hasSelected ? 'none' : 'flex';
+      if (!hasSelected) {
+        drawer.style.display = 'none';
+        drawer.classList.add('is-hidden');
+      } else {
+        drawer.style.display = 'flex';
+        drawer.classList.remove('is-hidden');
+      }
       return;
     }
     if (drawer.parentNode !== els.drawerHome.parentNode) {
       els.drawerHome.parentNode.insertBefore(drawer, els.drawerHome.nextSibling);
     }
     if (empty) empty.style.display = 'flex';
+    if (!hasSelected) {
+      drawer.style.display = 'none';
+      drawer.classList.add('is-hidden');
+    }
   }
 
   /* ---------------------------------------------------------------
@@ -165,14 +182,6 @@
       var btn = e.target.closest('button[data-view]');
       if (!btn) return;
       var targetView = btn.getAttribute('data-view');
-      if (targetView === 'detail') {
-        if (window.dispatcher && !window.dispatcher.selectedIncidentId) {
-          var firstIncId = window.dispatcher.incidents && window.dispatcher.incidents.keys && window.dispatcher.incidents.keys().next().value;
-          if (firstIncId) {
-            window.dispatcher.selectIncident(firstIncId);
-          }
-        }
-      }
       setMobileView(targetView, true);
     });
   }
@@ -190,19 +199,30 @@
     var drawer = els.drawer || $('activeIncidentDrawer');
     var queueList = $('incidentQueueList');
     var historyList = $('incidentHistoryList');
+    var empty = $('tacticalDetailEmpty');
 
     if (view === 'detail') {
       moveDrawer(true);
-      if (drawer) drawer.style.display = 'flex';
-      if (window.dispatcher && !window.dispatcher.selectedIncidentId) {
-        var firstIncId = window.dispatcher.incidents && window.dispatcher.incidents.keys && window.dispatcher.incidents.keys().next().value;
-        if (firstIncId) {
-          window.dispatcher.selectIncident(firstIncId);
+      var hasSelected = Boolean(window.dispatcher && window.dispatcher.selectedIncidentId);
+      if (hasSelected) {
+        if (drawer) {
+          drawer.style.display = 'flex';
+          drawer.classList.remove('is-hidden');
         }
+        if (empty) empty.style.display = 'none';
+      } else {
+        if (drawer) {
+          drawer.style.display = 'none';
+          drawer.classList.add('is-hidden');
+        }
+        if (empty) empty.style.display = 'flex';
       }
     } else if (view === 'queue') {
       moveDrawer(false);
-      if (drawer) drawer.style.display = 'none';
+      if (drawer) {
+        drawer.style.display = 'none';
+        drawer.classList.add('is-hidden');
+      }
       var activeTab = document.querySelector('.sidebar-tab-nav button.is-active');
       if (activeTab && activeTab.dataset.tab === 'history' && historyList) {
         historyList.style.display = 'block';
@@ -270,18 +290,39 @@
   }
 
   function syncDrawerState() {
-    var visible = isDrawerVisible();
+    var hasSelected = Boolean(window.dispatcher && window.dispatcher.selectedIncidentId);
+    var visible = hasSelected && isDrawerVisible();
     var changed = visible !== state.drawerVisible;
     state.drawerVisible = visible;
     document.body.classList.toggle('tac-incident-selected', visible);
-    if (state.mode === MODE.MOBILE && changed && visible && state.view === 'detail') {
-      var d = els.drawer || $('activeIncidentDrawer');
-      if (d) d.style.display = 'flex';
+
+    var empty = $('tacticalDetailEmpty');
+    var d = els.drawer || $('activeIncidentDrawer');
+
+    if (state.mode === MODE.MOBILE && state.view === 'detail') {
+      if (empty) empty.style.display = visible ? 'none' : 'flex';
+      if (d) {
+        if (visible) {
+          d.style.display = 'flex';
+          d.classList.remove('is-hidden');
+        } else {
+          d.style.display = 'none';
+          d.classList.add('is-hidden');
+        }
+      }
     } else if (state.mode === MODE.THREE) {
       moveDrawer(true);
       if (els.detailPanel) els.detailPanel.classList.toggle('has-incident', visible);
-      var d = els.drawer || $('activeIncidentDrawer');
-      if (d && visible) d.style.display = 'flex';
+      if (empty) empty.style.display = visible ? 'none' : 'flex';
+      if (d) {
+        if (visible) {
+          d.style.display = 'flex';
+          d.classList.remove('is-hidden');
+        } else {
+          d.style.display = 'none';
+          d.classList.add('is-hidden');
+        }
+      }
     }
     if (changed) resizeMapSoon();
   }
