@@ -246,6 +246,72 @@
     video::-webkit-media-controls-overlay-play-button { display: none !important; }
     video::-webkit-media-controls-fullscreen-button { display: none !important; }
     video::-moz-range-thumb { display: none !important; }
+    /* Cyber Tactical Transition Keyframes & Styles */
+    @keyframes cyberSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes cyberPing {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      80%, 100% { transform: scale(1.35); opacity: 0; }
+    }
+    @keyframes cyberScanline {
+      0% { transform: translateY(-100%); opacity: 0; }
+      50% { opacity: 0.7; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+    @keyframes flameAura {
+      0%, 100% { transform: scale(1); opacity: 0.55; }
+      50% { transform: scale(1.15); opacity: 0.9; filter: blur(30px); }
+    }
+    .cyber-radar-ring {
+      position: absolute;
+      inset: 0;
+      border: 2px dashed rgba(239, 68, 68, 0.65);
+      border-radius: 50%;
+      animation: cyberSpin 9s linear infinite;
+      pointer-events: none;
+    }
+    .cyber-ping-ring {
+      position: absolute;
+      inset: -12px;
+      border: 1.5px solid rgba(239, 68, 68, 0.35);
+      border-radius: 50%;
+      animation: cyberPing 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+      pointer-events: none;
+    }
+    .cyber-flame-core {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.85) 0%, rgba(245, 158, 11, 0.45) 45%, transparent 70%);
+      filter: blur(22px);
+      border-radius: 50%;
+      animation: flameAura 2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .cyber-laser-scanner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.95), transparent);
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.85);
+      animation: cyberScanline 2.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @media (max-width: 820px), (pointer: coarse) {
+      #cyberIntroVideo, #cyberLogoutVideo {
+        display: none !important;
+      }
+      #cyberIntroMobileCard, #cyberLogoutMobileCard {
+        display: flex !important;
+      }
+      .desktop-intro-badge, .desktop-logout-badge {
+        display: none !important;
+      }
+    }
     /* Prevent picture-in-picture icon */
     video::cue { display: none !important; }
     /* Background video specific - never interactive */
@@ -270,25 +336,82 @@
 
   <!-- Atmospheric Cosmic Tactical Orbit Background for Command Center (Video 1 - Fixed z-[0]) -->
   <div class="bg-video-container" style="position: fixed; inset: 0; width: 100%; height: 100dvh; overflow: hidden; z-index: 0; pointer-events: none;">
-    <video class="bg-video" id="dispatcherBgVideo" autoplay muted loop playsinline preload="auto" src="/assets/videos/dispatcher-bg.mp4" controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture disableremoteplayback x-webkit-airplay="deny" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; -webkit-user-select: none; user-select: none;" oncontextmenu="return false;"></video>
+    <video class="bg-video" id="dispatcherBgVideo" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="/assets/tactical-earth-orbit.jpg" src="/assets/videos/dispatcher-bg.mp4" controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture disableremoteplayback x-webkit-airplay="deny" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; -webkit-user-select: none; user-select: none;" oncontextmenu="return false;"></video>
     <div class="bg-video-overlay" style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(3, 7, 18, 0.1) 0%, rgba(3, 7, 18, 0.6) 100%); pointer-events: none;"></div>
   </div>
 
-  <!-- LEVEL-0.5: CYBER DEFENSE INTRO CINEMATIC (VIDEO 3 - AUTO TRANSITION WITHOUT SKIP BUTTON) -->
+  <!-- LEVEL-0.5: CYBER DEFENSE INTRO CINEMATIC (AUTO TRANSITION - MOBILE PURE-CSS SAFE, DESKTOP INLINE VIDEO) -->
   <div id="cyberIntroVideoOverlay" style="position: fixed; inset: 0; z-index: 9999999; background: #000000; display: none; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: auto;">
-    <video id="cyberIntroVideo" playsinline preload="none" src="/assets/videos/dispatcher-intro.mp4" controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture disableremoteplayback x-webkit-airplay="deny" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-select: none; user-select: none;" oncontextmenu="return false;"></video>
-    <div style="position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 8px 20px; background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(239, 68, 68, 0.5); border-radius: 9999px; backdrop-filter: blur(12px); pointer-events: none;">
+    <!-- Desktop Video (Strictly Muted + PlaysInline) -->
+    <video id="cyberIntroVideo" muted playsinline webkit-playsinline preload="none" src="/assets/videos/dispatcher-intro.mp4" controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture disableremoteplayback x-webkit-airplay="deny" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-select: none; user-select: none;" oncontextmenu="return false;"></video>
+    
+    <!-- Desktop Badge -->
+    <div class="desktop-intro-badge" style="position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 8px 20px; background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(239, 68, 68, 0.5); border-radius: 9999px; backdrop-filter: blur(12px); pointer-events: none;">
       <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: ping 1.5s infinite;"></span>
       <span style="font-size: 11px; font-weight: 800; color: #fecaca; letter-spacing: 1.5px; text-transform: uppercase;">KHỞI ĐỘNG HỆ THỐNG TRỰC BAN TÁC CHIẾN QUỐC GIA...</span>
     </div>
+
+    <!-- Mobile Cyber Cinematic Transition (NO VIDEO TAG - 100% IMMUNE TO IOS AVPLAYER / MEDIA CONTROLS) -->
+    <div id="cyberIntroMobileCard" style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 24px; position: relative; z-index: 10; background: radial-gradient(circle at center, #0f172a 0%, #030712 65%, #000000 100%); pointer-events: none;">
+      <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(239, 68, 68, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(239, 68, 68, 0.05) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none;"></div>
+      <div class="cyber-laser-scanner"></div>
+
+      <!-- Holographic Central Shield with Fire Aura -->
+      <div style="position: relative; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center; margin-bottom: 22px;">
+        <div class="cyber-radar-ring"></div>
+        <div class="cyber-ping-ring"></div>
+        <div class="cyber-flame-core"></div>
+        <div style="width: 88px; height: 88px; background: radial-gradient(circle, rgba(239, 68, 68, 0.35) 0%, rgba(185, 28, 28, 0.12) 75%); border: 2px solid #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 45px rgba(239, 68, 68, 0.75), inset 0 0 20px rgba(239, 68, 68, 0.4); position: relative; z-index: 2;">
+          <img src="/assets/icons/khien.png" style="width: 56px; height: 56px; object-fit: contain; filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.95));" alt="Khiên An Ninh">
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div style="text-align: center; margin-bottom: 20px; position: relative; z-index: 2;">
+        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 16px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.45); border-radius: 9999px; margin-bottom: 10px; backdrop-filter: blur(8px);">
+          <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 8px #ef4444;"></span>
+          <span style="font-size: 11px; font-weight: 800; color: #fca5a5; letter-spacing: 2px; text-transform: uppercase;">VIỆT NAM • AN NINH QUỐC GIA</span>
+        </div>
+        <h2 style="font-size: 18px; font-weight: 900; color: #ffffff; letter-spacing: 1.2px; text-transform: uppercase; margin: 0; text-shadow: 0 0 20px rgba(239, 68, 68, 0.7);">HỆ THỐNG TRỰC BAN TÁC CHIẾN</h2>
+        <div style="font-size: 11px; color: #94a3b8; margin-top: 5px; font-weight: 600; letter-spacing: 0.5px;">XÁC THỰC MẬT MÃ THÀNH CÔNG • ĐANG KHỞI TẠO BÀN ĐIỀU PHỐI</div>
+      </div>
+
+      <!-- High-tech Progress Bar -->
+      <div style="width: 80%; max-width: 290px; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(239, 68, 68, 0.45); border-radius: 9999px; padding: 3px; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(239, 68, 68, 0.25); z-index: 2;">
+        <div id="cyberIntroProgressBar" style="height: 6px; width: 0%; background: linear-gradient(90deg, #dc2626, #ef4444, #fca5a5); border-radius: 9999px; box-shadow: 0 0 12px #ef4444; transition: width 1.8s cubic-bezier(0.16, 1, 0.3, 1);"></div>
+      </div>
+
+      <!-- Subtext Status -->
+      <div id="cyberIntroStatusText" style="font-size: 10px; color: #fca5a5; font-family: monospace; font-weight: 700; margin-top: 14px; letter-spacing: 1px; text-align: center; position: relative; z-index: 2;">
+        KẾT NỐI MẠNG ĐIỀU PHỐI KHẨN CẤP [113 • 114 • 115]...
+      </div>
+    </div>
   </div>
 
-  <!-- LEVEL-OUTRO: CYBER DEFENSE LOGOUT CINEMATIC (VIDEO 1 - TRANSITION ON LOGOUT BACK TO GATEKEEPER) -->
+  <!-- LEVEL-OUTRO: CYBER DEFENSE LOGOUT CINEMATIC (AUTO TRANSITION - MOBILE PURE-CSS SAFE, DESKTOP INLINE VIDEO) -->
   <div id="cyberLogoutVideoOverlay" style="position: fixed; inset: 0; z-index: 99999999; background: #000000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: auto; cursor: pointer;">
-    <video id="cyberLogoutVideo" playsinline preload="none" src="/assets/videos/dispatcher-bg.mp4" controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture disableremoteplayback x-webkit-airplay="deny" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-select: none; user-select: none;" oncontextmenu="return false;"></video>
-    <div style="position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 10px 24px; background: rgba(0, 0, 0, 0.75); border: 1px solid rgba(56, 189, 248, 0.5); border-radius: 9999px; backdrop-filter: blur(14px); pointer-events: none; box-shadow: 0 0 30px rgba(0, 136, 255, 0.4);">
+    <!-- Desktop Video -->
+    <video id="cyberLogoutVideo" muted playsinline webkit-playsinline preload="none" src="/assets/videos/dispatcher-bg.mp4" controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture disableremoteplayback x-webkit-airplay="deny" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-select: none; user-select: none;" oncontextmenu="return false;"></video>
+    
+    <!-- Desktop Badge -->
+    <div class="desktop-logout-badge" style="position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 10px 24px; background: rgba(0, 0, 0, 0.75); border: 1px solid rgba(56, 189, 248, 0.5); border-radius: 9999px; backdrop-filter: blur(14px); pointer-events: none; box-shadow: 0 0 30px rgba(0, 136, 255, 0.4);">
       <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 10px #38bdf8; animation: ping 1.5s infinite;"></span>
       <span style="font-size: 11.5px; font-weight: 800; color: #e0f2fe; letter-spacing: 1.5px; text-transform: uppercase;">ĐANG ĐĂNG XUẤT &amp; KHÓA AN NINH TRỰC BAN QUỐC GIA...</span>
+    </div>
+
+    <!-- Mobile Logout Card -->
+    <div id="cyberLogoutMobileCard" style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 24px; position: relative; z-index: 10; background: radial-gradient(circle at center, #082f49 0%, #030712 70%, #000000 100%); pointer-events: none;">
+      <div style="position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <div class="cyber-radar-ring" style="border-color: rgba(56, 189, 248, 0.65);"></div>
+        <div class="cyber-ping-ring" style="border-color: rgba(56, 189, 248, 0.35);"></div>
+        <div style="width: 80px; height: 80px; background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, rgba(3, 105, 161, 0.1) 75%); border: 2px solid #38bdf8; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 35px rgba(56, 189, 248, 0.6);">
+          <img src="/assets/icons/khien.png" style="width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.9));" alt="Đăng Xuất">
+        </div>
+      </div>
+      <h3 style="font-size: 16px; font-weight: 800; color: #e0f2fe; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 12px; text-align: center;">ĐANG ĐĂNG XUẤT &amp; KHÓA BÀN ĐIỀU PHỐI...</h3>
+      <div style="width: 75%; max-width: 250px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 9999px; padding: 3px; overflow: hidden;">
+        <div id="cyberLogoutProgressBar" style="height: 5px; width: 0%; background: linear-gradient(90deg, #0284c7, #38bdf8, #bae6fd); border-radius: 9999px; box-shadow: 0 0 10px #38bdf8; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);"></div>
+      </div>
     </div>
   </div>
 

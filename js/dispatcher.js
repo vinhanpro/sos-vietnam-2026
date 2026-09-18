@@ -883,6 +883,8 @@ class DispatcherApp {
 
     const overlay = document.getElementById('cyberLogoutVideoOverlay');
     const video = document.getElementById('cyberLogoutVideo');
+    const mobileCard = document.getElementById('cyberLogoutMobileCard');
+    const progressBar = document.getElementById('cyberLogoutProgressBar');
 
     const finishLogout = () => {
       if (overlay) {
@@ -896,7 +898,7 @@ class DispatcherApp {
       this.checkAuth();
     };
 
-    if (!overlay || !video) {
+    if (!overlay) {
       finishLogout();
       return;
     }
@@ -907,25 +909,59 @@ class DispatcherApp {
       overlay.style.opacity = '1';
     });
 
-    video.currentTime = 0;
-    let finished = false;
-    const onEnd = () => {
-      if (finished) return;
-      finished = true;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                     window.innerWidth <= 820 || 
+                     ('ontouchstart' in window && window.innerWidth <= 1024);
+
+    if (isMobile) {
+      if (video) {
+        try { video.pause(); } catch(e) {}
+        video.style.display = 'none';
+      }
+      if (mobileCard) {
+        mobileCard.style.display = 'flex';
+      }
+      if (progressBar) {
+        progressBar.style.width = '0%';
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            if (progressBar) progressBar.style.width = '100%';
+          }, 50);
+        });
+      }
+      setTimeout(finishLogout, 1250);
+      return;
+    }
+
+    if (mobileCard) mobileCard.style.display = 'none';
+    if (video) {
+      video.style.display = 'block';
+      video.muted = true;
+      video.playsInline = true;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
+      video.currentTime = 0;
+      let finished = false;
+      const onEnd = () => {
+        if (finished) return;
+        finished = true;
+        finishLogout();
+      };
+
+      video.onended = onEnd;
+      video.onerror = onEnd;
+      overlay.onclick = onEnd;
+
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.warn('Logout video playback blocked, falling back:', err);
+          video.muted = true;
+          video.play().catch(() => onEnd());
+        });
+      }
+    } else {
       finishLogout();
-    };
-
-    video.onended = onEnd;
-    video.onerror = onEnd;
-    overlay.onclick = onEnd;
-
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(err => {
-        console.warn('Logout video autoplay unmuted blocked, falling back to muted autoplay:', err);
-        video.muted = true;
-        video.play().catch(() => onEnd());
-      });
     }
   }
 
@@ -11697,7 +11733,11 @@ class DispatcherApp {
   playGatekeeperIntroVideo() {
     const overlay = document.getElementById('cyberIntroVideoOverlay');
     const video = document.getElementById('cyberIntroVideo');
-    if (!overlay || !video) {
+    const mobileCard = document.getElementById('cyberIntroMobileCard');
+    const progressBar = document.getElementById('cyberIntroProgressBar');
+    const statusText = document.getElementById('cyberIntroStatusText');
+
+    if (!overlay) {
       this.checkAuth();
       return;
     }
@@ -11718,7 +11758,6 @@ class DispatcherApp {
 
     overlay.style.display = 'flex';
     overlay.style.opacity = '1';
-    video.currentTime = 0;
 
     let transitioned = false;
     const finishIntro = async () => {
@@ -11727,21 +11766,69 @@ class DispatcherApp {
       overlay.style.opacity = '0';
       setTimeout(async () => {
         overlay.style.display = 'none';
-        try { video.pause(); } catch (e) {}
+        try { if (video) video.pause(); } catch (e) {}
         await this.checkAuth();
       }, 650);
     };
 
-    video.onended = finishIntro;
-    video.onerror = finishIntro;
+    // Mobile / Touch / Small Screen Detection:
+    // Strictly NEVER play video on mobile/touch to prevent iOS QuickTime AVPlayer or Android media popup!
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                     window.innerWidth <= 820 || 
+                     ('ontouchstart' in window && window.innerWidth <= 1024);
 
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(err => {
-        console.warn('Video intro autoplay unmuted blocked, falling back to muted autoplay:', err);
-        video.muted = true;
-        video.play().catch(() => finishIntro());
-      });
+    if (isMobile) {
+      // 100% Mobile Safe: Hide video tag completely so mobile OS never detects media playback
+      if (video) {
+        try { video.pause(); } catch(e) {}
+        video.style.display = 'none';
+      }
+      if (mobileCard) {
+        mobileCard.style.display = 'flex';
+      }
+      if (progressBar) {
+        progressBar.style.width = '0%';
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            if (progressBar) progressBar.style.width = '100%';
+          }, 60);
+        });
+      }
+      if (statusText) {
+        setTimeout(() => {
+          if (statusText) statusText.textContent = 'GIẢI MÃ TỌA ĐỘ VÀ KẾT NỐI MẠNG ĐIỀU PHỐI...';
+        }, 750);
+        setTimeout(() => {
+          if (statusText) statusText.textContent = 'HOÀN TẤT • ĐANG VÀO GIAO DIỆN TÁC CHIẾN!';
+        }, 1450);
+      }
+
+      // Smooth cinematic transition after 1.85 seconds
+      setTimeout(finishIntro, 1850);
+      return;
+    }
+
+    // Desktop / Large Screen: Play video inline with strictly muted & playsinline
+    if (mobileCard) mobileCard.style.display = 'none';
+    if (video) {
+      video.style.display = 'block';
+      video.muted = true;
+      video.playsInline = true;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
+      video.currentTime = 0;
+      video.onended = finishIntro;
+      video.onerror = finishIntro;
+
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.warn('Desktop video playback blocked, falling back to instant intro:', err);
+          finishIntro();
+        });
+      }
+    } else {
+      finishIntro();
     }
   }
 
