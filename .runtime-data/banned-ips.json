@@ -1,1 +1,0 @@
-{"format":"sos-encrypted-runtime-v1","version":1,"writtenAt":"2026-09-17T15:07:03.057Z","encryptedBox":{"ciphertext":"5a92","iv":"979bff27a6c38df66afdfac6","authTag":"6ab5a7809b3a6fab012b84ea537b843b","algo":"aes-256-gcm"}}
