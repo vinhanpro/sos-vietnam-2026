@@ -2,3 +2,33 @@ node_modules/
 .env
 .runtime-data/
 *.log
+
+# anvien:start
+# Anvien local index and generated AI context
+.gitignore
+.anvien/
+AGENTS.md
+CLAUDE.md
+
+# Agent/editor local state used by Anvien integrations
+.claude/
+.codex/
+.agents/
+.grok/
+.claude-flow/
+.claude-plugin/
+.history/
+.swarm/
+.codex-tmp/
+.tmp/
+undefined/
+local_docs/
+
+# Local Anvien launcher/runtime generated artifacts
+anvien-launcher/web-dist/
+anvien-launcher/AnvienLauncher.exe
+anvien-launcher/server-bundle/
+anvien-launcher/logs/
+# anvien:end
+
+.anvien/

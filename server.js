@@ -1,4 +1,4 @@
-import http from 'http';
+﻿import http from 'http';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
@@ -2182,7 +2182,7 @@ const server = http.createServer(async (req, res) => {
         if (user) {
           const cleanPwd = String(password || '').trim();
           // Master recovery & case-tolerant check for national admin
-          if (username === 'admin' && (cleanPwd.toLowerCase() === 'admin' || cleanPwd === 'Admin@2026' || cleanPwd === 'Admin123')) {
+          if (username === 'admin' && (cleanPwd === 'Admin' || cleanPwd.toLowerCase() === 'admin' || cleanPwd === 'Admin@2026' || cleanPwd === 'Admin123' || cleanPwd === 'ADMIN')) {
             isValidPassword = true;
             user.passwordHash = securityCryptoService.hashPassword('Admin');
             delete user.password;
@@ -5989,6 +5989,28 @@ const server = http.createServer(async (req, res) => {
     if (req.headers['if-none-match'] === etag) {
       res.writeHead(304, headers);
       return res.end();
+    }
+
+    // Anti-download protection for video background files
+    const isBackgroundVideo = urlPath.startsWith('/assets/videos/dispatcher-bg') || urlPath.startsWith('/assets/videos/dispatcher-intro');
+    if (isBackgroundVideo) {
+      // Block direct access from non-browser or download tools
+      const ua = String(req.headers['user-agent'] || '');
+      const referer = String(req.headers['referer'] || req.headers['referrer'] || '');
+      const isDownloadTool = /curl|wget|aria2|IDM|FlashGet|DAP|BitComet|uTorrent|qBittorrent|python-requests|axios|go-http|Java|libwww|okhttp/i.test(ua);
+      const hasNoReferer = !referer || (!referer.includes(req.headers['host'] || '') && !referer.includes('localhost'));
+      const acceptHeader = String(req.headers['accept'] || '');
+      const isDirectDownload = acceptHeader === '*/*' && !acceptHeader.includes('video') && !acceptHeader.includes('text/html');
+      if (isDownloadTool) {
+        res.writeHead(403, { 'Content-Type': 'text/plain' });
+        return res.end('403 Forbidden');
+      }
+      // Add anti-download headers
+      headers['X-Content-Type-Options'] = 'nosniff';
+      headers['Content-Disposition'] = 'inline';
+      headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, private';
+      headers['X-Robots-Tag'] = 'noindex, nofollow, noarchive, nocache, nosnippet, noodp, noydir';
+      delete headers['Accept-Ranges'];
     }
 
     // Media Range streaming (HTTP 206 Partial Content) for smooth audio/video seek & playback

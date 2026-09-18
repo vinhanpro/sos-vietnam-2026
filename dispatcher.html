@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
@@ -230,20 +230,53 @@
       pointer-events: none;
       z-index: 1;
     }
-  </style>
+
+    /* === ANTI-DOWNLOAD / ANTI-NATIVE-CONTROLS VIDEO PROTECTION === */
+    video {
+      /* Prevents mobile browsers from treating bg-video as a tappable media */
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    /* Hide any native video controls chrome might show on mobile */
+    video::-webkit-media-controls { display: none !important; }
+    video::-webkit-media-controls-enclosure { display: none !important; }
+    video::-webkit-media-controls-panel { display: none !important; }
+    video::-webkit-media-controls-play-button { display: none !important; }
+    video::-webkit-media-controls-start-playback-button { display: none !important; }
+    video::-webkit-media-controls-overlay-play-button { display: none !important; }
+    video::-webkit-media-controls-fullscreen-button { display: none !important; }
+    video::-moz-range-thumb { display: none !important; }
+    /* Prevent picture-in-picture icon */
+    video::cue { display: none !important; }
+    /* Background video specific - never interactive */
+    #dispatcherBgVideo, #cyberIntroVideo, #cyberLogoutVideo {
+      pointer-events: none !important;
+      -webkit-touch-callout: none !important;
+    }
+    /* On mobile: make bg videos act as pure CSS backgrounds (not tappable) */
+    @media (max-width: 768px) {
+      .bg-video-container, #cyberIntroVideoOverlay, #cyberLogoutVideoOverlay {
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
+      }
+      video {
+        pointer-events: none !important;
+      }
+    }  </style>
   <link rel="stylesheet" href="/css/portal-cinematic.css?v=20260905_1">
 </head>
 <body class="theme-police">
 
   <!-- Atmospheric Cosmic Tactical Orbit Background for Command Center (Video 1 - Fixed z-[0]) -->
   <div class="bg-video-container" style="position: fixed; inset: 0; width: 100%; height: 100dvh; overflow: hidden; z-index: 0; pointer-events: none;">
-    <video class="bg-video" id="dispatcherBgVideo" autoplay muted loop playsinline preload="auto" src="/assets/videos/dispatcher-bg.mp4" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;"></video>
+    <video class="bg-video" id="dispatcherBgVideo" autoplay muted loop playsinline preload="auto" src="/assets/videos/dispatcher-bg.mp4" controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture disableremoteplayback x-webkit-airplay="deny" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; -webkit-user-select: none; user-select: none;" oncontextmenu="return false;"></video>
     <div class="bg-video-overlay" style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(3, 7, 18, 0.1) 0%, rgba(3, 7, 18, 0.6) 100%); pointer-events: none;"></div>
   </div>
 
   <!-- LEVEL-0.5: CYBER DEFENSE INTRO CINEMATIC (VIDEO 3 - AUTO TRANSITION WITHOUT SKIP BUTTON) -->
   <div id="cyberIntroVideoOverlay" style="position: fixed; inset: 0; z-index: 9999999; background: #000000; display: none; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: auto;">
-    <video id="cyberIntroVideo" playsinline preload="none" src="/assets/videos/dispatcher-intro.mp4" style="width: 100%; height: 100%; object-fit: cover;"></video>
+    <video id="cyberIntroVideo" playsinline preload="none" src="/assets/videos/dispatcher-intro.mp4" controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture disableremoteplayback x-webkit-airplay="deny" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-select: none; user-select: none;" oncontextmenu="return false;"></video>
     <div style="position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 8px 20px; background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(239, 68, 68, 0.5); border-radius: 9999px; backdrop-filter: blur(12px); pointer-events: none;">
       <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: ping 1.5s infinite;"></span>
       <span style="font-size: 11px; font-weight: 800; color: #fecaca; letter-spacing: 1.5px; text-transform: uppercase;">KHỞI ĐỘNG HỆ THỐNG TRỰC BAN TÁC CHIẾN QUỐC GIA...</span>
@@ -252,7 +285,7 @@
 
   <!-- LEVEL-OUTRO: CYBER DEFENSE LOGOUT CINEMATIC (VIDEO 1 - TRANSITION ON LOGOUT BACK TO GATEKEEPER) -->
   <div id="cyberLogoutVideoOverlay" style="position: fixed; inset: 0; z-index: 99999999; background: #000000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: auto; cursor: pointer;">
-    <video id="cyberLogoutVideo" playsinline preload="none" src="/assets/videos/dispatcher-bg.mp4" style="width: 100%; height: 100%; object-fit: cover;"></video>
+    <video id="cyberLogoutVideo" playsinline preload="none" src="/assets/videos/dispatcher-bg.mp4" controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture disableremoteplayback x-webkit-airplay="deny" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-select: none; user-select: none;" oncontextmenu="return false;"></video>
     <div style="position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 10px 24px; background: rgba(0, 0, 0, 0.75); border: 1px solid rgba(56, 189, 248, 0.5); border-radius: 9999px; backdrop-filter: blur(14px); pointer-events: none; box-shadow: 0 0 30px rgba(0, 136, 255, 0.4);">
       <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 10px #38bdf8; animation: ping 1.5s infinite;"></span>
       <span style="font-size: 11.5px; font-weight: 800; color: #e0f2fe; letter-spacing: 1.5px; text-transform: uppercase;">ĐANG ĐĂNG XUẤT &amp; KHÓA AN NINH TRỰC BAN QUỐC GIA...</span>
@@ -3135,5 +3168,57 @@
   </script>
   <script src="/js/tactical-layout.js?v=20260917_map_wide_v1"></script>
   <script type="module" src="/js/dispatcher.js?v=20260917_map_wide_v1"></script>
-</body>
+  <!-- Anti-Download Video Protection -->
+  <script>
+    (function() {
+      'use strict';
+      // Block right-click context menu on video elements
+      document.addEventListener('contextmenu', function(e) {
+        if (e.target && (e.target.tagName === 'VIDEO' || e.target.closest('.bg-video-container') || 
+            e.target.id === 'cyberIntroVideo' || e.target.id === 'cyberLogoutVideo')) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      }, true);
+      // Prevent long-press save on iOS/Android
+      document.addEventListener('touchstart', function(e) {
+        if (e.target && e.target.tagName === 'VIDEO') {
+          e.target.style.pointerEvents = 'none';
+        }
+      }, {passive: true});
+      // Prevent keyboard shortcuts for save/download
+      document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+          // Let Ctrl+S work for other things but not video context
+          if (document.activeElement && document.activeElement.tagName === 'VIDEO') {
+            e.preventDefault();
+          }
+        }
+      });
+      // Override video element to remove controls
+      function lockVideos() {
+        var videos = document.querySelectorAll('video');
+        videos.forEach(function(v) {
+          v.removeAttribute('controls');
+          v.setAttribute('controlslist', 'nodownload nofullscreen noremoteplayback');
+          v.disablePictureInPicture = true;
+          v.style.pointerEvents = 'none';
+          v.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+          });
+        });
+      }
+      // Run on DOMContentLoaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', lockVideos);
+      } else {
+        lockVideos();
+      }
+      // Also run after a short delay to catch dynamically added videos
+      setTimeout(lockVideos, 500);
+      setTimeout(lockVideos, 2000);
+    })();
+  </script></body>
 </html>

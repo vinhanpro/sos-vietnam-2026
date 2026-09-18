@@ -2664,3 +2664,29 @@ body.map-fullscreen-active .dispatcher-map-area {
   }
 }
 
+
+/* ================================================================
+   ANTI-DOWNLOAD / ANTI-NATIVE-CONTROLS VIDEO PROTECTION (DISPATCHER)
+   ================================================================ */
+video {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+video::-webkit-media-controls { display: none !important; }
+video::-webkit-media-controls-enclosure { display: none !important; }
+video::-webkit-media-controls-panel { display: none !important; }
+video::-webkit-media-controls-play-button { display: none !important; }
+video::-webkit-media-controls-start-playback-button { display: none !important; }
+video::-webkit-media-controls-overlay-play-button { display: none !important; }
+video::-webkit-media-controls-fullscreen-button { display: none !important; }
+video::-webkit-media-controls-timeline { display: none !important; }
+video::-webkit-media-controls-volume-slider { display: none !important; }
+#dispatcherBgVideo, #cyberIntroVideo, #cyberLogoutVideo {
+  pointer-events: none !important;
+  -webkit-touch-callout: none !important;
+}
+@media (max-width: 1024px) {
+  video { pointer-events: none !important; -webkit-touch-callout: none !important; }
+  .bg-video-container { -webkit-touch-callout: none !important; user-select: none !important; }
+}
