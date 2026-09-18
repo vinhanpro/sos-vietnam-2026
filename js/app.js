@@ -2530,6 +2530,21 @@ class SOSApp {
     // Unit info
     const assigned = incident.dispatchUnit || incident.assignedUnit;
     if (assigned) {
+      // Check and render auto-routing notice for citizen
+      const autoRouteNotice = document.getElementById('citizenAutoRoutingNotice');
+      if (autoRouteNotice) {
+        if (assigned.isAutoRoutedNearest || incident.assignedUnit?.isAutoRoutedNearest) {
+          autoRouteNotice.style.display = 'block';
+          const textEl = document.getElementById('citizenAutoRoutingNoticeText');
+          if (textEl) {
+            const dist = assigned.distanceKm ? ` (${assigned.distanceKm} km)` : '';
+            const orig = assigned.originalWard ? `địa bàn ${assigned.originalWard}` : 'khu vực bạn sống';
+            textEl.innerHTML = `🔄 <strong>ĐIỀU PHỐI LIÊN VÙNG:</strong> Do ${orig} chưa có dữ liệu trực ban sở tại, phiếu SOS đã được <strong>tự động chuyển tiếp đến đơn vị gần nhất: ${assigned.unitName || assigned.name}${dist}</strong> đúng lực lượng chuyên trách để ứng cứu khẩn cấp kịp thời!`;
+          }
+        } else {
+          autoRouteNotice.style.display = 'none';
+        }
+      }
       this.unitAvatar.innerHTML = '<svg class="svg-ico ico-2xl ico-blue" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="10" r="3"></circle></svg>';
       this.unitName.textContent = assigned.unitName || assigned.name;
       const officerTitle = assigned.officerFullTitle || (assigned.officerRank ? `${assigned.officerRank} ${assigned.officerName}` : assigned.officerName) || 'Kíp trực ban phản ứng nhanh';
@@ -4125,6 +4140,27 @@ class SOSApp {
   }
 
   speakSosPrompt() {
+    try {
+      // 1. First priority: Play natural studio-grade voice by VieNeu-TTS (Thùy Dung)
+      if (!this.sosPromptAudio) {
+        this.sosPromptAudio = new Audio('assets/sounds/sos_prompt_thuy_dung.mp3');
+        this.sosPromptAudio.preload = 'auto';
+      }
+      this.sosPromptAudio.currentTime = 0;
+      const playPromise = this.sosPromptAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn('HTML5 Audio playback interrupted, falling back to speech synthesis:', err);
+          this.fallbackSpeechSynthesis();
+        });
+      }
+    } catch (e) {
+      console.warn('Audio element error:', e);
+      this.fallbackSpeechSynthesis();
+    }
+  }
+
+  fallbackSpeechSynthesis() {
     try {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel(); // Hủy các lời đọc trước đó nếu có

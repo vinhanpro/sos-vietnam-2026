@@ -715,8 +715,8 @@ body.officer-authenticated .ios26-ambient-bubbles-backdrop {
   body.tac-mobile-console[data-tac-view="map"] .dispatcher-map-area { visibility: visible; pointer-events: auto; }
   body.tac-mobile-console[data-tac-view="queue"] .dispatcher-sidebar { display: flex !important; }
   body.tac-mobile-console[data-tac-view="queue"] #activeIncidentDrawer { display: none !important; }
-  body.tac-mobile-console[data-tac-view="detail"] .dispatcher-sidebar { display: flex !important; }
-  body.tac-mobile-console[data-tac-view="detail"] #activeIncidentDrawer { display: flex !important; flex: 1 !important; width: 100% !important; }
+  body.tac-mobile-console[data-tac-view="detail"] .dispatcher-sidebar { display: none !important; }
+  body.tac-mobile-console[data-tac-view="detail"].tac-incident-selected #activeIncidentDrawer { display: flex !important; flex: 1 !important; width: 100% !important; }
   body.tac-mobile-console[data-tac-view="detail"] .sidebar-tab-nav,
   body.tac-mobile-console[data-tac-view="detail"] #queueFilterBar,
   body.tac-mobile-console[data-tac-view="detail"] #incidentQueueList,
@@ -1704,7 +1704,7 @@ body.tac-keyboard-open .tactical-tabbar { transform: translate(-50%, 200%) !impo
     max-height: 100% !important;
     overflow: hidden !important;
   }
-  body[data-tac-view="detail"] #activeIncidentDrawer {
+  body[data-tac-view="detail"].tac-incident-selected #activeIncidentDrawer {
     display: flex !important;
     flex: 1 !important;
     height: 100% !important;
@@ -2339,7 +2339,7 @@ body.map-fullscreen-active .dispatcher-map-area {
     overflow: hidden !important;
   }
 
-  body.tac-mobile-console[data-tac-view="detail"] .tactical-detail-panel #activeIncidentDrawer {
+  body.tac-mobile-console[data-tac-view="detail"].tac-incident-selected .tactical-detail-panel #activeIncidentDrawer {
     display: flex !important;
     flex: 1 1 auto !important;
     width: 100% !important;
@@ -2689,4 +2689,56 @@ video::-webkit-media-controls-volume-slider { display: none !important; }
 @media (max-width: 1024px) {
   video { pointer-events: none !important; -webkit-touch-callout: none !important; }
   .bg-video-container { -webkit-touch-callout: none !important; user-select: none !important; }
+}
+
+/* --- Mobile Drawer Jerk & Phantom SOS-XXXX Prevention --- */
+body.tac-mobile-console:not(.tac-incident-selected) #activeIncidentDrawer,
+body[data-tac-view="detail"]:not(.tac-incident-selected) #activeIncidentDrawer,
+body.tac-mobile-console #activeIncidentDrawer.is-hidden,
+#activeIncidentDrawer.is-hidden {
+  display: none !important;
+}
+
+body.tac-mobile-console[data-tac-view="detail"]:not(.tac-incident-selected) #tacticalDetailEmpty {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ==========================================================================
+   FIX TẬN GỐC: KHÔNG BAO GIỜ HIỆN 2 GIAO DIỆN CÙNG LÚC TRÊN MÀN HÌNH
+   ========================================================================== */
+body:not(.tac-incident-selected) #activeIncidentDrawer,
+body.tac-mobile-console:not(.tac-incident-selected) #activeIncidentDrawer,
+body[data-tac-view="detail"]:not(.tac-incident-selected) #activeIncidentDrawer,
+#activeIncidentDrawer.is-hidden {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+body.tac-incident-selected #tacticalDetailEmpty,
+body.tac-mobile-console.tac-incident-selected #tacticalDetailEmpty,
+.tactical-detail-panel.has-incident #tacticalDetailEmpty {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  height: 0 !important;
+}
+
+body.tac-mobile-console[data-tac-view="detail"]:not(.tac-incident-selected) #tacticalDetailEmpty {
+  display: flex !important;
+  visibility: visible !important;
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
 }

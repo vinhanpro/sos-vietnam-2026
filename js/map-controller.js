@@ -684,7 +684,7 @@ export class MapController {
     }
   }
 
-  reloadStationsMarkers(region = 'Cần Thơ') {
+  reloadStationsMarkers(region = 'all') {
     this.loadAllStationsMarkers(region);
   }
 

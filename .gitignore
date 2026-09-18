@@ -32,3 +32,12 @@ anvien-launcher/logs/
 # anvien:end
 
 .anvien/
+
+# Temporary test media & production artifacts
+video_production/
+test_*.mp4
+test_*.webm
+test_*.wav
+test_*.png
+preview_*.png
+sample_*.png

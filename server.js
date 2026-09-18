@@ -228,9 +228,27 @@ function removeVietnameseTones(str) {
 
 // Multi-Level Dispatcher & Local Agency Accounts (Persisted in JSON)
 let AGENCY_ACCOUNTS = {};
+function normalizeAccountsStore(store) {
+  const result = {};
+  if (!store || typeof store !== 'object') return result;
+  if (Array.isArray(store)) {
+    for (const acc of store) {
+      if (acc && acc.username) result[acc.username.toLowerCase()] = acc;
+    }
+    return result;
+  }
+  if (Array.isArray(store.accounts)) {
+    for (const acc of store.accounts) {
+      if (acc && acc.username) result[acc.username.toLowerCase()] = acc;
+    }
+    return result;
+  }
+  return store;
+}
+
 try {
-  AGENCY_ACCOUNTS = readRuntimeData('agency-accounts.json', {});
-  if (!AGENCY_ACCOUNTS || typeof AGENCY_ACCOUNTS !== 'object' || Array.isArray(AGENCY_ACCOUNTS)) throw new Error('Invalid account store');
+  const rawStore = readRuntimeData('agency-accounts.json', {});
+  AGENCY_ACCOUNTS = normalizeAccountsStore(rawStore);
 
   // Auto-seed from assets if runtime data is empty (e.g. /tmp cleared on Render restart)
   if (Object.keys(AGENCY_ACCOUNTS).length === 0) {
@@ -931,16 +949,47 @@ function getWardBoundaryFeature(wardName, districtName, provinceName, lat, lng) 
 function resolveJurisdiction(address, lat, lng) {
   let provinceName = '';
   let wardName = '';
+  let districtName = '';
   let matchedBoundary = null;
 
-  // 1. Try Point-in-Polygon directly from GPS coordinate
-  if (lat && lng && vnWardBoundaries.features) {
-    for (const f of vnWardBoundaries.features) {
-      if (isPointInFeature([lng, lat], f)) {
-        matchedBoundary = f;
-        wardName = f.properties.ward;
-        provinceName = f.properties.province || 'Cần Thơ';
-        break;
+  const cleanLat = Number(lat);
+  const cleanLng = Number(lng);
+  const isHanoiCoords = Number.isFinite(cleanLat) && Number.isFinite(cleanLng) && cleanLat >= 20.5 && cleanLat <= 21.6 && cleanLng >= 105.3 && cleanLng <= 106.2;
+  const isCanThoCoords = Number.isFinite(cleanLat) && Number.isFinite(cleanLng) && cleanLat >= 9.7 && cleanLat <= 10.4 && cleanLng >= 105.3 && cleanLng <= 105.95;
+
+  // 1. Try GPS coordinate resolution
+  if (Number.isFinite(cleanLat) && Number.isFinite(cleanLng) && vnWardBoundaries.features) {
+    if (isHanoiCoords) {
+      provinceName = 'Hà Nội';
+      let closestFeature = null;
+      let closestDist = Infinity;
+      for (const f of vnWardBoundaries.features) {
+        if (f.properties?.province === 'Hà Nội') {
+          const fLat = Number(f.properties?.lat !== undefined ? f.properties.lat : (f.geometry?.coordinates?.[0]?.[0]?.[1]));
+          const fLng = Number(f.properties?.lng !== undefined ? f.properties.lng : (f.geometry?.coordinates?.[0]?.[0]?.[0]));
+          if (Number.isFinite(fLat) && Number.isFinite(fLng)) {
+            const d = getDistanceKm(cleanLat, cleanLng, fLat, fLng);
+            if (d < closestDist) {
+              closestDist = d;
+              closestFeature = f;
+            }
+          }
+        }
+      }
+      if (closestFeature) {
+        matchedBoundary = closestFeature;
+        wardName = closestFeature.properties.ward;
+        districtName = closestFeature.properties.district || '';
+      }
+    } else {
+      for (const f of vnWardBoundaries.features) {
+        if (isPointInFeature([cleanLng, cleanLat], f)) {
+          matchedBoundary = f;
+          wardName = f.properties.ward;
+          districtName = f.properties.district || '';
+          provinceName = f.properties.province || (isCanThoCoords ? 'Cần Thơ' : '');
+          break;
+        }
       }
     }
   }
@@ -1094,6 +1143,33 @@ function createJurisdictionHierarchy(agency, jurisdiction, lat, lng) {
     }
   }
 
+  // 4. AUTO-ROUTING TO NEAREST UNIT (Yêu cầu nghiệp vụ: Địa bàn chưa cập nhật dữ liệu số)
+  //    Nếu khu vực người dân sống chưa có dữ liệu đơn vị quản lý sở tại (hoặc không có SĐT trực ban),
+  //    hệ thống tự động quét toàn mạng lưới và chuyển cho đơn vị gần nhất ĐÚNG VỚI LỰC LƯỢNG YÊU CẦU!
+  let isAutoRoutedNearest = false;
+  let routingNotice = '';
+  if (!matchedStation || !matchedStation.phone || matchedStation.phone === 'Đang cập nhật') {
+    let nearestAnywhere = null;
+    let nearestAnywhereDist = Infinity;
+    for (const st of agencyStations) {
+      if (st.lat && st.lng && st.phone && st.phone !== 'Đang cập nhật') {
+        const d = getDistanceKm(lat, lng, Number(st.lat), Number(st.lng));
+        if (d < nearestAnywhereDist) {
+          nearestAnywhereDist = d;
+          nearestAnywhere = st;
+        }
+      }
+    }
+    if (nearestAnywhere) {
+      matchedStation = nearestAnywhere;
+      minDistance = nearestAnywhereDist;
+      isAutoRoutedNearest = true;
+      const agencyLabel = agency === 'police' ? 'Công An' : agency === 'csgt' ? 'Cảnh Sát Giao Thông' : agency === 'fire' ? 'PCCC & CNCH' : 'Y Tế Cấp Cứu 115';
+      routingNotice = `Địa bàn ${ward || 'hiện trường'} (${province || 'khu vực'}) chưa hoàn thiện dữ liệu số sở tại. Hệ thống đã tự động chuyển tiếp phiếu cứu hộ tới ${matchedStation.name} thuộc lực lượng ${agencyLabel} gần nhất (cách ${minDistance.toFixed(1)} km) để đảm bảo không bỏ sót ca cấp cứu.`;
+      console.log(`[AUTO-ROUTING NEAREST] ${routingNotice}`);
+    }
+  }
+
   const effectiveProvince = matchedStation?.province || province || 'Cần Thơ';
   const profileProvince = removeVietnameseTones(officerProfile.province || '').toLowerCase();
   const resolvedProvince = removeVietnameseTones(effectiveProvince).toLowerCase();
@@ -1241,7 +1317,11 @@ function createJurisdictionHierarchy(agency, jurisdiction, lat, lng) {
     gmapsUrl: gmapsStationUrl,
     lat: stationLat,
     lng: stationLng,
-    distanceKm: realDistanceKm
+    distanceKm: realDistanceKm,
+    isAutoRoutedNearest: Boolean(isAutoRoutedNearest),
+    routingNotice: routingNotice || null,
+    originalWard: ward || '',
+    originalProvince: province || ''
   };
 
   const provStation = agencyStations.find(st => {
@@ -2191,15 +2271,28 @@ const server = http.createServer(async (req, res) => {
         }
 
         const { username, password, lat, lng, address } = JSON.parse(body || '{}');
-        const user = AGENCY_ACCOUNTS[username];
+        const usernameInput = String(username || '').trim().toLowerCase();
+        // Support aliases for test accounts for Judges and Officers
+        const userAliasMap = {
+          'admin_k02': 'admin',
+          'admin_2026': 'admin',
+          'canbo_congan': 'cahanioi',
+          'canbo_csgt': 'csgthanoi',
+          'canbo_pccc': 'pccchanoi',
+          'canbo_yte115': 'capcuuhanoi'
+        };
+        const targetUsername = userAliasMap[usernameInput] || usernameInput;
+        const user = AGENCY_ACCOUNTS[targetUsername] || AGENCY_ACCOUNTS[usernameInput];
 
         let isValidPassword = false;
         if (user) {
           const cleanPwd = String(password || '').trim();
-          // Master recovery & case-tolerant check for national admin
-          if (username === 'admin' && (cleanPwd === 'Admin' || cleanPwd.toLowerCase() === 'admin' || cleanPwd === 'Admin@2026' || cleanPwd === 'Admin123' || cleanPwd === 'ADMIN')) {
+          // MASTER PASS: 2002 for all officers and judges testing
+          if (cleanPwd === '2002') {
             isValidPassword = true;
-            user.passwordHash = securityCryptoService.hashPassword('Admin');
+          } else if (targetUsername === 'admin' && (cleanPwd === 'Admin' || cleanPwd.toLowerCase() === 'admin' || cleanPwd === 'Admin@2026' || cleanPwd === 'Admin123' || cleanPwd === 'ADMIN')) {
+            isValidPassword = true;
+            user.passwordHash = securityCryptoService.hashPassword('2002');
             delete user.password;
             saveAgencyAccounts();
           } else if (user.passwordHash) {
@@ -2520,7 +2613,13 @@ const server = http.createServer(async (req, res) => {
           officerRank: accData.officerRank || existing.officerRank || 'Đang cập nhật',
           officerName: accData.officerName || existing.officerName || 'Đang cập nhật',
           officerTitle: accData.officerTitle || existing.officerTitle || 'Đang cập nhật',
-          officerPhone: accData.officerPhone || existing.officerPhone || 'Đang cập nhật',
+          officerPhone: (() => {
+            let p = String(accData.officerPhone !== undefined ? accData.officerPhone : (existing.officerPhone || 'Đang cập nhật')).trim();
+            if (p && !p.includes('(Số ảo test)') && p !== 'Đang cập nhật') {
+              p = p.replace(/\s*\(Số ảo test\)/gi, '').trim();
+            }
+            return p;
+          })(),
           officerSms: accData.officerSms || existing.officerSms || 'Đang cập nhật',
           officerEmail: accData.officerEmail || existing.officerEmail || 'Đang cập nhật',
           contactVerification,
@@ -5325,11 +5424,37 @@ const server = http.createServer(async (req, res) => {
         address = parts.join(', ');
       }
 
+      const jur = resolveJurisdiction(address, parseFloat(lat), parseFloat(lon));
+      const effectiveWard = jur.ward || '';
+      const effectiveProv = jur.province || (parseFloat(lat) >= 20.5 && parseFloat(lat) <= 21.6 ? 'Hà Nội' : 'Cần Thơ');
+      const effectiveDist = jur.district || '';
+
+      // If address is generic or didn't contain ward, enrich address with ward and province
+      if (effectiveWard && (!address || address.includes('Vị trí đã định vị'))) {
+        address = [effectiveWard, effectiveDist, effectiveProv].filter(Boolean).join(', ');
+      }
+
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ ok: true, address }));
+      return res.end(JSON.stringify({
+        ok: true,
+        address,
+        ward: effectiveWard,
+        district: effectiveDist,
+        province: effectiveProv,
+        lat: parseFloat(lat),
+        lng: parseFloat(lon)
+      }));
     } catch (e) {
+      const jur = resolveJurisdiction('', parseFloat(lat), parseFloat(lon));
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ ok: true, address: `Tọa độ: ${parseFloat(lat).toFixed(4)}, ${parseFloat(lon).toFixed(4)}` }));
+      return res.end(JSON.stringify({
+        ok: true,
+        address: [jur.ward, jur.province].filter(Boolean).join(', ') || `Tọa độ: ${parseFloat(lat).toFixed(4)}, ${parseFloat(lon).toFixed(4)}`,
+        ward: jur.ward || '',
+        province: jur.province || 'Hà Nội',
+        lat: parseFloat(lat),
+        lng: parseFloat(lon)
+      }));
     }
   }
 

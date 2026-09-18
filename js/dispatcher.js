@@ -53,7 +53,7 @@ class DispatcherApp {
     this.stationsList = [];
     this.enterprisesList = [];
     this.hospitalsList = [];
-    this.selectedStationRegion = 'Cần Thơ';
+    this.selectedStationRegion = 'all';
     this.searchStationKeyword = '';
     this.searchEnterpriseKeyword = '';
     this.openChatWindows = new Map();
@@ -1462,6 +1462,26 @@ class DispatcherApp {
     }
 
 
+    // Auto-focus officer jurisdiction region and load stations
+    if (officer.province && officer.province !== 'Toàn Quốc' && officer.province !== 'Cấp Quốc Gia' && officer.username !== 'admin') {
+      this.selectedStationRegion = officer.province;
+      if (this.mapController) {
+        this.mapController.loadAllStationsMarkers(this.selectedStationRegion);
+        const oLng = officer.stationLng || officer.lng;
+        const oLat = officer.stationLat || officer.lat;
+        if (oLng && oLat) {
+          this.mapController.map?.flyTo({ center: [oLng, oLat], zoom: 14, duration: 1200 });
+        } else if (officer.province.toLowerCase().includes('hà nội')) {
+          this.mapController.map?.flyTo({ center: [105.850, 21.028], zoom: 13.5, duration: 1200 });
+        }
+      }
+    } else {
+      this.selectedStationRegion = 'all';
+      if (this.mapController) {
+        this.mapController.loadAllStationsMarkers('all');
+      }
+    }
+
     this.renderQueue();
     this.renderStationsDirectory();
   }
@@ -1855,7 +1875,7 @@ class DispatcherApp {
     setVal('editAccLng', acc.lng !== undefined && acc.lng !== null ? (typeof acc.lng === 'number' ? acc.lng.toFixed(6) : acc.lng) : '');
     setVal('editAccRank', acc.officerRank || '');
     setVal('editAccOfficerName', acc.officerName || '');
-    setVal('editAccPhone', acc.officerPhone || '');
+    setVal('editAccPhone', (acc.officerPhone || '').replace(/\s*\(Số ảo test\)/gi, '').trim());
     setVal('editAccSms', acc.officerSms || '');
     setVal('editAccEmail', acc.officerEmail || '');
     const verifiedCheckbox = document.getElementById('editAccVerified');
@@ -2948,7 +2968,7 @@ class DispatcherApp {
           </div>
           <div style="font-size: 10.5px; color: #94a3b8; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
             <span style="display: inline-flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-xs ico-purple" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Cán bộ: <b style="color: #f8fafc;">${acc.officerRank || ''} ${acc.officerName || ''}</b></span>
-            <span style="display: inline-flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-xs ico-blue" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> ${contactLabel} <b style="color: #38bdf8;">${acc.officerPhone || 'Đang cập nhật'}</b></span>
+            <span style="display: inline-flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-xs ico-blue" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> ${contactLabel} <b style="color: #38bdf8;">${(acc.officerPhone || '').replace('(Số ảo test)', '').trim() || 'Đang cập nhật'}</b>${(acc.officerPhone || '').includes('(Số ảo test)') ? '<span style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 4px; padding: 1px 5px; font-size: 10px; font-weight: 700; margin-left: 4px;">Số ảo test</span>' : ''}</span>
             <span style="display: inline-flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-xs ico-amber" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Mật khẩu: <b style="color: #a78bfa; font-family: monospace; letter-spacing: 0.5px;">${pwdDisplay}</b></span>
           </div>
         </div>
@@ -4103,7 +4123,8 @@ class DispatcherApp {
           if (data.ward) this.pickedLocation.ward = data.ward;
           if (data.province) this.pickedLocation.province = data.province;
           if (this.locationPickerAddressDisplay) {
-            this.locationPickerAddressDisplay.textContent = `🏢 ${data.address}`;
+            const locDetails = [data.ward, data.district, data.province].filter(Boolean).join(' · ');
+            this.locationPickerAddressDisplay.innerHTML = `<div style="font-weight: 700; color: #38bdf8;">📍 ${this.escapeHtml(data.address)}</div>${locDetails ? `<div style="font-size: 11px; color: #a78bfa; margin-top: 2px;">🏛️ ${this.escapeHtml(locDetails)}</div>` : ''}`;
           }
         } else {
           if (this.locationPickerAddressDisplay) {
@@ -7190,7 +7211,7 @@ class DispatcherApp {
 
     if (this.mapController.map) {
       this.mapController.map.on('load', () => {
-        this.mapController.loadAllStationsMarkers(this.selectedStationRegion || 'Cần Thơ');
+        this.mapController.loadAllStationsMarkers(this.selectedStationRegion || 'all');
         
         // Auto-locate dispatcher's real position on startup & update header widget
         this.autoLocateCurrentPosition(false);
@@ -7414,6 +7435,7 @@ class DispatcherApp {
           // Highlight province boundary
           if (this.mapController) {
             this.mapController.highlightProvinceBoundary(item.name);
+            this.mapController.loadAllStationsMarkers(item.name);
           }
 
           // Show clear button
@@ -9528,6 +9550,20 @@ class DispatcherApp {
       drawer.classList.remove('is-hidden');
       drawer.style.display = 'flex';
       drawer.style.removeProperty('display');
+    }
+
+    // Auto-Routing to Nearest Unit Notice for Unmapped Wards
+    const autoRoutedEl = document.getElementById('drawerAutoRoutedNotice');
+    const autoRoutedText = document.getElementById('drawerAutoRoutedNoticeText');
+    if (autoRoutedEl) {
+      if (inc.assignedUnit && inc.assignedUnit.isAutoRoutedNearest) {
+        autoRoutedEl.style.display = 'flex';
+        if (autoRoutedText) {
+          autoRoutedText.innerHTML = `<strong>ĐIỀU PHỐI LIÊN VÙNG TỰ ĐỘNG:</strong> Địa bàn sở tại (<b>${inc.assignedUnit.originalWard || inc.jurisdiction?.ward || 'hiện trường'}</b>) chưa hoàn thiện dữ liệu số trực ban. Hệ thống đã tự động gán cho đơn vị trực ban gần nhất: <b>${inc.assignedUnit.name}</b> (cách <b>${inc.assignedUnit.distanceKm || 'gần'} km</b>) thuộc lực lượng <b>${inc.agencyName || 'Cứu hộ'}</b>.`;
+        }
+      } else {
+        autoRoutedEl.style.display = 'none';
+      }
     }
 
     this.drawerSosId.textContent = `#${inc.id}`;

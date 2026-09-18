@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="/vendor/maplibre-gl.css">
   <link rel="stylesheet" href="/css/style.css?v=20260917_polish_v2">
   <link rel="stylesheet" href="/css/map.css?v=20260904_2">
-  <link rel="stylesheet" href="/css/tactical-responsive.css?v=20260917_map_wide_v2">
+  <link rel="stylesheet" href="/css/tactical-responsive.css?v=20260918_rootfix_v5">
   <link rel="stylesheet" href="/css/portal-cinematic.css?v=20260905_3">
   <style>
     body {
@@ -681,6 +681,10 @@
 
         <!-- Shift Time Window Selection (Vietnam Time ICT UTC+7) -->
         <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 10px; padding: 12px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);">
+          <div id="drawerAutoRoutedNotice" style="display: none; align-items: flex-start; gap: 8px; background: rgba(245, 158, 11, 0.15); border: 1.5px solid #f59e0b; border-radius: 8px; padding: 8px 12px; margin-bottom: 8px; color: #fbbf24; font-size: 11.5px; line-height: 1.45;">
+            <span style="font-size: 15px;">🔄</span>
+            <div id="drawerAutoRoutedNoticeText"></div>
+          </div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <div style="font-size: 11.5px; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 6px;">
               <svg class="svg-ico ico-md ico-blue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Khung Giờ Ca Trực (Theo Giờ Việt Nam)
@@ -2104,7 +2108,7 @@
         </div>
 
         <!-- Active Incident Action & Detail Drawer -->
-        <div id="activeIncidentDrawer" style="display: none; flex: 1; flex-direction: column; min-height: 0; overflow-y: auto;">
+        <div id="activeIncidentDrawer" class="is-hidden" style="display: none !important; flex: 1; flex-direction: column; min-height: 0; overflow-y: auto;">
           <!-- Top Navigation Header (Image 3 Header) -->
           <div class="drawer-header-bar" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.12); margin-bottom: 12px; background: rgba(255,255,255,0.03); border-radius: 10px;">
             <div style="display: flex; align-items: center; gap: 8px;">
@@ -2112,19 +2116,19 @@
                 <svg class="svg-ico ico-xs ico-blue" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Danh Sách
               </button>
               <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 8px #ef4444;"></span>
-              <h3 id="drawerHeaderTitle" style="font-size: 14px; font-weight: 800; color: #fff; margin: 0;">Hồ Sơ #SOS-XXXX</h3>
+              <h3 id="drawerHeaderTitle" style="font-size: 14px; font-weight: 800; color: #fff; margin: 0;">Hồ Sơ Sự Cố</h3>
             </div>
             <button type="button" id="btnCloseDrawer" onclick="window.dispatcher ? window.dispatcher.showQueueView() : (function(){ const d = document.getElementById('activeIncidentDrawer'); if(d){ d.style.display='none'; d.style.setProperty('display','none','important'); } document.body.removeAttribute('data-tac-view'); const q = document.getElementById('incidentQueueList'); if(q){ q.style.display='flex'; q.style.setProperty('display','flex','important'); } })(); return false;" style="background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.5); color: #fca5a5; font-size: 16px; font-weight: 800; cursor: pointer; padding: 4px 10px; min-width: 32px; min-height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; z-index: 10; pointer-events: auto !important; transition: all 0.2s;" title="Đóng hồ sơ">&times;</button>
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <div id="drawerSosId" style="font-weight: 800; font-size: 15px; color: #60a5fa;">#SOS-XXXX</div>
+            <div id="drawerSosId" style="font-weight: 800; font-size: 15px; color: #60a5fa;"></div>
             <div id="drawerStatusBadge" class="tracking-badge-status pending">Đang chờ</div>
           </div>
 
-          <div style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 3px;" id="drawerReporter">Người dân: 0988xxxxxx</div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;" id="drawerAddress">Địa chỉ hiện trường</div>
-          <div style="font-size: 12px; font-weight: 700; color: #f87171; margin-bottom: 10px;" id="drawerTags">Sự cố: Khẩn cấp</div>
+          <div style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 3px;" id="drawerReporter"></div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;" id="drawerAddress"></div>
+          <div style="font-size: 12px; font-weight: 700; color: #f87171; margin-bottom: 10px;" id="drawerTags"></div>
 
           <!-- Google Maps Quick Navigation Buttons for Dispatcher (Car & Motorbike) -->
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px;">
@@ -3289,8 +3293,8 @@
       }
     });
   </script>
-  <script src="/js/tactical-layout.js?v=20260917_map_wide_v1"></script>
-  <script type="module" src="/js/dispatcher.js?v=20260917_map_wide_v1"></script>
+  <script src="/js/tactical-layout.js?v=20260918_rootfix_v5"></script>
+  <script type="module" src="/js/dispatcher.js?v=20260918_rootfix_v5"></script>
   <!-- Anti-Download Video Protection -->
   <script>
     (function() {
