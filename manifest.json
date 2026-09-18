@@ -1,0 +1,48 @@
+{
+  "name": "SOS Việt Nam 2026 — Cứu Hộ Khẩn Cấp Quốc Gia",
+  "short_name": "SOS Việt Nam",
+  "description": "Hệ thống cảnh báo và điều phối cứu hộ khẩn cấp kết nối Công an, Y tế, Cứu nạn cứu hộ theo định vị GPS thời gian thực.",
+  "start_url": "/index.html?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#030712",
+  "theme_color": "#ef4444",
+  "lang": "vi",
+  "icons": [
+    {
+      "src": "/assets/icons/logo-police-round-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icons/logo-police-round-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icons/logo-police-round-an.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["utilities", "lifestyle", "government"],
+  "shortcuts": [
+    {
+      "name": "Phát Tín Hiệu SOS",
+      "short_name": "Báo SOS",
+      "description": "Kích hoạt cứu hộ khẩn cấp 1 chạm",
+      "url": "/index.html?action=sos",
+      "icons": [{ "src": "/assets/icons/logo-police-round-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cổng Trực Ban",
+      "short_name": "Trực Ban",
+      "description": "Mở cổng điều phối tác chiến",
+      "url": "/dispatcher.html",
+      "icons": [{ "src": "/assets/icons/logo-police-round-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

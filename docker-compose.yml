@@ -1,0 +1,32 @@
+services:
+  sos-vietnam:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sos-vietnam:local
+    restart: unless-stopped
+    init: true
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      SOS_MASTER_SECRET: ${SOS_MASTER_SECRET:?Set SOS_MASTER_SECRET in .env}
+      SOS_TOKEN_SECRET: ${SOS_TOKEN_SECRET:?Set SOS_TOKEN_SECRET in .env}
+      SOS_RUNTIME_DATA_DIR: /var/lib/sos-data
+      SOS_WARD_BOUNDARIES_FILE: ${SOS_WARD_BOUNDARIES_FILE:-vn-wards-simplified.geojson}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+      GRACEFUL_SHUTDOWN_TIMEOUT_MS: ${GRACEFUL_SHUTDOWN_TIMEOUT_MS:-10000}
+    ports:
+      - "${SOS_BIND_ADDRESS:-127.0.0.1}:${SOS_PORT:-3000}:3000"
+    volumes:
+      - sos-runtime-data:/var/lib/sos-data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/healthz').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+volumes:
+  sos-runtime-data:
+    external: true
+    name: sos-runtime-data

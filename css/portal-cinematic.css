@@ -1,0 +1,215 @@
+/* Tactical 3D Space Canvas & Cinematic Motion Design */
+.tactical-3d-space-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Liquid Glass Hover Effect on Unit Bubbles */
+#cosmicPortalView .cosmic-bubble-item {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.35s ease;
+}
+#cosmicPortalView .cosmic-bubble-item:hover {
+  transform: scale(1.08) translateY(-4px) !important;
+  filter: drop-shadow(0 0 24px rgba(56, 189, 248, 0.6));
+}
+#cosmicPortalView .bubble-glass-sphere {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+#cosmicPortalView .cosmic-bubble-item:hover .bubble-glass-sphere {
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.45), inset 0 0 20px rgba(255, 255, 255, 0.3);
+}
+#cosmicPortalView {
+  overflow-y: auto !important;
+  padding: max(18px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  box-sizing: border-box;
+}
+#cosmicPortalView .cosmic-portal-header {
+  position: relative !important; top: auto !important; left: auto !important;
+  transform: none !important; margin: 0 auto 20px;
+  width: min(900px, 100%) !important; inline-size: min(900px, 100%) !important;
+  max-inline-size: 100% !important; max-width: 100% !important;
+  padding: 16px 22px !important; border-radius: 22px;
+  background: rgba(6, 19, 35, .88) !important;
+}
+#cosmicPortalView .cosmic-portal-title { font-size: clamp(18px, 2vw, 30px) !important; line-height: 1.22 !important; text-shadow: none; }
+#cosmicPortalView .cosmic-portal-desc { line-height: 1.5 !important; }
+#cosmicPortalView .cosmic-stage-wrapper {
+  position: relative !important; inset: auto !important; height: auto !important;
+  min-height: max(390px, calc(100dvh - 300px)); padding: 18px 0 30px;
+}
+#cosmicPortalView .cosmic-stage {
+  height: auto !important; max-height: none !important;
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(36px, 7vh, 100px) 46%;
+  align-items: center; justify-items: center; max-width: 1500px;
+}
+#cosmicPortalView .cosmic-bubble-item {
+  position: relative !important; inset: auto !important; transform: none !important;
+  animation: none !important; width: 100%; max-inline-size: 100%;
+  display: flex; align-items: center; flex-direction: column; cursor: pointer;
+}
+#cosmicPortalView .bubble-police { grid-column: 1; grid-row: 1; }
+#cosmicPortalView .bubble-fire { grid-column: 2; grid-row: 1; }
+#cosmicPortalView .bubble-csgt { grid-column: 1; grid-row: 2; }
+#cosmicPortalView .bubble-admin { grid-column: 2; grid-row: 2; }
+#cosmicPortalView .bubble-label-tag { display: flex !important; min-height: 36px; font-size: 13px !important; }
+#cosmicPortalView .bubble-orbit-ring,
+.bubble-sphere-wrapper .bubble-orbit-ring,
+.bubble-orbit-ring {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  border: none !important;
+  animation: none !important;
+  pointer-events: none !important;
+}
+#cosmicPortalView .cosmic-portal-bottom-bar {
+  position: relative !important; inset: auto !important; transform: none !important;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 10px auto 0;
+}
+#cosmicPortalView .cosmic-portal-bottom-bar > div:last-child { width: 100%; text-align: center; }
+.cinematic-toolbar {
+  display: none !important;
+}
+.cinematic-toolbar button, .cinematic-toolbar a {
+  font: 600 12px/1.4 system-ui, sans-serif; color: #e5f0fc; background: #09172ce8;
+  border: 1px solid #52687f; border-radius: 999px; padding: 9px 15px; min-height: 44px;
+  text-decoration: none; cursor: pointer; transition: transform 140ms ease-out, background-color 140ms ease-out;
+}
+.cinematic-toolbar button:active { transform: scale(.97); }
+.cinematic-toolbar button:disabled { opacity: .5; cursor: default; }
+.cinematic-toolbar :focus-visible, #cosmicPortalView .cosmic-bubble-item:focus-visible { outline: 3px solid #ffde96; outline-offset: 5px; }
+#cinematicStatus { font: 500 12px/1.5 system-ui, sans-serif; color: #d5e4f5; width: 100%; text-align: center; text-shadow: 0 1px 4px #000; }
+.portal-cinematic-scene { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; opacity: 0; }
+.portal-cinematic-scene.is-ready { opacity: 1; }
+.cinematic-globe-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.cinematic-geography { position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse at 48% 48%, #16394a 0%, #081c30 42%, #020711 90%); }
+.cinematic-geography::after { content: ''; position: absolute; inset: 0; background: linear-gradient(#020711aa, transparent 30%, transparent 72%, #020711bb); }
+.cinematic-geography svg { width: 100%; height: 100%; overflow: visible; }
+.cinematic-land { fill: url(#cinematicLand); stroke: #ffd589; stroke-width: .65; stroke-linejoin: round; }
+.cinematic-grid { stroke: #427994; stroke-opacity: .17; stroke-width: .7; fill: none; }
+.cinematic-label { font: 14px system-ui, sans-serif; fill: #d9e6eb; paint-order: stroke; stroke: #061425; stroke-width: 3px; stroke-linejoin: round; }
+.cinematic-city { fill: #ffe1a0; }
+.cinematic-country { font: 600 30px system-ui, sans-serif; letter-spacing: 8px; fill: #ffe1a0; }
+@media (max-width: 800px) {
+  #cosmicPortalView .cosmic-stage { gap: 46px 12%; }
+  #cosmicPortalView .cosmic-stage-wrapper { min-height: max(350px, calc(100dvh - 350px)); }
+  #cosmicPortalView .cosmic-portal-header { padding: 12px !important; }
+  #cosmicPortalView .cosmic-portal-badge { font-size: 10px !important; letter-spacing: 1px !important; }
+  .cinematic-toolbar button, .cinematic-toolbar a { padding: 8px 11px; }
+  .cinematic-geography svg { opacity: .72; }
+}
+@media (max-height: 500px) and (min-width: 600px) {
+  #cosmicPortalView .cosmic-stage { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  #cosmicPortalView .cosmic-stage-wrapper { min-height: 165px; }
+  #cosmicPortalView .cosmic-bubble-item { grid-column: auto; grid-row: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-toolbar button, .cinematic-toolbar a { transition: none; }
+  #cosmicPortalView *, .bg-video-container * { animation: none !important; }
+}
+
+/* 3-Second Cloud Descent & Hyperspace Speed Lines */
+.cinematic-cloud-descent {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+  mix-blend-mode: screen;
+}
+.cloud-layer {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+.cloud-layer-high {
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.45) 0%, rgba(56, 189, 248, 0.25) 40%, transparent 70%);
+}
+.cloud-layer-mid {
+  background: radial-gradient(ellipse at 50% 50%, rgba(224, 242, 254, 0.35) 0%, rgba(14, 165, 233, 0.2) 50%, transparent 80%);
+}
+.warp-speed-rays {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 20%, rgba(56, 189, 248, 0.15) 60%, rgba(255, 255, 255, 0.3) 100%);
+  filter: blur(4px);
+}
+
+/* History Pull-Up Handle Bar */
+.history-pull-handle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px 0 4px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 12px 12px 0 0;
+  transition: background 0.2s;
+}
+.history-pull-handle:hover, .history-pull-handle:focus-visible {
+  background: rgba(30, 41, 59, 0.85);
+  outline: 2px solid #38bdf8;
+  outline-offset: -2px;
+}
+.history-pull-pill {
+  width: 42px;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(148, 163, 184, 0.5);
+  transition: all 0.2s ease;
+}
+.history-pull-handle:hover .history-pull-pill {
+  background: #38bdf8;
+  width: 54px;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+}
+.history-pull-text {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #93c5fd;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0.3px;
+}
+
+/* Expanded State for History Panel */
+#panelHistoryView.is-expanded-history {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  max-height: 100% !important;
+  z-index: 100020 !important;
+  background: rgba(8, 15, 28, 0.96) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  border-bottom: none !important;
+  border-radius: 20px 20px 0 0 !important;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.25) !important;
+  animation: none;
+}
+@keyframes slideUpHistory {
+  from { transform: translateY(60px); opacity: 0.8; }
+  to { transform: translateY(0); opacity: 1; }
+}
+body.has-expanded-history #btnMasterChatHub,
+body.has-expanded-history .sos-mailbox-bubble-orb {
+  transform: translateY(140px) scale(0.6) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}

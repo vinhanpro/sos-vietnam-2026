@@ -1,0 +1,15 @@
+{
+  "gatekeeperEnabled": true,
+  "gatekeeperPass": "2002",
+  "antiDevToolsEnabled": true,
+  "antiCopyEnabled": true,
+  "maxFailedAttempts": 4,
+  "lockoutDurationMs": 7200000,
+  "voiceConfig": {
+    "voiceType": "female-south",
+    "rate": 1,
+    "pitch": 1.3,
+    "repeats": 3,
+    "playChime": true
+  }
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "SEC-MTD1OV8G-735",
+    "timestamp": "2026-08-28T14:26:37.984Z",
+    "timeVN": "21:26:37 28/8/2026",
+    "type": "BRUTE_FORCE_LOCKOUT",
+    "severity": "CRITICAL",
+    "ip": "::1",
+    "failedCount": 5,
+    "lockedUntilMs": 1787934397984,
+    "lockoutDurationMinutes": 120,
+    "context": "Đăng nhập tài khoản [unknown_hacker]",
+    "userAgent": "Python-urllib/3.12",
+    "deviceInfo": "Chrome/Browser (Windows PC)",
+    "location": "Chưa xác định (Theo IP)",
+    "lat": null,
+    "lng": null,
+    "message": "🚫 PHÁT HIỆN TẤN CÔNG DÒ MẬT KHẨU: Địa chỉ IP ::1 đã nhập sai quá 5 lần. Hệ thống đã KHÓA IP này 2 tiếng và chuyển toàn bộ hồ sơ thiết bị về Trung Tâm Chỉ Huy Quốc Gia!"
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "name": "sos-emergency-vietnam",
+  "version": "1.0.0",
+  "description": "Hệ thống Cảnh báo và Cứu hộ Khẩn cấp SOS Việt Nam (Công an 113, Y tế 115, Cứu hộ 114)",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "sos",
+    "emergency",
+    "vietnam",
+    "maplibre",
+    "rescue"
+  ],
+  "author": "dienvinhan@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}

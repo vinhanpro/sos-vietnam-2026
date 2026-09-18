@@ -1,0 +1,35 @@
+[
+  {
+    "id": "SOS-MTD75H46-959",
+    "agency": "police",
+    "agencyName": "Cảnh Sát 113",
+    "address": "Vị trí đã định vị trên bản đồ",
+    "officerName": "Trưởng Công An Phường Tân An",
+    "reporterName": "Người dân cần hỗ trợ",
+    "reporterPhone": "0988113115",
+    "incidentTime": "23:59:31 28/8/2026",
+    "coords": "10.03405, 105.74847",
+    "description": "🚨 Bị cướp giật / Móc túi.  Đã tiếp nhận định vị GPS và xử lý trực tiếp.",
+    "helpRequest": "Điều động lực lượng công an / phương tiện phản ứng nhanh tiếp cận hiện trường để ứng cứu và đảm bảo an toàn.",
+    "adviceGiven": "Giữ bình tĩnh, di chuyển đến vị trí an toàn, duy trì liên lạc điện thoại và mở camera để lực lượng cứu hộ tiếp cận nhanh nhất.",
+    "resolutionResult": "Lực lượng chức năng đã có mặt, tiếp cận hiện trường và xử lý hoàn tất an toàn.",
+    "signatures": {
+      "citizen": {
+        "signed": true,
+        "name": "Người dân cần hỗ trợ",
+        "type": "type",
+        "signatureData": "Người dân cần hỗ trợ",
+        "signedAt": "00:11:54 29/8/2026"
+      },
+      "officer": {
+        "signed": true,
+        "name": "Trưởng Công An Phường Tân An",
+        "type": "type",
+        "signatureData": "Trưởng Công An Phường Tân An",
+        "signedAt": "00:11:09 29/8/2026"
+      },
+      "isFullySigned": true
+    },
+    "archivedAt": "2026-08-28T17:12:17.841Z"
+  }
+]

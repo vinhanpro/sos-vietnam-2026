@@ -1,0 +1,5 @@
+Contact: mailto:security@sos-vietnam.gov.vn
+Expires: 2030-12-31T23:59:59.000Z
+Preferred-Languages: vi, en
+Policy: https://sos-vietnam.gov.vn/security-policy
+Acknowledgments: https://sos-vietnam.gov.vn/hall-of-fame

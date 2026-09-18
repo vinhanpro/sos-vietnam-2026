@@ -1,0 +1,4222 @@
+[
+  {
+    "id": "sec_1788278339804_u6epi2",
+    "timestamp": "2026-09-01T15:58:59.804Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "118.69.12.34",
+    "userAgent": "Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (compatible; gptbot/1.2; +https://openai.com/gptbot)"
+    }
+  },
+  {
+    "id": "sec_1788278339807_oquwnk",
+    "timestamp": "2026-09-01T15:58:59.807Z",
+    "type": "HONEYPOT_TRIPPED",
+    "ip": "171.244.55.66",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/api/v1/system-dump",
+    "method": "GET",
+    "detail": {
+      "url": "/api/v1/system-dump"
+    }
+  },
+  {
+    "id": "sec_1788278339809_rlh8jl",
+    "timestamp": "2026-09-01T15:58:59.809Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "14.161.88.99",
+    "userAgent": "Mozilla/5.0",
+    "url": "/api/auth/login",
+    "method": "POST",
+    "detail": {
+      "tier": "login",
+      "count": 6,
+      "max": 5
+    }
+  },
+  {
+    "id": "sec_1788278339811_uqmpxk",
+    "timestamp": "2026-09-01T15:58:59.811Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "14.161.88.99",
+    "userAgent": "Mozilla/5.0",
+    "url": "/api/auth/login",
+    "method": "POST",
+    "detail": {
+      "tier": "login",
+      "count": 7,
+      "max": 5
+    }
+  },
+  {
+    "id": "sec_1788324024504_00wz0i",
+    "timestamp": "2026-09-02T04:40:24.504Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "118.69.12.34",
+    "userAgent": "Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (compatible; gptbot/1.2; +https://openai.com/gptbot)"
+    }
+  },
+  {
+    "id": "sec_1788324024507_lxikv6",
+    "timestamp": "2026-09-02T04:40:24.507Z",
+    "type": "BLOCKED_BANNED_IP",
+    "ip": "171.244.55.66",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/api/v1/system-dump",
+    "method": "GET",
+    "detail": {
+      "reason": "IP is on auto-ban blacklist"
+    }
+  },
+  {
+    "id": "sec_1788324024509_ot4cxn",
+    "timestamp": "2026-09-02T04:40:24.509Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "14.161.88.99",
+    "userAgent": "Mozilla/5.0",
+    "url": "/api/auth/login",
+    "method": "POST",
+    "detail": {
+      "tier": "login",
+      "count": 6,
+      "max": 5
+    }
+  },
+  {
+    "id": "sec_1788324024511_zbgri0",
+    "timestamp": "2026-09-02T04:40:24.511Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "14.161.88.99",
+    "userAgent": "Mozilla/5.0",
+    "url": "/api/auth/login",
+    "method": "POST",
+    "detail": {
+      "tier": "login",
+      "count": 7,
+      "max": 5
+    }
+  },
+  {
+    "id": "sec_1788325482537_zn13h2",
+    "timestamp": "2026-09-02T05:04:42.537Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "118.69.12.34",
+    "userAgent": "Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (compatible; gptbot/1.2; +https://openai.com/gptbot)"
+    }
+  },
+  {
+    "id": "sec_1788325482539_l2ojdt",
+    "timestamp": "2026-09-02T05:04:42.539Z",
+    "type": "BLOCKED_BANNED_IP",
+    "ip": "171.244.55.66",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/api/v1/system-dump",
+    "method": "GET",
+    "detail": {
+      "reason": "IP is on auto-ban blacklist"
+    }
+  },
+  {
+    "id": "sec_1788325482541_diwfbm",
+    "timestamp": "2026-09-02T05:04:42.541Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "14.161.88.99",
+    "userAgent": "Mozilla/5.0",
+    "url": "/api/auth/login",
+    "method": "POST",
+    "detail": {
+      "tier": "login",
+      "count": 6,
+      "max": 5
+    }
+  },
+  {
+    "id": "sec_1788325482543_8xx0ih",
+    "timestamp": "2026-09-02T05:04:42.543Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "14.161.88.99",
+    "userAgent": "Mozilla/5.0",
+    "url": "/api/auth/login",
+    "method": "POST",
+    "detail": {
+      "tier": "login",
+      "count": 7,
+      "max": 5
+    }
+  },
+  {
+    "id": "sec_1788337420482_3ddpzj",
+    "timestamp": "2026-09-02T08:23:40.482Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "curl/8.14.1",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "userAgent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "sec_1788337438768_un9jef",
+    "timestamp": "2026-09-02T08:23:58.776Z",
+    "type": "BLOCKED_BANNED_IP",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "reason": "IP is on auto-ban blacklist"
+    }
+  },
+  {
+    "id": "sec_1788337478499_ganajm",
+    "timestamp": "2026-09-02T08:24:38.499Z",
+    "type": "BLOCKED_BANNED_IP",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Safari/605.1.15",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "reason": "IP is on auto-ban blacklist"
+    }
+  },
+  {
+    "id": "sec_1788337478534_y3k0pc",
+    "timestamp": "2026-09-02T08:24:38.534Z",
+    "type": "BLOCKED_BANNED_IP",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Safari/605.1.15",
+    "url": "/dispatcher.html",
+    "method": "GET",
+    "detail": {
+      "reason": "IP is on auto-ban blacklist"
+    }
+  },
+  {
+    "id": "sec_1788337478559_1yikya",
+    "timestamp": "2026-09-02T08:24:38.559Z",
+    "type": "BLOCKED_BANNED_IP",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Safari/605.1.15",
+    "url": "/css/style.css",
+    "method": "GET",
+    "detail": {
+      "reason": "IP is on auto-ban blacklist"
+    }
+  },
+  {
+    "id": "sec_1788337478584_naacix",
+    "timestamp": "2026-09-02T08:24:38.584Z",
+    "type": "BLOCKED_BANNED_IP",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Safari/605.1.15",
+    "url": "/js/dispatcher.js",
+    "method": "GET",
+    "detail": {
+      "reason": "IP is on auto-ban blacklist"
+    }
+  },
+  {
+    "id": "sec_1788337485911_k9w1ir",
+    "timestamp": "2026-09-02T08:24:45.911Z",
+    "type": "BLOCKED_BANNED_IP",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Safari/605.1.15",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "reason": "IP is on auto-ban blacklist"
+    }
+  },
+  {
+    "id": "sec_1788487343561_emv0hh",
+    "timestamp": "2026-09-04T02:02:23.561Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "curl/8.21.0",
+    "url": "/assets/icons/logo-police-round-192.png",
+    "method": "GET",
+    "detail": {
+      "userAgent": "curl/8.21.0"
+    }
+  },
+  {
+    "id": "sec_1788487364717_z5vjul",
+    "timestamp": "2026-09-04T02:02:44.717Z",
+    "type": "BLOCKED_BANNED_IP",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/assets/icons/logo-police-round-192.png",
+    "method": "HEAD",
+    "detail": {
+      "reason": "IP is on auto-ban blacklist"
+    }
+  },
+  {
+    "id": "sec_1788487399286_l1g4l7",
+    "timestamp": "2026-09-04T02:03:19.286Z",
+    "type": "BLOCKED_BANNED_IP",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/sos/sync-doc",
+    "method": "POST",
+    "detail": {
+      "reason": "IP is on auto-ban blacklist"
+    }
+  },
+  {
+    "id": "sec_1788507686824_41qil8",
+    "timestamp": "2026-09-04T07:41:26.824Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/dispatcher.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507686912_gq6ccx",
+    "timestamp": "2026-09-04T07:41:26.912Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507687275_stjoqp",
+    "timestamp": "2026-09-04T07:41:27.275Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507687291_etbqcc",
+    "timestamp": "2026-09-04T07:41:27.291Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507687385_j046f2",
+    "timestamp": "2026-09-04T07:41:27.385Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507687627_040an8",
+    "timestamp": "2026-09-04T07:41:27.627Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507687716_fhql1m",
+    "timestamp": "2026-09-04T07:41:27.716Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507687802_oxmsgx",
+    "timestamp": "2026-09-04T07:41:27.802Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507687876_ge4q59",
+    "timestamp": "2026-09-04T07:41:27.876Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/dispatcher.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507687961_lxjqs1",
+    "timestamp": "2026-09-04T07:41:27.961Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507688086_tkij2u",
+    "timestamp": "2026-09-04T07:41:28.086Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507688761_043ffy",
+    "timestamp": "2026-09-04T07:41:28.761Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507688773_ozcmhf",
+    "timestamp": "2026-09-04T07:41:28.773Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/dispatcher.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507688829_uvnotq",
+    "timestamp": "2026-09-04T07:41:28.829Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507690444_jswpux",
+    "timestamp": "2026-09-04T07:41:30.444Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507690510_la5j9b",
+    "timestamp": "2026-09-04T07:41:30.510Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507690537_x8rwyc",
+    "timestamp": "2026-09-04T07:41:30.537Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788507690633_3ta04z",
+    "timestamp": "2026-09-04T07:41:30.633Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36 edg/152.0.0.0"
+    }
+  },
+  {
+    "id": "sec_1788514471894_gw39g6",
+    "timestamp": "2026-09-04T09:34:31.894Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788514471899_ejchma",
+    "timestamp": "2026-09-04T09:34:31.899Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788514471900_ukwgdg",
+    "timestamp": "2026-09-04T09:34:31.900Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788514532244_6g846e",
+    "timestamp": "2026-09-04T09:35:32.245Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788514532250_fkv8h1",
+    "timestamp": "2026-09-04T09:35:32.250Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788514532252_xln7ia",
+    "timestamp": "2026-09-04T09:35:32.252Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788514532254_cy37gu",
+    "timestamp": "2026-09-04T09:35:32.254Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525793165_f4rf5q",
+    "timestamp": "2026-09-04T12:43:13.165Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525793171_61p4sq",
+    "timestamp": "2026-09-04T12:43:13.171Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525793173_8i5dek",
+    "timestamp": "2026-09-04T12:43:13.173Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525793175_iw8tg2",
+    "timestamp": "2026-09-04T12:43:13.175Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525811264_7y0xld",
+    "timestamp": "2026-09-04T12:43:31.264Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525811270_p98cv0",
+    "timestamp": "2026-09-04T12:43:31.270Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525811272_wruhhq",
+    "timestamp": "2026-09-04T12:43:31.272Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525811273_ykbpeh",
+    "timestamp": "2026-09-04T12:43:31.273Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525811278_lpg7z1",
+    "timestamp": "2026-09-04T12:43:31.278Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788525811279_gshqmg",
+    "timestamp": "2026-09-04T12:43:31.279Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525811281_xlo30d",
+    "timestamp": "2026-09-04T12:43:31.281Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788525811283_rr0g5n",
+    "timestamp": "2026-09-04T12:43:31.283Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525878142_vcrjkh",
+    "timestamp": "2026-09-04T12:44:38.142Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525878148_44nptz",
+    "timestamp": "2026-09-04T12:44:38.148Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525878150_j3f9a3",
+    "timestamp": "2026-09-04T12:44:38.150Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525878152_bd84j9",
+    "timestamp": "2026-09-04T12:44:38.152Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525878156_5y8dy5",
+    "timestamp": "2026-09-04T12:44:38.156Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788525878157_w2oicq",
+    "timestamp": "2026-09-04T12:44:38.157Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525878159_lmd7tv",
+    "timestamp": "2026-09-04T12:44:38.159Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788525878161_zr2tgm",
+    "timestamp": "2026-09-04T12:44:38.161Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788525878163_gcdxoe",
+    "timestamp": "2026-09-04T12:44:38.163Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788525878165_ejevh1",
+    "timestamp": "2026-09-04T12:44:38.165Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526293138_o13jhf",
+    "timestamp": "2026-09-04T12:51:33.138Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526293143_on8qs9",
+    "timestamp": "2026-09-04T12:51:33.143Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526293144_yoegew",
+    "timestamp": "2026-09-04T12:51:33.144Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526293146_fvh0yx",
+    "timestamp": "2026-09-04T12:51:33.146Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526293151_zi0alg",
+    "timestamp": "2026-09-04T12:51:33.151Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526293153_4kor9h",
+    "timestamp": "2026-09-04T12:51:33.153Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526293155_jhq602",
+    "timestamp": "2026-09-04T12:51:33.155Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526293156_ff7jpz",
+    "timestamp": "2026-09-04T12:51:33.156Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526293158_b9mqv7",
+    "timestamp": "2026-09-04T12:51:33.158Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526293160_pelz0o",
+    "timestamp": "2026-09-04T12:51:33.160Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526631721_lskh5c",
+    "timestamp": "2026-09-04T12:57:11.721Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526631727_20wm70",
+    "timestamp": "2026-09-04T12:57:11.727Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526631729_9j0ar4",
+    "timestamp": "2026-09-04T12:57:11.729Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526631731_2dpzz4",
+    "timestamp": "2026-09-04T12:57:11.731Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526631736_rrxjy3",
+    "timestamp": "2026-09-04T12:57:11.736Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526631738_a5iw0q",
+    "timestamp": "2026-09-04T12:57:11.738Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526631740_y9ztnx",
+    "timestamp": "2026-09-04T12:57:11.740Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526631741_gj63xr",
+    "timestamp": "2026-09-04T12:57:11.741Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526631744_esppvc",
+    "timestamp": "2026-09-04T12:57:11.744Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526631745_9elx87",
+    "timestamp": "2026-09-04T12:57:11.745Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526753789_rnc53l",
+    "timestamp": "2026-09-04T12:59:13.789Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526753794_40zeui",
+    "timestamp": "2026-09-04T12:59:13.794Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526753796_ibwg9m",
+    "timestamp": "2026-09-04T12:59:13.796Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526753798_ntfxzp",
+    "timestamp": "2026-09-04T12:59:13.798Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526753804_um0hfm",
+    "timestamp": "2026-09-04T12:59:13.804Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526753806_1exky2",
+    "timestamp": "2026-09-04T12:59:13.806Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526753808_8ie9us",
+    "timestamp": "2026-09-04T12:59:13.808Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526753809_3q51ie",
+    "timestamp": "2026-09-04T12:59:13.809Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526753811_neczei",
+    "timestamp": "2026-09-04T12:59:13.811Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526753813_wq1rur",
+    "timestamp": "2026-09-04T12:59:13.813Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526886639_ptxep3",
+    "timestamp": "2026-09-04T13:01:26.639Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526886644_nkkjkn",
+    "timestamp": "2026-09-04T13:01:26.644Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526886646_cu262c",
+    "timestamp": "2026-09-04T13:01:26.646Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526886647_m4xvzk",
+    "timestamp": "2026-09-04T13:01:26.647Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526886653_316j5q",
+    "timestamp": "2026-09-04T13:01:26.653Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526886655_730tbi",
+    "timestamp": "2026-09-04T13:01:26.655Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526886657_idne2x",
+    "timestamp": "2026-09-04T13:01:26.657Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526886659_ejtw9l",
+    "timestamp": "2026-09-04T13:01:26.659Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788526886661_3yykd4",
+    "timestamp": "2026-09-04T13:01:26.661Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788526886663_pryjzg",
+    "timestamp": "2026-09-04T13:01:26.663Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527250831_p4x7c3",
+    "timestamp": "2026-09-04T13:07:30.831Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "node",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527379635_4p30yz",
+    "timestamp": "2026-09-04T13:09:39.635Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "node",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527416969_xn3wmb",
+    "timestamp": "2026-09-04T13:10:16.969Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "node",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527611742_g510cr",
+    "timestamp": "2026-09-04T13:13:31.742Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "node",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527611908_9s4l7b",
+    "timestamp": "2026-09-04T13:13:31.908Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527611912_q9fqhd",
+    "timestamp": "2026-09-04T13:13:31.912Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527611915_i189wa",
+    "timestamp": "2026-09-04T13:13:31.915Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527611917_ek986y",
+    "timestamp": "2026-09-04T13:13:31.917Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527611922_gzc4xl",
+    "timestamp": "2026-09-04T13:13:31.922Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788527611924_973ugm",
+    "timestamp": "2026-09-04T13:13:31.924Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527611926_itewcb",
+    "timestamp": "2026-09-04T13:13:31.926Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788527611928_6qlazj",
+    "timestamp": "2026-09-04T13:13:31.928Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527611930_2cykc1",
+    "timestamp": "2026-09-04T13:13:31.930Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788527611932_8hlg3m",
+    "timestamp": "2026-09-04T13:13:31.932Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527753952_z08evv",
+    "timestamp": "2026-09-04T13:15:53.952Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "node",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527754495_6dfmjw",
+    "timestamp": "2026-09-04T13:15:54.495Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527754500_v39oh2",
+    "timestamp": "2026-09-04T13:15:54.500Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527754502_utyphz",
+    "timestamp": "2026-09-04T13:15:54.502Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527754504_liza4u",
+    "timestamp": "2026-09-04T13:15:54.504Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527754509_tp9rwb",
+    "timestamp": "2026-09-04T13:15:54.509Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788527754510_ha5f94",
+    "timestamp": "2026-09-04T13:15:54.510Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527754512_97l6h2",
+    "timestamp": "2026-09-04T13:15:54.512Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788527754514_nmjssd",
+    "timestamp": "2026-09-04T13:15:54.514Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788527754516_e2tjqt",
+    "timestamp": "2026-09-04T13:15:54.516Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788527754518_f97zxs",
+    "timestamp": "2026-09-04T13:15:54.518Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532075308_ny0o3x",
+    "timestamp": "2026-09-04T14:27:55.308Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "node",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532175361_4pcm0v",
+    "timestamp": "2026-09-04T14:29:35.361Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532175365_cn5a7u",
+    "timestamp": "2026-09-04T14:29:35.365Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532175367_t86dqn",
+    "timestamp": "2026-09-04T14:29:35.367Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532175370_mkfu7i",
+    "timestamp": "2026-09-04T14:29:35.370Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532175377_b169zj",
+    "timestamp": "2026-09-04T14:29:35.377Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788532175379_o2itoa",
+    "timestamp": "2026-09-04T14:29:35.379Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532175381_5xidgf",
+    "timestamp": "2026-09-04T14:29:35.381Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788532175383_j7sn0w",
+    "timestamp": "2026-09-04T14:29:35.383Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532175384_sfjgtj",
+    "timestamp": "2026-09-04T14:29:35.384Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788532175386_7avbxl",
+    "timestamp": "2026-09-04T14:29:35.386Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532175387_6jf9w7",
+    "timestamp": "2026-09-04T14:29:35.387Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts?token=eyJ1c2VybmFtZSI6InNlY3VyaXR5LXJlZ3Jlc3Npb24iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3ODg1NjA5NzUzMzksImlhdCI6MTc4ODUzMjE3NTMzOSwibm9uY2UiOiI2ODdlZDg5ZTAxM2U4NzNjIn0.A0Tu-KIKP2P9wjkzXjxo57V6oHt_DjQzTv4hTKrgtoM",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532248286_oytz59",
+    "timestamp": "2026-09-04T14:30:48.286Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532248291_9l1dv5",
+    "timestamp": "2026-09-04T14:30:48.291Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532248292_ad9758",
+    "timestamp": "2026-09-04T14:30:48.292Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532248293_6ausfd",
+    "timestamp": "2026-09-04T14:30:48.293Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532248297_33cxnx",
+    "timestamp": "2026-09-04T14:30:48.297Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788532248299_f84528",
+    "timestamp": "2026-09-04T14:30:48.299Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532248300_3d5sl9",
+    "timestamp": "2026-09-04T14:30:48.300Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788532248302_ollyor",
+    "timestamp": "2026-09-04T14:30:48.302Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532248303_t80p9c",
+    "timestamp": "2026-09-04T14:30:48.303Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788532248305_6fy3ax",
+    "timestamp": "2026-09-04T14:30:48.305Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532248306_9mxind",
+    "timestamp": "2026-09-04T14:30:48.306Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts?token=eyJ1c2VybmFtZSI6InNlY3VyaXR5LXJlZ3Jlc3Npb24iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3ODg1NjEwNDgyNjUsImlhdCI6MTc4ODUzMjI0ODI2NSwibm9uY2UiOiJkZDczODA4M2JkMTZmYzllIn0.y2yYjymN2HRG6gkoZTfP7NC0GC_d920aVBGPJkjlCjE",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788532248429_mfksg9",
+    "timestamp": "2026-09-04T14:30:48.429Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "node",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788533013685_0mc0ko",
+    "timestamp": "2026-09-04T14:43:33.685Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788533013711_h2qnu3",
+    "timestamp": "2026-09-04T14:43:33.711Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788533530151_tb0mhf",
+    "timestamp": "2026-09-04T14:52:10.151Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788533530188_62afs5",
+    "timestamp": "2026-09-04T14:52:10.188Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788535959993_ajeyjh",
+    "timestamp": "2026-09-04T15:32:39.993Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788535960085_th6i3g",
+    "timestamp": "2026-09-04T15:32:40.085Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536428361_7nyipn",
+    "timestamp": "2026-09-04T15:40:28.361Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536428413_33l3wa",
+    "timestamp": "2026-09-04T15:40:28.413Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536514270_xfyg7v",
+    "timestamp": "2026-09-04T15:41:54.270Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536514283_912mwy",
+    "timestamp": "2026-09-04T15:41:54.283Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536578072_yg2qiv",
+    "timestamp": "2026-09-04T15:42:58.072Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536578094_uhq5v2",
+    "timestamp": "2026-09-04T15:42:58.094Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536592377_n66s2a",
+    "timestamp": "2026-09-04T15:43:12.377Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536592416_s1yxnd",
+    "timestamp": "2026-09-04T15:43:12.416Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536617814_qsfq48",
+    "timestamp": "2026-09-04T15:43:37.814Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536617861_vl7aln",
+    "timestamp": "2026-09-04T15:43:37.861Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536653523_646iqi",
+    "timestamp": "2026-09-04T15:44:13.523Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536653539_sj712x",
+    "timestamp": "2026-09-04T15:44:13.539Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536868314_abjhf9",
+    "timestamp": "2026-09-04T15:47:48.314Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788536868332_ipdtb4",
+    "timestamp": "2026-09-04T15:47:48.332Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788537024081_wh86q5",
+    "timestamp": "2026-09-04T15:50:24.081Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788537024090_8wiye8",
+    "timestamp": "2026-09-04T15:50:24.090Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788569929129_bu7ei9",
+    "timestamp": "2026-09-05T00:58:49.130Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788569945775_p6dsgd",
+    "timestamp": "2026-09-05T00:59:05.775Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788569945818_e42ld6",
+    "timestamp": "2026-09-05T00:59:05.818Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578237554_1ntrmf",
+    "timestamp": "2026-09-05T03:17:17.554Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578237593_x547ik",
+    "timestamp": "2026-09-05T03:17:17.593Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578364204_v4cbvt",
+    "timestamp": "2026-09-05T03:19:24.204Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578364249_81en8v",
+    "timestamp": "2026-09-05T03:19:24.249Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578868263_l0tjr6",
+    "timestamp": "2026-09-05T03:27:48.263Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578868267_oo79if",
+    "timestamp": "2026-09-05T03:27:48.267Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578868269_s9so4q",
+    "timestamp": "2026-09-05T03:27:48.269Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578868270_kx8ntm",
+    "timestamp": "2026-09-05T03:27:48.270Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578868273_zah4tk",
+    "timestamp": "2026-09-05T03:27:48.273Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788578868275_9fm69e",
+    "timestamp": "2026-09-05T03:27:48.275Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578868276_dc3dch",
+    "timestamp": "2026-09-05T03:27:48.276Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788578868277_3vch3a",
+    "timestamp": "2026-09-05T03:27:48.277Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578868279_ja4izd",
+    "timestamp": "2026-09-05T03:27:48.279Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788578868280_yht79s",
+    "timestamp": "2026-09-05T03:27:48.280Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578868281_0snfz4",
+    "timestamp": "2026-09-05T03:27:48.281Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts?token=eyJ1c2VybmFtZSI6InNlY3VyaXR5LXJlZ3Jlc3Npb24iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3ODg2MDc2NjgyNDUsImlhdCI6MTc4ODU3ODg2ODI0NSwibm9uY2UiOiI4ZDI5ZWNlZTc5ZTJiYjNjIn0.dFROFIMt7q7JgEpZdNaHFnsV1o-n6o073ONN_RImG5c",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788578928656_mq6muk",
+    "timestamp": "2026-09-05T03:28:48.656Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/120.0.0.0 Safari/537.36",
+    "url": "/dispatcher.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (x11; linux x86_64) applewebkit/537.36 (khtml, like gecko) headlesschrome/120.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788578953609_nj8pli",
+    "timestamp": "2026-09-05T03:29:13.609Z",
+    "type": "HONEYPOT_TRIPPED",
+    "ip": "::1",
+    "userAgent": "node",
+    "url": "/api/v1/system-dump",
+    "method": "GET",
+    "detail": {
+      "url": "/api/v1/system-dump"
+    }
+  },
+  {
+    "id": "sec_1788580338734_8uw090",
+    "timestamp": "2026-09-05T03:52:18.734Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788580338739_17j31n",
+    "timestamp": "2026-09-05T03:52:18.739Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788580392743_vbuas2",
+    "timestamp": "2026-09-05T03:53:12.743Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788580392754_o588vi",
+    "timestamp": "2026-09-05T03:53:12.754Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788580562596_i500wg",
+    "timestamp": "2026-09-05T03:56:02.596Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788580562617_cfx3fc",
+    "timestamp": "2026-09-05T03:56:02.617Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788580691588_15haso",
+    "timestamp": "2026-09-05T03:58:11.588Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788580691610_vqgv48",
+    "timestamp": "2026-09-05T03:58:11.610Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788580857560_qi0gz3",
+    "timestamp": "2026-09-05T04:00:57.560Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788580857574_lrig1d",
+    "timestamp": "2026-09-05T04:00:57.574Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788581017543_89nnwz",
+    "timestamp": "2026-09-05T04:03:37.543Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788581017566_g16cfs",
+    "timestamp": "2026-09-05T04:03:37.566Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788581244271_e75m07",
+    "timestamp": "2026-09-05T04:07:24.271Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/security/audit-logs",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788581244275_ss19km",
+    "timestamp": "2026-09-05T04:07:24.275Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788581244277_yzh2o7",
+    "timestamp": "2026-09-05T04:07:24.277Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/officers",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788581244279_l1s2le",
+    "timestamp": "2026-09-05T04:07:24.279Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788581244284_ipbcl2",
+    "timestamp": "2026-09-05T04:07:24.284Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788581244285_kxnt5g",
+    "timestamp": "2026-09-05T04:07:24.285Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/stations/update",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788581244287_uzfwfl",
+    "timestamp": "2026-09-05T04:07:24.287Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/geo/sync-status",
+    "method": "GET",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788581244288_ilu2od",
+    "timestamp": "2026-09-05T04:07:24.288Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/hospitals/register",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788581244290_nkmanf",
+    "timestamp": "2026-09-05T04:07:24.290Z",
+    "type": "AUTH_FORBIDDEN_ROLE",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/enterprises/register",
+    "method": "POST",
+    "detail": {
+      "user": "dispatcher-regression",
+      "role": "police",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  },
+  {
+    "id": "sec_1788581244291_3vw4j1",
+    "timestamp": "2026-09-05T04:07:24.291Z",
+    "type": "AUTH_INVALID_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788581244293_h3guln",
+    "timestamp": "2026-09-05T04:07:24.293Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 Security Regression",
+    "url": "/api/admin/accounts?token=eyJ1c2VybmFtZSI6InNlY3VyaXR5LXJlZ3Jlc3Npb24iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3ODg2MTAwNDQyNTUsImlhdCI6MTc4ODU4MTI0NDI1NSwibm9uY2UiOiJkZDkwOTc4MDI5MDU1ZDI2In0.75VfsNtQgzRqnv0F1qg5uieGStbQNNP7ZQMWYnH10FQ",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788582134268_l81stp",
+    "timestamp": "2026-09-05T04:22:14.268Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788582134310_xggadu",
+    "timestamp": "2026-09-05T04:22:14.310Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788582164554_la62wy",
+    "timestamp": "2026-09-05T04:22:44.554Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788582164595_340jtj",
+    "timestamp": "2026-09-05T04:22:44.595Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788583112447_bk4h84",
+    "timestamp": "2026-09-05T04:38:32.447Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788583112487_39eovt",
+    "timestamp": "2026-09-05T04:38:32.487Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788584351304_pxpef6",
+    "timestamp": "2026-09-05T04:59:11.304Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788584351331_vgtkd5",
+    "timestamp": "2026-09-05T04:59:11.331Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788586256525_ijtljm",
+    "timestamp": "2026-09-05T05:30:56.525Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "118.69.12.34",
+    "userAgent": "Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (compatible; gptbot/1.2; +https://openai.com/gptbot)"
+    }
+  },
+  {
+    "id": "sec_1788586256530_egwv5f",
+    "timestamp": "2026-09-05T05:30:56.530Z",
+    "type": "HONEYPOT_TRIPPED",
+    "ip": "171.244.55.66",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/api/v1/system-dump",
+    "method": "GET",
+    "detail": {
+      "url": "/api/v1/system-dump"
+    }
+  },
+  {
+    "id": "sec_1788586256534_mc2un4",
+    "timestamp": "2026-09-05T05:30:56.534Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "14.161.88.99",
+    "userAgent": "Mozilla/5.0",
+    "url": "/api/auth/login",
+    "method": "POST",
+    "detail": {
+      "tier": "login",
+      "count": 6,
+      "max": 5
+    }
+  },
+  {
+    "id": "sec_1788586256536_utp5i7",
+    "timestamp": "2026-09-05T05:30:56.536Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "14.161.88.99",
+    "userAgent": "Mozilla/5.0",
+    "url": "/api/auth/login",
+    "method": "POST",
+    "detail": {
+      "tier": "login",
+      "count": 7,
+      "max": 5
+    }
+  },
+  {
+    "id": "sec_1788684807804_y64wv6",
+    "timestamp": "2026-09-06T08:53:27.804Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "node",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685277338_7as6y6",
+    "timestamp": "2026-09-06T09:01:17.338Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "curl/8.21.0",
+    "url": "/assets/videos/dispatcher-intro.mp4",
+    "method": "HEAD",
+    "detail": {
+      "userAgent": "curl/8.21.0"
+    }
+  },
+  {
+    "id": "sec_1788685302484_zfn20e",
+    "timestamp": "2026-09-06T09:01:42.484Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/api/dispatcher/flag-fake",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685302487_xubbgo",
+    "timestamp": "2026-09-06T09:01:42.487Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685302490_0fy6bi",
+    "timestamp": "2026-09-06T09:01:42.490Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/api/security/ban-ip",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685354699_vux1hn",
+    "timestamp": "2026-09-06T09:02:34.699Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/api/dispatcher/flag-fake",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685354703_lgyz6s",
+    "timestamp": "2026-09-06T09:02:34.703Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685354705_c58lk4",
+    "timestamp": "2026-09-06T09:02:34.705Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "url": "/api/security/ban-ip",
+    "method": "POST",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685460161_fh9rqw",
+    "timestamp": "2026-09-06T09:04:20.161Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788685495343_6dp4ag",
+    "timestamp": "2026-09-06T09:04:55.343Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788685498448_59984c",
+    "timestamp": "2026-09-06T09:04:58.448Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685498562_vdtpv6",
+    "timestamp": "2026-09-06T09:04:58.562Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685498633_8wei3g",
+    "timestamp": "2026-09-06T09:04:58.633Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685524718_jcab9i",
+    "timestamp": "2026-09-06T09:05:24.718Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788685526465_iwol0e",
+    "timestamp": "2026-09-06T09:05:26.465Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685526553_2lda3p",
+    "timestamp": "2026-09-06T09:05:26.553Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685526586_5y3jpa",
+    "timestamp": "2026-09-06T09:05:26.586Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685566944_i2i403",
+    "timestamp": "2026-09-06T09:06:06.944Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788685569106_9hoxfz",
+    "timestamp": "2026-09-06T09:06:09.106Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685569161_uh4j4d",
+    "timestamp": "2026-09-06T09:06:09.161Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685569219_74f6r1",
+    "timestamp": "2026-09-06T09:06:09.219Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685631799_n8u5ho",
+    "timestamp": "2026-09-06T09:07:11.799Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788685633952_n04ujr",
+    "timestamp": "2026-09-06T09:07:13.952Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685634015_b7ql0g",
+    "timestamp": "2026-09-06T09:07:14.015Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685634040_3xiyv8",
+    "timestamp": "2026-09-06T09:07:14.040Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685664004_nivvwn",
+    "timestamp": "2026-09-06T09:07:44.004Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788685666260_7w1ew3",
+    "timestamp": "2026-09-06T09:07:46.260Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685666339_iz0nt2",
+    "timestamp": "2026-09-06T09:07:46.339Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685666464_147hpu",
+    "timestamp": "2026-09-06T09:07:46.464Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685719585_6odzio",
+    "timestamp": "2026-09-06T09:08:39.585Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788685720573_rhejmh",
+    "timestamp": "2026-09-06T09:08:40.573Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685720632_q2ktm3",
+    "timestamp": "2026-09-06T09:08:40.632Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685720656_qrcmid",
+    "timestamp": "2026-09-06T09:08:40.656Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685726434_3h8jhj",
+    "timestamp": "2026-09-06T09:08:46.434Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/history/trash-status",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685726436_xpc88a",
+    "timestamp": "2026-09-06T09:08:46.436Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788685726438_ent2u3",
+    "timestamp": "2026-09-06T09:08:46.438Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/history/trash-status",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788708722743_oj2gmz",
+    "timestamp": "2026-09-06T15:32:02.743Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788708722882_dd2rx9",
+    "timestamp": "2026-09-06T15:32:02.882Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788708722934_2ag9hx",
+    "timestamp": "2026-09-06T15:32:02.934Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788708874395_onuqz5",
+    "timestamp": "2026-09-06T15:34:34.395Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708874470_6xdwn9",
+    "timestamp": "2026-09-06T15:34:34.470Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708876185_a70l1n",
+    "timestamp": "2026-09-06T15:34:36.185Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708876220_ah7u8a",
+    "timestamp": "2026-09-06T15:34:36.220Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708877912_dv8ef2",
+    "timestamp": "2026-09-06T15:34:37.912Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708877939_igp8y2",
+    "timestamp": "2026-09-06T15:34:37.939Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708879648_kc61io",
+    "timestamp": "2026-09-06T15:34:39.648Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708879675_rqondg",
+    "timestamp": "2026-09-06T15:34:39.675Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708881390_3k2wa1",
+    "timestamp": "2026-09-06T15:34:41.390Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708881416_uawct1",
+    "timestamp": "2026-09-06T15:34:41.416Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708883165_584eyu",
+    "timestamp": "2026-09-06T15:34:43.165Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708883202_5tg2iw",
+    "timestamp": "2026-09-06T15:34:43.202Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708884919_q63znh",
+    "timestamp": "2026-09-06T15:34:44.919Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708884947_wyel3h",
+    "timestamp": "2026-09-06T15:34:44.947Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708886677_7ccs3d",
+    "timestamp": "2026-09-06T15:34:46.677Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708886708_0rillc",
+    "timestamp": "2026-09-06T15:34:46.708Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708888519_04h7s9",
+    "timestamp": "2026-09-06T15:34:48.519Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708888564_6uhijd",
+    "timestamp": "2026-09-06T15:34:48.564Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708925019_4tak4e",
+    "timestamp": "2026-09-06T15:35:25.019Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708927960_3fcy4k",
+    "timestamp": "2026-09-06T15:35:27.960Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708930068_63xoar",
+    "timestamp": "2026-09-06T15:35:30.068Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708932323_facmqk",
+    "timestamp": "2026-09-06T15:35:32.323Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708935692_7yfdkt",
+    "timestamp": "2026-09-06T15:35:35.692Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708937211_02wcba",
+    "timestamp": "2026-09-06T15:35:37.211Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708941499_1lidq7",
+    "timestamp": "2026-09-06T15:35:41.499Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708942265_130qui",
+    "timestamp": "2026-09-06T15:35:42.265Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/ios-bubble-ambient.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 181,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788708942268_itg4jv",
+    "timestamp": "2026-09-06T15:35:42.268Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/tactical-layout.js?v=20260904_2",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 182,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788708942270_e45cye",
+    "timestamp": "2026-09-06T15:35:42.270Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/icons/logo-police-round-192.png",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 183,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788708942272_apdv9i",
+    "timestamp": "2026-09-06T15:35:42.272Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/videos/sos-citizen-bg.mp4",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 184,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788708943198_9jb5wr",
+    "timestamp": "2026-09-06T15:35:43.198Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/location.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 185,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788708943200_pakeqy",
+    "timestamp": "2026-09-06T15:35:43.200Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/map-controller.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 186,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788708943521_gcag0u",
+    "timestamp": "2026-09-06T15:35:43.521Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788708943523_fm9bsv",
+    "timestamp": "2026-09-06T15:35:43.523Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/icons/favicon.png",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 187,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788708943527_vpaq9h",
+    "timestamp": "2026-09-06T15:35:43.527Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/icons/logo-police-round-192.png",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 188,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788708945113_4rb0jf",
+    "timestamp": "2026-09-06T15:35:45.113Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 189,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788708945140_k6mt7a",
+    "timestamp": "2026-09-06T15:35:45.140Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 190,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709008784_cxz3in",
+    "timestamp": "2026-09-06T15:36:48.784Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709136146_bcjma8",
+    "timestamp": "2026-09-06T15:38:56.146Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709140893_gifqlm",
+    "timestamp": "2026-09-06T15:39:00.893Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709142806_r2pdj6",
+    "timestamp": "2026-09-06T15:39:02.806Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709146114_e6vsc2",
+    "timestamp": "2026-09-06T15:39:06.114Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709147787_noepss",
+    "timestamp": "2026-09-06T15:39:07.787Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709153450_xcry19",
+    "timestamp": "2026-09-06T15:39:13.450Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709155374_0kbgcm",
+    "timestamp": "2026-09-06T15:39:15.374Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709158398_4stk6c",
+    "timestamp": "2026-09-06T15:39:18.398Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709160285_degg46",
+    "timestamp": "2026-09-06T15:39:20.285Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709161724_t9ycbv",
+    "timestamp": "2026-09-06T15:39:21.724Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/vector-icons.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 181,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709161728_8gq2kb",
+    "timestamp": "2026-09-06T15:39:21.728Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/vendor/maplibre-gl.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 182,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709161731_cuhgkj",
+    "timestamp": "2026-09-06T15:39:21.731Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/ios-bubble-ambient.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 183,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709161734_k2wh2h",
+    "timestamp": "2026-09-06T15:39:21.734Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/tactical-layout.js?v=20260904_2",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 184,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709161737_jk5pyn",
+    "timestamp": "2026-09-06T15:39:21.737Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/icons/logo-police-round-192.png",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 185,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709161763_mmuw13",
+    "timestamp": "2026-09-06T15:39:21.763Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/videos/sos-citizen-bg.mp4",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 186,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709162113_dy8z0b",
+    "timestamp": "2026-09-06T15:39:22.113Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/location.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 187,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709162118_kgk4wx",
+    "timestamp": "2026-09-06T15:39:22.118Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/map-controller.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 188,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709162534_yrtctg",
+    "timestamp": "2026-09-06T15:39:22.534Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/icons/favicon.png",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 189,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709162537_gnp17d",
+    "timestamp": "2026-09-06T15:39:22.537Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709162542_2xjjlb",
+    "timestamp": "2026-09-06T15:39:22.542Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/icons/logo-police-round-192.png",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 190,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788709875374_08t95q",
+    "timestamp": "2026-09-06T15:51:15.374Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709879718_w0uqcn",
+    "timestamp": "2026-09-06T15:51:19.718Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709881653_wk8jp3",
+    "timestamp": "2026-09-06T15:51:21.653Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788709886014_gbkykm",
+    "timestamp": "2026-09-06T15:51:26.014Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788710006185_9ngkuz",
+    "timestamp": "2026-09-06T15:53:26.185Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788710007567_8dj8ki",
+    "timestamp": "2026-09-06T15:53:27.567Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788710009448_s94ap1",
+    "timestamp": "2026-09-06T15:53:29.448Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788710011552_t22xxo",
+    "timestamp": "2026-09-06T15:53:31.552Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788710013380_5of9uk",
+    "timestamp": "2026-09-06T15:53:33.380Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788710015908_9ci203",
+    "timestamp": "2026-09-06T15:53:35.908Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788710018798_pi440a",
+    "timestamp": "2026-09-06T15:53:38.798Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788710019386_bak37h",
+    "timestamp": "2026-09-06T15:53:39.386Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/vector-icons.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 181,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710019387_ap3810",
+    "timestamp": "2026-09-06T15:53:39.387Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/vendor/maplibre-gl.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 182,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710019389_4qw1n5",
+    "timestamp": "2026-09-06T15:53:39.389Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/ios-bubble-ambient.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 183,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710019390_zj4w9g",
+    "timestamp": "2026-09-06T15:53:39.390Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/tactical-layout.js?v=20260904_2",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 184,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710019392_k5brp0",
+    "timestamp": "2026-09-06T15:53:39.392Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/icons/logo-police-round-192.png",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 185,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710019395_rs2c5y",
+    "timestamp": "2026-09-06T15:53:39.395Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/videos/sos-citizen-bg.mp4",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 186,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710020037_8o3rwl",
+    "timestamp": "2026-09-06T15:53:40.037Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/location.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 187,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710020039_4mjh08",
+    "timestamp": "2026-09-06T15:53:40.039Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/js/map-controller.js",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 188,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710020295_vrw8v1",
+    "timestamp": "2026-09-06T15:53:40.295Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/sw.js",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788710020305_ulbs9d",
+    "timestamp": "2026-09-06T15:53:40.305Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/icons/favicon.png",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 189,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710020309_iqpje1",
+    "timestamp": "2026-09-06T15:53:40.309Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/assets/icons/logo-police-round-192.png",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 190,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710021236_9hfrba",
+    "timestamp": "2026-09-06T15:53:41.236Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 191,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710021284_arinyd",
+    "timestamp": "2026-09-06T15:53:41.284Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 192,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710022069_6pe29t",
+    "timestamp": "2026-09-06T15:53:42.069Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 193,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710022088_m1ykr5",
+    "timestamp": "2026-09-06T15:53:42.088Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 194,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710022918_a8bpl6",
+    "timestamp": "2026-09-06T15:53:42.918Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/index.html",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 195,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788710022956_cl9f20",
+    "timestamp": "2026-09-06T15:53:42.956Z",
+    "type": "RATE_LIMIT_EXCEEDED",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "tier": "general",
+      "count": 196,
+      "max": 180
+    }
+  },
+  {
+    "id": "sec_1788712711580_ajj8mm",
+    "timestamp": "2026-09-06T16:38:31.581Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/dispatcher.html",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788712711668_p4yl88",
+    "timestamp": "2026-09-06T16:38:31.668Z",
+    "type": "AI_BOT_BLOCKED",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "url": "/favicon.ico",
+    "method": "GET",
+    "detail": {
+      "userAgent": "mozilla/5.0 (windows nt 10.0; win64; x64) applewebkit/537.36 (khtml, like gecko) headlesschrome/152.0.0.0 safari/537.36"
+    }
+  },
+  {
+    "id": "sec_1788712762436_pc2vo7",
+    "timestamp": "2026-09-06T16:39:22.436Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/fake-archive",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788712762468_k1lvp8",
+    "timestamp": "2026-09-06T16:39:22.468Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/incidents",
+    "method": "GET",
+    "detail": {}
+  },
+  {
+    "id": "sec_1788712762482_hmzh15",
+    "timestamp": "2026-09-06T16:39:22.482Z",
+    "type": "AUTH_MISSING_TOKEN",
+    "ip": "::ffff:127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "url": "/api/dispatcher/stream",
+    "method": "GET",
+    "detail": {}
+  }
+]

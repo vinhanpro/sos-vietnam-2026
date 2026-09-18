@@ -1,0 +1,2934 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="icon" type="image/png" href="img/logo2.png">
+<meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,user-scalable=no">
+<meta name="keywords" content="bản đồ, 34 tỉnh thành, 3321 phường xã mới, sap nhap, sapnhap, xa moi, 34 tinh, phuong moi, tru so moi, 3321 xa, sách điện tử/số, sách tài nguyên môi trường, sách bản đồ, tập bản đồ, địa danh">
+<meta name="description" content="Tra cứu 34 tỉnh/TP, 3321 đặc khu/phường/xã mới - Việt Nam">
+<title>Đơn vị hành chính Việt Nam</title>
+
+<link rel="stylesheet" href="res/css/webfont.all.min.css">
+<link rel="stylesheet" href="res/css/w3.css">
+<link rel="stylesheet" href="res/css/jquery-ui.min.css">
+
+<script src="res/js/jquery-3.7.1.min.js"></script>
+<script src="res/js/stieuchuan1.4.js"></script>
+<script src="res/js/jquery.cookie.js"></script>
+<script src="res/js/jquery-ui.min.js"></script>
+<script src="res/js/jquery.ui.touch-punch.min.js"></script>
+
+</head>
+
+<body>
+
+<link rel="stylesheet" href="a.chung.1.css">
+
+<div id="status_load" style="position:fixed; z-index:200; top:50%; left:50%; transform:translate(-50%, -50%)"><img src="res/img/loading3.gif"/></div>
+
+<div id="popup" class="ol-popup">
+  <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+  <div id="popup-content"></div>
+</div>
+
+<!-- Hộp link cosodulieu -->
+<div style="position:fixed; display:flex; align-items:center; right:40px; bottom:68px; font-stretch: condensed; font-stretch: 75%; color:#CC0000; z-index:100; background-color:#FFD680; font-size:11px; font-family:'Arial Narrow'; font-weight:bold">
+	<a class="w3-button" href="https://www.youtube.com/watch?v=aphUNjceNBk" target="_blank"><i class="fa-brands fa-youtube"></i> TẬP BẢN ĐỒ 34 TỈNH, THÀNH PHỐ</a>
+	<a href="https://cosodulieu.bando.com.vn" target="_blank"><i class="fa fa-link"></i> BẢN ĐỒ NỀN VIỆT NAM&nbsp;</a>
+</div>
+<!-- Hộp nhập tỷ lệ -->
+<div class="scale-box">1 : <input id="scaleInput" type="text" value="50000"></div>
+<!--hop toado-->  
+<div class="coord-box">X: <span id="lon">—</span> |	Y: <span id="lat">—</span></div>
+
+<div id="banner" style="display:flex; width:100%; height:66px; min-width:300px; z-index:100; background-color:white; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">
+	<div style="display:flex; height:65px">
+		<div style="width:60px; margin:6px 0px 6px 10px"><a href="https://bando.com.vn" target="_blank"><img alt="" src="img/logo2.png" style="height:55px"></a></div>
+		<div id="tieude_web1" style="flex:1; line-height:18px; padding-left:4px; padding-top:6px; color:#003366">
+			<span style="font-size:13px">BỘ NÔNG NGHIỆP VÀ MÔI TRƯỜNG</span><br>
+			<span style="font-size:13px"><strong>NHÀ XUẤT BẢN TÀI NGUYÊN - MÔI TRƯỜNG VÀ BẢN ĐỒ VIỆT NAM</strong></span><br>
+			<div class="blink" style="color:red; font-size:14px; min-width:230px; width:100%"><strong>BẢN ĐỒ TRA CỨU CÁC ĐƠN VỊ HÀNH CHÍNH VIỆT NAM</strong></div><br>
+		</div>
+		<div id="tieude_web2" style="flex:1; line-height:18px; padding-left:4px; padding-top:6px; color:#003366">
+			<div class="blink" style="color:red; font-size:13px; max-width:140px; width:100%"><strong>BẢN ĐỒ TRA CỨU CÁC ĐƠN VỊ HÀNH CHÍNH VIỆT NAM</strong></div><br>
+		</div>
+	</div>
+	<div style="flex:1; margin:20px; display:flex; flex-direction:row-reverse; z-index:101">
+		<div class="w3-dropdown-hover w3-right" style="background-color:transparent">
+  	  <div style="color:#999999"><i class="fa-regular fa-circle-user fa-xl"></i></div>
+  	  <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
+  	    <a href="javascript:void(0);" class="w3-bar-item w3-button" onclick="alert('Tính năng này đang được hoàn thiện');">Đăng nhập</a>
+  	    <a href="javascript:void(0);" class="w3-bar-item w3-button" onclick="alert('Tính năng này đang được hoàn thiện');">Đăng ký</a>
+  	  </div>
+  	</div>
+  </div>
+</div>
+
+<div style="position:fixed; right:50px; top:13px; z-index:200">
+	<div id="link_ebook" class="w3-button" title="ebook-emap" style="width:120px">
+		<a href="https://vnebook.vn" target="_blank"><img id="anh_ebook" src="img/ebook1.png" style="height:14px"></a>
+	</div>
+	<div class="w3-button" title="Chia sẻ">
+		<a href="javascript:void(0);" onclick="chiase_vitri();"><i class="fa-solid fa-share-nodes fa-xl"></i></a>
+	</div>
+</div>
+
+<div id="vungnoidung" style="display:flex; width:100%; z-index:10; border-top:2px outset #CC3300">
+	<div id="vungbando" style="flex:1; width:100%"></div>
+	<div id="thanhcongcu" style="width:34px; background-color:#D5D5BF; padding-left:4px">
+		<div class="nutcongcu" title="Lớp dữ liệu"><a href="javascript:void(0);" onclick="anhien_lop()"><i class="fa-solid fa-layer-group fa-xl"></i></a></div>
+		<div class="kengang"></div>
+		<div class="nutcongcu" title="Phóng to"><a href="javascript:void(0);" onclick="phongtobando()"><i class="fa-solid fa-magnifying-glass-plus fa-xl"></i></a></div>
+		<div class="nutcongcu" title="Thu nhỏ"><a href="javascript:void(0);" onclick="thunhobando()"><i class="fa-solid fa-magnifying-glass-minus fa-xl"></i></a></div>
+		<div class="nutcongcu" title="Kín khung nhìn"><a href="javascript:void(0);" onclick="kinkhungnhin()"><i class="fa-solid fa-earth-asia fa-xl"></i></a></div>
+		<div class="kengang"></div>
+		<div id="nutpan" class="nutcongcu_nhan" title="Di chuyển"><a href="javascript:void(0);" onclick="dichuyenbando()"><i class="fa-solid fa-hand fa-xl"></i></a></div>
+		<div id="nutinfo" class="nutcongcu" title="Xem thông tin"><a href="javascript:void(0);" onclick="xemthongtin()"><i class="fa-solid fa-circle-info fa-xl"></i></a></div>
+		<div class="kengang"></div>
+		<div class="nutcongcu" title="Đo chiều dài"><a href="javascript:void(0);"  onclick="dochieudai()"><i class="fa-solid fa-ruler fa-xl"></i></a></div>
+		<div class="nutcongcu" title="Đo diện tích"><a href="javascript:void(0);" onclick="dodientich()"><i class="fa-solid fa-border-none fa-xl"></i></a></div>
+		<div class="kengang"></div>
+		<div class="nutcongcu" title="Chú giải bản đồ"><a href="javascript:void(0);" onclick="xemchugiai()"><i class="fa-solid fa-l fa-xl"></i></a></div>
+		<div class="kengang"></div>
+		<div id="nut_inbando" class="nutcongcu" title="Xuất/In bản đồ"><a href="javascript:void(0);" onclick="inbando();"><i class="fa-solid fa-print fa-xl"></i></a></div>
+	</div>
+</div>
+
+<div id="sbottom" style="overflow:hidden; width:100%; height:26px; background-color:#EDF2FA; color:#001A33; font-size:13px; position:fixed; left:0px; bottom:0px; display:flex; align-items:center; z-index:11">
+	<div id="runfooter">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:red">Xuất bản phẩm không kinh doanh, phục vụ cộng đồng: <b>Bản Đồ Tra Cứu Các Đơn Vị Hành Chính Việt Nam</b></span> (theo Nghị quyết số 202/2025/QH15 ngày 12/6/2025 của Quốc hội về việc sắp xếp đơn vị hành chính cấp tỉnh và 34 Nghị quyết ngày 16/6/2025 của Quốc hội về việc sắp xếp đơn vị hành chính cấp xã của Việt Nam) - &nbsp;<a href="https://bando.com.vn" target="_blank">
+	Bộ Nông nghiệp và Môi trường - Nhà xuất bản Tài nguyên Môi trường và Bản đồ Việt Nam</a>&nbsp;- Số xác nhận ĐKXB: 1027-2026/CXBIPH/03-129/BaĐ; Mã ISBN: 978-632-622-303-3;
+ QĐ xuất bản số: 30/QĐ-NXBTNMT cấp ngày 16/4/2026 - Tại Nhà xuất bản Tài nguyên - Môi trường và Bản đồ Việt Nam - Website:&nbsp;
+  <a href="bando.com.vn" target="_blank"><strong>bando.com.vn</strong></a>&nbsp;|&nbsp;Số truy cập: 5.485.979&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+</div>
+
+<div style="position:fixed; left:4px; top:70px; z-index:100; background-color:rgba(255, 255, 255, 0.3)">
+	<div id="nut_dvhc" class="w3-button nutA" title="Đơn vị hành chính" onclick="nhan_nutA('dvhc')"><i class="fa-solid fa-bars fa-xl"></i></div>
+</div>
+<div id="nhom_timkiem" style="position:fixed; left:54px; top:70px; z-index:100; display:flex; background-color:rgba(255, 255, 255, 0.3)">
+	<div id="nut_timtu" class="w3-button nutA" title="Tìm bởi từ khóa" onclick="nhan_nutA('timtu')"><i class="fa-solid fa-magnifying-glass fa-xl"></i></div>
+	<div id="nut_timvt" class="w3-button nutA" title="Tìm bởi vị trí" onclick="nhan_nutA('timvt')"><i class="fa-solid fa-magnifying-glass-location fa-xl"></i></div>
+	<div id="nut_chonpt" class="w3-button nutA" title="Chỉ dẫn đường" onclick="nhan_nutA('chonpt')"><i class="fas fa-route fa-xl"></i></div>
+	<div id="nut_gps" class="w3-button nutA" title="Định vị GPS - Vị trí hiện tại của bạn" onclick="nhan_nutA('gps')"><i class="fa-solid fa-location-crosshairs fa-xl"></i></div>
+	<div id="nut_xuat" class="w3-button nutA" title="Trích xuất dữ liệu tùy chọn ra excel" onclick="nhan_nutA('xuat')"><i class="fa-solid fa-file-export fa-xl"></i></div>
+	<!--<div id="nut_bt" class="w3-button nutA" title="Biên tập dữ liệu cá nhân" onclick="nhan_nutA('bt')"><i class="fa-solid fa-pen-to-square fa-xl"></i></div>-->
+</div>
+
+<div id="hop_timtu" style="position:fixed; left:54px; top:110px; display:flex; z-index:20">
+	<input id="timnhanh" class="w3-input w3-border" style="width:220px; height:36px" placeholder="Tìm nhanh">
+	<span class="clear-btn" title="Xóa">×</span>
+</div>
+<div id="hop_timvt" style="position:fixed; left:106px; top:110px; display:flex; z-index:20">
+	<input id="timvitri" class="w3-input w3-border" style="width:200px; height:36px" placeholder="Tọa độ cần tìm: [long,lat]">
+	<a href="javascript:void(0)" onclick="timboitoado()"><span class="clear-btn1" title="Tìm"><i class="fa-brands fa-sistrix"></i></span></a>
+</div>
+<div id="hop_chonpt" style="position:fixed; left:136px; top:110px; z-index:20">
+	<select id="transport" style="padding:6px">
+		<option value="driving">Đi bằng ô tô</option>
+		<option value="cycling">Đi bằng xe máy</option>
+	</select>
+</div>
+<div id="hop_bt" style="position:fixed; display:flex; height:36px; top:110px; left:175px; background-color:#E3E3D7; width:auto; z-index:20">
+	<img src="res/img/themdiem1.png" class="nutbientap" onclick="nhanNut('them')" title="Vẽ mới"><img src="res/img/suadiem1.png" class="nutbientap"  onclick="nhanNut('suakg')" title="Sửa vị trí, hình dạng">
+	<img src="res/img/xoadiem1.png" class="nutbientap"  onclick="nhanNut('xoa')" title="Chọn và xóa"><img src="res/img/edit2.png" class="nutbientap"  onclick="nhanNut('suatt')" title="Chọn và sửa thông tin thuộc tính">
+</div>
+
+<!--Cay danh muc-->
+<link rel="stylesheet" href="res/jstree/themes/default/style.min.css" />
+<script src="res/jstree/jstree.js"></script>
+
+﻿<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+<style>
+/*tree css--*/
+    .tree {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    .tree ul {
+      list-style: none;
+      padding-left: 12px;
+      margin: 2px;
+      border-left: 1px dashed #ccc;
+    }
+
+    .tree li {
+      position: relative;
+      margin: 5px 0;
+    }
+
+    /* Ẩn checkbox */
+    .tree input {
+      display: none;
+    }
+
+    /* Label icon */
+    .tree label {
+      cursor: pointer;
+      display: inline-block;
+      width: 14px;
+    }
+
+    /* Link text */
+    .tree a {
+      text-decoration: none;
+      color: #2a4d7a;
+      /*font-weight: bold;*/
+    }
+
+    .tree .file {
+      color: #444;
+      margin-left: 6px;
+    }
+
+    /* Ẩn cây con nếu chưa được chọn */
+    .tree input:not(:checked) ~ ul {
+      display: none;
+    }
+
+    /* Nhánh ngang */
+    .tree li::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: -10px;
+      width: 10px;
+      height: 1px;
+      background: #ccc;
+    }
+
+    /* Icon mở/đóng bằng pseudo-element */
+    .tree label::before {
+      content: "▶"; /* icon mặc định là đóng */
+      display: inline-block;
+      transform: rotate(0deg);
+      transition: transform 0.2s ease;
+    }
+
+    .tree input:checked + label::before {
+      transform: rotate(90deg); /* icon mở */
+    }
+	/*--*/
+  </style>
+ 
+ <style>
+ /*--Do dac-*/
+.ol-tooltip {
+  position: relative;
+  background: #ffcc33;
+  border-radius: 4px;
+  color: black;
+  padding: 4px 8px;
+  opacity: 0.7;
+  white-space: nowrap;
+  font-size: 15px;
+}
+.ol-tooltip-measure {
+  opacity: 1;
+  font-weight: lighter;
+}
+.ol-tooltip-static {
+  background-color: #ffcc33;
+  color: black;
+  border: 1px solid white;
+}
+.ol-tooltip-measure:before,
+.ol-tooltip-static:before {
+	border-top: 6px solid #ffcc33;
+	border-right: 6px solid transparent;
+	border-left: 6px solid transparent;
+	content: "";
+	position: absolute;
+	bottom: -6px;
+	margin-left: -7px;
+	left: 50%;
+}
+.ol-tooltip-static:before {
+	border-top-color: #ffcc33;
+}
+ </style>
+ 
+ 
+<style>
+/*jstree*/
+/*--Cho phep <br> ngat dong--*/
+.jstree-anchor {
+	white-space: normal !important;
+	word-break: break-word;
+	display:inline;
+}
+/*--Chinh lai mui ten to len, dep hon--*/
+/* khoảng cách node */
+#jstree .jstree-anchor{
+    padding:4px 6px;
+    border-radius:4px;
+}
+/* hover */
+#jstree .jstree-anchor:hover{
+    background:#e8f2ff;
+}
+/* node được chọn */
+#jstree .jstree-clicked{
+    background:#cfe3ff !important;
+    color:#000;
+}
+/* node đóng */
+#jstree .jstree-closed > .jstree-ocl:before{
+    content:"▶";
+    font-size:18px;
+    color:#555;
+}
+/* node mở */
+#jstree .jstree-open > .jstree-ocl:before{
+    content:"▼";
+    font-size:18px;
+    color:#1976d2;
+}
+/* hiệu ứng mượt */
+#jstree .jstree-ocl:before{
+    transition:0.2s;
+}
+/* khoảng cách giữa node */
+#jstree li{
+    margin:2px 0;
+}
+/* font chữ đẹp hơn */
+#jstree{
+    font-family:Segoe UI,Roboto,Arial;
+    font-size:15px;
+}
+/*--*/
+.gcsapnhap {
+	color:#333333; padding-left:10px; font-size:13px;
+}
+/*--ket qua tim trong jstree--*/
+.jstree-search {
+	color:black;
+}
+/*--*/
+.search-box {
+	position: relative;
+	display: inline-block;
+	width:100%;
+	height:30px;
+}
+#search {
+	padding-right: 25px;
+}
+#clear-search {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+	font-weight: bold;
+	color: #999;
+	display: none;
+}
+#clear-search:hover {
+	color: #333;
+}
+</style>
+
+<div id="hop_dvhc" style="box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.25); width:244px; height:330px; position:fixed; top:110px; left:3px; display:block; z-index:30; background-color:#E3E3D5">
+	<div style="display:flex; width:100%; height:40px; align-items:center; background-color:#DBB895">
+		<div style="flex:1; display:flex">DANH MỤC ĐƠN VỊ HÀNH CHÍNH</div>
+		<div class="w3-button" style="width:30px; color:red" onclick="dong_hop_dvhc()"><strong>X</strong></div>
+	</div>
+	<div class="search-box" style="margin:4px 0px 2px 0px">
+		<input type="text" id="search" class="w3-input" placeholder="Nhập tên cũ hoặc tên mới cần tìm" style="width:100%">
+		<span id="clear-search">×</span>
+	</div>
+	<div id="jstree-box" style="overflow-y:auto; overflow-x:hidden; width:100%; height:310px; background-color:white; margin-top:10px">
+		<div id="jstree"></div>
+	</div>
+</div>
+<!-->
+
+<div id="cuasothongtin" title="Thông tin">
+	<div id="vungthongtin"></div>
+</div>
+<div id="cuasobientap" title="Thông tin">
+	<div id="vungbientap"></div>
+</div>
+<div id="cuasolop" title="Các lớp dữ liệu">
+	<div id="nutlop_cuatoi" class="nutC">DỮ LIỆU CỦA TÔI</div>
+	<div id="hoplop_cuatoi" style="width:100%"></div>
+	<div id="nutlop_chiase" class="nutC">DỮ LIỆU NGƯỜI KHÁC CHIA SẺ</div>
+	<div id="hoplop_chiase" style="width:100%"></div>
+	<div id="nutlop_bandonen" class="nutC">BẢN ĐỒ NỀN CHUNG</div>
+	<div id="hoplop_bandonen" style="width:100%"></div>
+</div>
+
+<div id="modal01" class="w3-modal" onclick="this.style.display='none'" style="z-index:2000">
+	<span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+	<div class="w3-modal-content w3-animate-zoom">
+		<img id="hinhanh_lon" src="" style="width:100%">
+	</div>
+</div>
+
+<div id="id01" class="w3-modal w3-small" style="z-index:201">
+  <div class="w3-modal-content">
+    <header class="w3-container w3-teal">
+      <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+      <h6>Chia sẻ</h6>
+    </header>
+    <div class="w3-container">
+      <input id="link_chiase" class="w3-input" type="text" value="" readonly="true">
+      <div class="w3-right"><button class="w3-button" onclick="copy_link()">Chép Link</button></div>
+      <br>
+      <div style="display:flex" class="w3-margin">
+      	<a class="w3-button" href="https://www.facebook.com" target="_blank"><i class="fa-brands fa-facebook fa-xl"></i></a>
+      	<a class="w3-button" href="https://chat.zalo.me/" target="_blank"><i class="fa-solid fa-z fa-xl"></i></a>
+      </div>
+      <br>
+    </div>
+  </div>
+</div>
+
+<!--ol-->
+<link rel="stylesheet" href="res/ol8.0.0/ol.css" type="text/css">
+<link rel="stylesheet" href="res/ol8.0.0/olext/ol-ext.min.css">
+<script src="res/ol8.0.0/ol.js"></script>
+<script src="res/ol8.0.0/olext/ol-ext.min.js"></script>
+<!-->
+
+<!--print-->
+<script src="res/js/jspdf.min.js"></script>
+<script src="res/js/FileSaver.min.js"></script>
+
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<script>
+//osm
+function co_lopbando_osm(url) {
+	//default: url='https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var url1=url;
+	if (url=='') url1='https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+	return new ol.layer.Tile({
+		source: new ol.source.OSM({
+			url: url1,
+			crossOrigin: 'anonymous'
+		})
+	});
+}
+//co lop anh ve tinh dang Tile_XYZ
+function co_lopvetinh_xyz(url) {
+	return new ol.layer.Tile({
+		source: new ol.source.XYZ({
+			url: url,
+			crossOrigin: 'anonymous'
+		})
+	});
+}
+//co lop tileWMS: dich vu map cua NXB: cache hoac wms
+function co_lopTileWMS(url,ten,hienthi,minZ,maxZ) {
+	if (minZ==0 && maxZ==0) {
+	return new ol.layer.Tile({
+		source: new ol.source.TileWMS({
+			url: url,
+			params: {
+				'LAYERS': ten,
+				'FORMAT': 'image/png',
+				'TRANSPARENT': true
+			},
+			crossOrigin: 'anonymous'
+		}),
+		visible: hienthi
+	});
+	}
+	if (minZ==0 && maxZ>0) {
+	return new ol.layer.Tile({
+		source: new ol.source.TileWMS({
+			url: url,
+			params: {
+				'LAYERS': ten,
+				'FORMAT': 'image/png',
+				'TRANSPARENT': true
+			},
+			crossOrigin: 'anonymous'
+		}),
+		visible: hienthi,
+		maxZoom: maxZ
+	});
+	}
+	if (minZ>0 && maxZ==0) {
+	return new ol.layer.Tile({
+		source: new ol.source.TileWMS({
+			url: url,
+			params: {
+				'LAYERS': ten,
+				'FORMAT': 'image/png',
+				'TRANSPARENT': true
+			},
+			crossOrigin: 'anonymous'
+		}),
+		visible: hienthi,
+		minZoom: minZ
+	});
+	}
+	//--
+	return new ol.layer.Tile({
+		source: new ol.source.TileWMS({
+			url: url,
+			params: {
+				'LAYERS': ten,
+				'FORMAT': 'image/png',
+				'TRANSPARENT': true
+			},
+			crossOrigin: 'anonymous'
+		}),
+		visible: hienthi,
+		minZoom: minZ,
+		maxZoom: maxZ
+	});
+}
+//co nguon dang Tile_WMS (dung cho nen khong chua label/text, de tao cache anh load nhanh)
+function co_nguon_tile_wms(url,caclop,fmap,kieu) {
+	return new ol.source.TileWMS({
+		url: url,
+		params: {
+			//neu co nhieu lop thi moi lop cach nhau boi dau "," va thu tu xep lop tu phai sang trai
+			'LAYERS': caclop,
+			//khong dat Request thi moi info duoc
+			//'REQUEST': 'GetMap',
+			'SERVICE': 'WMS',
+			'VERSION': '1.3.0',
+			'FORMAT': 'image/png; mode=8bit',
+			'TRANSPARENT': true,
+			'TILED': true,
+			'MAP': fmap,
+			'WIDTH':400,
+			'HEIGHT':400,
+		},
+		serverType: kieu,
+		//muc do render: 1: kin khung nhin, <1: thieu so voi khung nhin
+		ratio: 1,
+		hidpi: false,
+		//cho phep in, export map
+		crossOrigin: 'anonymous'
+	});
+}
+//co nguon dang Img_WMS (dung cho lop label/text de chu khong bi cat)
+function co_nguon_img_wms(url,caclop,fmap,kieu) {
+	return new ol.source.ImageWMS({
+		url: url,
+		params: {
+			//neu co nhieu lop thi moi lop cach nhau boi dau "," va thu tu xep lop tu phai sang trai
+			'LAYERS': caclop,
+			//khong dat Request thi moi info duoc (nhung la lop nhan, khong can info nen cu dat bt)
+			//'REQUEST': 'GetMap',
+			'SERVICE': 'WMS',
+			'VERSION': '1.3.0',
+			'FORMAT': 'image/png; mode=8bit',
+			'TRANSPARENT': true,
+			'TILED': true,
+			'MAP': fmap,
+			'WIDTH':400,
+			'HEIGHT':400,
+		},
+		serverType: kieu,
+		//muc do render: 1: kin khung nhin, <1: thieu so voi khung nhin
+		ratio: 1,
+		hidpi: false,
+		//cho phep in, export map
+		crossOrigin: 'anonymous'
+	});
+}
+//tao lop ban do dang Tile_WMS (dung cho nguon tile)
+function tao_lop_tile_wms(nguon,ten) {
+	return new ol.layer.Tile({
+		source: nguon,
+		className: ten
+	});
+}
+//tao lop ban do dang Img_WMS (dung cho nguon img)
+function tao_lop_img_wms(nguon,ten) {
+	return new ol.layer.Image({
+		source: nguon,
+		className: ten
+	});
+}
+//tao view
+function tao_view(tam_x,tam_y,zoom,min_zoom,max_zoom,ext) {
+	if (ext!=null) {
+		const ae=ext.split(",");
+		const ex1=new ol.extent.boundingExtent([[Number(ae[0]),Number(ae[2])],[Number(ae[1]),Number(ae[3])]]);
+	}
+	//--
+	return new ol.View({
+		//chuyen tu longlat sang UTM
+		center: ol.proj.fromLonLat([tam_x,tam_y], 'EPSG:3857'),
+		zoom: zoom,
+		minZoom: min_zoom,
+		maxZoom: max_zoom,
+		//4326: WGS84 longlat, 3857: WGS84 UTM
+		projection: 'EPSG:3857',
+		enableRotation: false,
+		constrainResolution: false,
+		resolution: 39.37, //38.2185, // resolution cụ thể
+		//showFullExtent: true,
+		//extent: ex1
+	});
+}
+//tao ban do
+function tao_map(mang_lop,vung_bando,view) {
+	const o='#'+vung_bando;
+	$(o).html('');
+	return new ol.Map({
+		layers: mang_lop,
+		target: vung_bando,
+		view: view
+	});
+}
+//tao doi tuong diem
+function tao_diem(lon,lat,ma) {
+	return new ol.Feature({
+    geometry: new ol.geom.Point(
+      ol.proj.fromLonLat([lon,lat])
+    ),
+    ma:ma
+	});
+}
+//tao style diem
+function tao_style_diem(kieu,url,dorong,maunen,dorongnet,maunet) {
+	var iconStyle;
+	//anh, svg
+	if (kieu=='url') {
+		iconStyle = new ol.style.Style({
+			image: new ol.style.Icon({
+				anchor: [0.5, 1],
+				anchorXUnits: 'fraction',
+  		  anchorYUnits: 'fraction',
+  		  src: url,
+  	  	scale: dorong //scale: 0.1-1
+  		})
+		});
+	//point solid
+	} else {
+		iconStyle = new ol.style.Style({
+			image: new ol.style.Circle({
+				radius: dorong, //pixel
+				fill: new ol.style.Fill({ color: maunen }),
+				stroke: new ol.style.Stroke({ color: maunet, width: dorongnet })
+			})
+		});
+	}
+	return iconStyle;
+}
+//tao style duong
+function tao_style_duong(dorong,mau) {
+	return new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: mau,
+			width: dorong
+		})
+	});
+}
+//tao style vung
+function tao_style_vung(kieu,maunen,dorongnet,maunet) {
+	var iconStyle;
+	if (kieu=='covien') {
+		iconStyle = new ol.style.Style({
+			fill: new ol.style.Fill({
+				color: maunen
+			}),
+			stroke: new ol.style.Stroke({
+				color: maunet,
+				width: dorongnet
+			})
+		});
+	} else {
+		iconStyle = new ol.style.Style({
+			fill: new ol.style.Fill({
+				color: maunen
+			}),
+		});
+	}
+	return iconStyle;
+}
+//--
+//lop do dac - tinh khoang cach, dien tich
+//Class doi tuong do dac: length, area
+/*Create Vector Layer*/
+class VectorLayer {
+  //Constructor accepts title of vector layer and map object
+  constructor(title, map) {
+    this.layer = new ol.layer.Vector({
+      title: title,      
+      source: new ol.source.Vector({
+        projection:map.getView().projection
+      }),
+      style: new ol.style.Style({        
+        stroke: new ol.style.Stroke({
+          color: '#0e97fa',
+          width:4
+        }),
+		text: new ol.style.Text({
+			font: '20px Calibri,sans-serif',
+			overflow: true,
+			fill: new ol.style.Fill({
+				color: '#000'
+			}),
+			stroke: new ol.style.Stroke({
+				color: '#fff',
+				width: 3
+			}),
+			offsetY: -12
+		})
+      })
+    });
+  }
+}
+/*Create overlay*/
+class Overlay {
+  //Contrctor accepts map object, overlay html element, overlay offset, overlay positioning and overlay class
+  constructor(map, element = null, offset = [0, -15], positioning = 'bottom-center', className = 'ol-tooltip-measure') {
+    this.map = map;
+
+    if (!element) {
+      element = document.createElement('div');
+      element.className = className;
+      document.body.appendChild(element);
+    }
+
+    this.overlay = new ol.Overlay({
+      element: element,
+      offset: offset,
+      positioning: positioning
+    });
+
+    this.overlay.setPosition([0,0]);
+    element.style.display = 'block';      
+    this.map.addOverlay(this.overlay);
+  }
+}
+/*Create a Draw interaction for LineString and Polygon*/
+class Draw {  
+  //Constructor accepts geometry type, map object and vector layer
+  constructor(type, map, vector_layer) {
+    this.map = map;
+    this.vector_layer = vector_layer;
+    this.draw = new ol.interaction.Draw({
+        type: type,
+        stopClick: true
+    });
+    this.draw.on('drawstart', this.onDrawStart);
+    this.draw.on('drawend', this.onDrawEnd);
+    this.map.addInteraction(this.draw);
+  } 
+  /*
+  This function will be called when you start drawing
+  */
+  onDrawStart = (e) => {      
+    //It will store the coordinates length of geometry
+    this.coordinates_length = 0;
+    //partDistanceOverlay is used to display the label of distance measurements on each segment of Line and Polygon geomtry
+    this.partDistanceOverlay = null;
+    //totalAreaDistanceOverlay is used to display the total distance if geomtery is LineString or it will display the area if geomtry is Polygon
+    this.totalAreaDistanceOverlay = new Overlay(this.map).overlay;
+    //lastPartLineOverlay is used to display the distance measurement of last segment of Polygon which is its last two coordinates
+    this.lastPartLineOverlay = new Overlay(this.map).overlay;
+    //Binding onGeomChange function with drawing feature
+    e.feature.getGeometry().on('change', this.onGeomChange); 
+  }
+  /*
+  This function will be called when drawing is finished
+  */
+  onDrawEnd = (e) => {  
+    //Add drawn geometry to vector layer          
+    this.vector_layer.getSource().addFeature(e.feature);
+  }
+  /*
+  This function will called when ever there will be a change in geometry like increase in length, area, position,
+  */
+  onGeomChange = (e) => {    
+    let geomType = e.target.getType();
+    let coordinates = e.target.getCoordinates();
+    if(geomType == "Polygon"){
+      coordinates = e.target.getCoordinates()[0];
+    }
+    //This logic will check if the new coordinates are added to geometry. If yes, then It will create a overlay for the new segment
+    if (coordinates.length > this.coordinates_length) {                
+      this.partDistanceOverlay = new Overlay(this.map).overlay;
+      this.coordinates_length =  coordinates.length;      
+    }
+    else {                     
+      this.coordinates_length =  coordinates.length;            
+    }    
+    let partLine = new ol.geom.LineString([coordinates[this.coordinates_length-2], coordinates[this.coordinates_length-1]]);    
+    if(geomType == "Polygon") {
+      partLine = new ol.geom.LineString([coordinates[this.coordinates_length-3], coordinates[this.coordinates_length-2]]);    
+    }  
+    //the calculates the length of a segment and position the overlay at the midpoint of it
+    this.calDistance(this.partDistanceOverlay, partLine.getFlatMidpoint(), partLine.getLength());  
+    //if geometry is LineString and coordinates_length is greater than 2, then calculate the total length of the line and set the position of the overlay at last coordninates
+    if (geomType == "LineString" && this.coordinates_length > 2 && e.target.getLength() > new ol.geom.LineString([coordinates[0], coordinates[1]]).getLength()) {
+      this.calDistance(this.totalAreaDistanceOverlay, coordinates[this.coordinates_length-1], ol.sphere.getLength(e.target));
+    }  
+    //If geometry is Polygon, then it will create the overlay for area measurement and last segment of it which is its first and last coordinates.
+    if (geomType == "Polygon" && this.coordinates_length > 3) {
+      this.calArea(this.totalAreaDistanceOverlay, e.target.getFlatInteriorPoint(), ol.sphere.getArea(e.target));      
+      partLine = new ol.geom.LineString([coordinates[this.coordinates_length-2], coordinates[this.coordinates_length-1]]);    
+      this.calDistance(this.lastPartLineOverlay, partLine.getFlatMidpoint(), ol.sphere.getLength(partLine));
+    } 
+  }
+  //Calculates the length of a segment and position the overlay at the midpoint of it.
+  calDistance = (overlay, overlayPosition, distance) => {  
+    if(parseInt(distance) == 0) {    
+      overlay.setPosition([0,0]);       
+    }
+    else {
+      overlay.setPosition(overlayPosition);      
+      if (distance >= 1000) {
+        overlay.element.innerHTML = (distance/1000).toFixed(2) + ' km';
+      }
+      else {
+        overlay.element.innerHTML = distance.toFixed(2) + ' m';
+      }
+    }    
+  }
+  //Calculates the area of Polygon and position the overlay at the center of polygon
+  calArea = (overlay, overlayPosition, area) => {    
+    if(parseInt(area) == 0) {    
+      overlay.setPosition([0,0]);  
+    }
+    else {
+      overlay.setPosition(overlayPosition);  
+      if (area >= 10000) {
+        overlay.element.innerHTML = Math.round((area / 1000000) * 100) / 100  + ' km<sup>2<sup>';
+      }
+      else {
+        overlay.element.innerHTML =  Math.round(area * 100) / 100  + ' m<sup>2<sup>';
+      }
+    }   
+  }
+}
+//Remove map interactions except default interactions
+let removeInteractions = (map) => {  
+  map.getInteractions().getArray().forEach((interaction, i) => {
+    if(i > 8) {
+      map.removeInteraction(interaction);
+    }
+  });
+}
+//Clear vector features and overlays and remove any interaction
+let clear_draw = (map) => {
+  removeInteractions(map);
+  map.getOverlays().clear();
+}
+</script>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<script>
+let rmh=0;
+let cmh=0;
+let cnoidung=0;
+let ma_chon_lk='vn';
+function thaydoi() {
+	rmh=$(window).width();
+	cmh=$(window).height();
+	//--
+	runFooter(rmh);
+	//--
+	if (rmh<800) {
+		$('#tieude_web1').hide();
+		$('#tieude_web2').show();
+		$('#link_ebook').css({"width":"94px"});
+		$('#anh_ebook').css({"height":"12px"});
+	} else {
+		$('#tieude_web1').show();
+		$('#tieude_web2').hide();
+		$('#link_ebook').css({"width":"110px"});
+		$('#anh_ebook').css({"height":"14px"});
+		//$('#link_ebook').show();
+	}
+	//--
+	if (cmh<400) {
+		$('#banner').hide();
+		cnoidung=cmh-2-26;
+		alert('Chiều cao màn hình không phù hợp cho ứng dụng - Không quan sát hết được nội dung');
+	} else {
+		cnoidung=cmh-68-26;
+	}
+	if (rmh<360) alert('Chiều rộng màn hình không phù hợp cho ứng dụng - Không quan sát hết được nội dung');
+	$('#vungbando').height(cnoidung);
+	$('#thanhcongcu').height(cnoidung);
+	$('#hop_dvhc').height(400);
+	$('.hopmnA').height(184);
+}
+function an_hop() {
+	$('#hop_dvhc').hide();
+	$('#hop_timtu').hide();
+	$('#hop_timvt').hide();
+	$('#hop_chonpt').hide();
+	$('#hop_bt').hide();
+}
+$(document).ready(()=>{
+	thaydoi();
+	an_hop();
+	//--
+	if ($.cookie('hienthi_danhmuc')==undefined || $.cookie('hienthi_danhmuc')=='1') nhan_nutA('dvhc');
+});
+$(window).resize(()=>{
+	thaydoi();
+});
+//runfooter
+var chay_runfooter1;
+function runFooter(rmh) {
+	if (chay_runfooter1) clearInterval(chay_runfooter1);
+	var abottom=$('#runfooter');
+	var rchay=abottom.width()-rmh;
+	var lui=0;
+	var luitien=0;
+	if (rchay<=0) {
+		abottom.css("left",(-1)*Math.round(rchay/2)+"px");
+		return;
+	}
+	chay_runfooter1=setInterval(() => {
+		if (luitien==0) {
+			lui=lui-1;
+			abottom.css("left",lui+"px");
+			if (lui<(-1)*rchay) luitien=1;
+		} else {
+			lui=lui+1;
+			abottom.css("left",lui+"px");
+			if (lui>0) luitien=0;
+		}
+	},50);
+}
+//==
+$("#cuasothongtin").dialog({
+	position:{my:"right-40 top+70", at: "right top", of: window},
+	width:240,
+	height:300,
+	autoOpen: false,
+	open: function(event, ui) {
+	},
+	close: function(event, ui) {
+		$('#vungthongtin').html('');
+	}
+});
+$("#cuasobientap").dialog({
+	position:{my:"right-40 top+70", at: "right top", of: window},
+	width:240,
+	height:300,
+	autoOpen: false,
+	open: function(event, ui) {
+	},
+	close: function(event, ui) {
+		huychon();
+		$('#vungbientap').html('');
+	}
+});
+$("#cuasolop").dialog({
+	position:{my:"right-40 top+70", at: "right top", of: window},
+	width:300,
+	height:400,
+	autoOpen: false,
+	open: function(event, ui) {
+	},
+	close: function(event, ui) {
+	}
+});
+//==
+//dangnhan[0]: nhom nut trai
+//dangnhan[1]: nhom nut cong cu ben phai
+let dangnhan=['','pan'];
+function nhan_nutA(nutA) {
+	huychon();
+	huydodac();
+	if (nutA=='gps') {
+		dinhvi_GPS();
+		return;
+	}
+	if (nutA=='bt') {
+		alert('Chức năng cho phép bạn vẽ, gán thông tin/hình ảnh/video/nhập các lớp dữ liệu của bạn vào bản đồ, tạo bản đồ riêng của bạn này đang được hoàn thiện');
+		return;
+		huyBienTap();
+	}
+	if (nutA=='xuat') {
+		window.location.href='/bangbieu='+ma_chon_lk+'&kieu=0';
+		return;
+	}
+	if (nutA=='timtu') $('#timnhanh').focus();
+	if (nutA=='timvt') $('#timvitri').focus();
+	//--
+	$('.nutA').css({'background-color':'transparent'});
+	//an hop dang hien
+	if (dangnhan[0]!='') {
+		const tam='#hop_'+dangnhan[0];
+		$(tam).hide(500);
+	}
+	//xem xet hop moi
+	const hop='#hop_'+nutA;
+	const nut='#nut_'+nutA;
+	if ($(hop).is(':visible')) {
+		$(hop).hide(500);
+		dangnhan[0]='';
+		$.cookie('hienthi_danhmuc','0');
+	} else {
+		$(hop).show(500);
+		$(nut).css({'background-color':'#999999'});
+		dangnhan[0]=nutA;
+		$.cookie('hienthi_danhmuc','1');
+	}
+}
+//dinh vi gps
+function dinhvi_GPS() {
+	alert('Hãy bật chức năng định vị GPS của thiết bị để hệ thống xác định vị trí địa lý của bạn');
+	if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function showPosition(pos) {
+    	const lat=pos.coords.latitude;
+			const lon=pos.coords.longitude;
+			co_diem_vitri('0.0','Quí vị đang ở đây',lon,lat,0);
+    },
+	(error) => {
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                alert("Bạn chưa cho phép tính năng GPS. Hãy vào mục Location của thiết bị, cho phép và thử lại.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                alert("Thông tin vị trí không khả dụng.");
+                break;
+            case error.TIMEOUT:
+                alert("Yêu cầu vị trí bị quá thời gian.");
+                break;
+            default:
+                alert("Lỗi không xác định:", error.message);
+				break;
+        }
+    }
+	);
+  } else {
+    alert('Chức năng GPS đang tắt. Hãy bật chức năng GPS cho trình duyệt và thử lại');
+  }
+}
+function timboitoado() {
+	huychon();
+	let diemtoado = $('#timvitri').val();
+	if (diemtoado.trim().length<2) {
+		alert('Sai kiểu: [kinh_độ,vĩ_độ] - Ví dụ: 105.8523,21.0278');
+		return;
+	}
+	diemtoado=diemtoado.replaceAll(' ','');
+	const kv=diemtoado.split(',');
+	if (kv.length!=2 || isNaN(Number(kv[0])) || isNaN(Number(kv[1]))) {
+		alert('Sai kiểu: [kinh_độ,vĩ_độ] - Ví dụ: 105.8523,21.0278');
+		return;
+	}
+	co_diem_vitri('0.0',diemtoado,kv[0],kv[1],0);
+}
+//=====
+//MAP
+//==
+//map vars
+const o_map={
+	tam_x:107.09,
+	tam_y:16.37,
+	zoom:4,
+	zoom_min:4,
+	zoom_max:18
+}
+let lop_anhdiahinh=null;
+let lop_anhvetinh=null;
+let lop_vn1tr=null;
+let lop_vn1tr_label=null;
+let lop_tenxa=null;
+let lop_rgvn=null;
+let lop_dodac=null;
+let draw_dodac=null;
+let lop_tim=null;
+let map=null;
+let view=null;
+var choosedFeature;
+var lop_vector_tam;
+let lop_vung_bt=null;
+let vung_bientap={qg:'0',tinh:'',huyen:'',xa:''};
+//kieu diem mac dinh: diem, duong, vung
+const kieuPLA1 = new ol.style.Style({
+	stroke: new ol.style.Stroke({
+		color: '#FFFF00',
+		lineDash: [4],
+		width: 7
+	}),
+	fill: new ol.style.Fill({
+		color: 'rgba(235, 35, 205, 0.3)',
+	}),
+	image: new ol.style.Circle({
+		radius: 7,
+		fill: new ol.style.Fill({
+			color: '#f08951'
+		})
+	})
+});
+//nguon va lop de render du lieu chuyen mon
+let nguon_cm=[];
+nguon_cm['ck']=new ol.source.Vector();
+nguon_cm['moc']=new ol.source.Vector();
+let lop_cm=[];
+lop_cm['ck']=new ol.layer.Vector({source:nguon_cm['ck'], style:kieuPLA1});
+lop_cm['moc']=new ol.layer.Vector({source:nguon_cm['moc'], style:kieuPLA1});
+let nguon_cm_chung=new ol.source.Vector();
+var nguon_tam=new ol.source.Vector({wrapX: false});
+//--
+//dan duong
+let start = null;
+let end = null;
+const td_vectorSource = new ol.source.Vector();
+const td_vectorLayer = new ol.layer.Vector({
+	source: td_vectorSource,
+	style: new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: '#007bff',
+			width: 4
+		})
+	})
+});
+//--
+const CENTER_LIMIT1 = {
+	minLon: 100,
+	maxLon: 112,
+	minLat: 8,
+	maxLat: 23.5
+};
+const CENTER_LIMIT2 = {
+	minLon: 102,
+	maxLon: 114,
+	minLat: 8.5,
+	maxLat: 23.5
+};
+var CENTER_LIMIT=CENTER_LIMIT1;
+var limit=1;
+const DPI = 96;
+const mpu = ol.proj.get('EPSG:3857').getMetersPerUnit();
+const scaleInput = document.getElementById('scaleInput');
+let isZooming = false;
+let tylebando=15000000;
+let mucview=1;
+let mucviewC=1;
+//==
+//popup
+var container = document.getElementById('popup');
+var content = document.getElementById('popup-content');
+var closer = document.getElementById('popup-closer');
+var overlay = new ol.Overlay({
+  element: container,
+  autoPan: true,
+  autoPanAnimation: {
+    duration: 250
+  }
+});
+closer.onclick = function () {
+	huychon();
+  overlay.setPosition(undefined);
+  closer.blur();
+  return false;
+};
+//--
+//in bando
+var printControl = new ol.control.PrintDialog({target:'nut_inbando'});
+printControl.setSize('A4');
+printControl.on(['print', 'error'], function(e) {
+  //Print success
+  if (e.image) {
+    if (e.pdf) {
+      //Export pdf using the print info
+      var pdf = new jsPDF({
+        orientation: e.print.orientation,
+        unit: e.print.unit,
+        format: e.print.size
+      });
+      pdf.addImage(e.image, 'JPEG', e.print.position[0], e.print.position[0], e.print.imageWidth, e.print.imageHeight);
+      pdf.save(e.print.legend ? 'legend.pdf' : 'bando.pdf');
+    } else  {
+      //Save image as file
+      e.canvas.toBlob(function(blob) {
+        var name = (e.print.legend ? 'legend.' : 'map.')+e.imageType.replace('image/','');
+        saveAs(blob, name);
+      }, e.imageType, e.quality);
+    }
+  } else {
+    console.warn('No canvas to export');
+  }
+});
+//==
+function batdau() {
+const wms1='gis/?SERVICE=WMS&VERSION=1.3.0&DPI=96';
+//anh dia hinh
+const dh1='https://services.arcgisonline.com/arcgis/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}';
+lop_anhdiahinh=co_lopvetinh_xyz(dh1); //dia hinh
+//anh dia vat
+const vt1='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'; //dia vat
+lop_anhvetinh=co_lopvetinh_xyz(vt1); //dia vat
+//anh openstreetmap
+//lop_osm=co_lopbando_osm('');
+//ban do nen
+lop_vn1tr=co_lopTileWMS('https://cache.bando.com.vn/service?','vietnam_2026',true,0,16);
+lop_vn1tr_label=co_lopTileWMS('https://cache.bando.com.vn/service?','vietnam_label_2026',true,0,16);
+const nguon_tenxa=co_nguon_img_wms(wms1,'bandot','/opt/sapnhap/tenxa5.qgz','qgis');
+lop_tenxa=tao_lop_img_wms(nguon_tenxa);
+//ranhgioi
+const nguonRG=co_nguon_tile_wms(wms1,'bando','/opt/sapnhap/rgvn10.qgz','qgis');
+lop_rgvn=tao_lop_tile_wms(nguonRG);
+//info
+const nguonTim=co_nguon_tile_wms(wms1,'bando','/opt/sapnhap/vnsapnhap10.qgz','qgis');
+lop_tim=tao_lop_tile_wms(nguonTim);
+//nen bien tap
+const nguonBT=co_nguon_tile_wms(wms1,'bando','/opt/sapnhap/vnsapnhap_bt10.qgz','qgis');
+lop_vung_bt=tao_lop_tile_wms(nguonBT);
+//--
+const lopbando=[lop_anhdiahinh,lop_anhvetinh,lop_vn1tr,lop_rgvn,lop_vn1tr_label,lop_tenxa];
+map=tao_map(lopbando,'vungbando',view=tao_view(o_map.tam_x,o_map.tam_y,o_map.zoom,o_map.zoom_min,o_map.zoom_max,null));
+//bat dau load map
+map.once('loadstart', function(event) {
+	$('#status_load').show();
+});
+//ket thuc load map
+map.once('loadend', function(event) {
+	$('#status_load').hide();
+	kinkhungnhin();
+	//an zoomin, zoomout default
+	map.getControls().forEach(function(control) {
+		map.removeControl(control);
+	});
+	//them control print
+	map.addControl(printControl);
+	//control scaleline
+	map.addControl(
+		new ol.control.ScaleLine({
+	   	units: 'metric',
+	 	})
+	);
+	//--
+	mucview=1;
+	molopNEN('anhdiahinh');
+	tatlopNEN('anhvetinh');
+	//--
+	map.addLayer(td_vectorLayer);
+	//--
+	lop_dodac=new VectorLayer('Lớp đo đạc', map).layer;
+	map.addLayer(lop_dodac);
+	//--
+	lop_vector_tam=new ol.layer.Vector({source:nguon_tam, style:kieuPLA1});
+	map.addLayer(lop_vector_tam);
+	//--
+	thaydoi_dophangiai();
+	//lop tim kiem
+	map.addLayer(lop_tim);
+	//lop popup
+	map.addOverlay(overlay);
+	//chuyen mon cua toi
+	//map.addLayer(lop_cm['ck']);
+	//map.addLayer(lop_cm['moc']);
+	//--
+	mucviewC=1;
+	//tatlopCM_tat();
+	dat_opacity(lop_vn1tr,0.6);
+	//check url shared
+	const myTimeout = setTimeout(myStopFunction, 1000);
+	function myStopFunction() {
+	  clearTimeout(myTimeout);
+	  kiemtra_chiase();
+	}
+});
+//nhan vao ban do
+map.on("singleclick", function(evt) {
+	//dan duong
+	if (dangnhan[0]=='chonpt') {
+		timduongdi(evt);
+		return;
+	}
+	//them, sua, xoa, sua thong tin =>co doi tuong duoc chon
+	if (dangnhan[1]=='them' || dangnhan[1]=='suakg' || dangnhan[1]=='xoa' || dangnhan[1]=='suatt') {
+		const zoom = view.getZoom();
+		if (zoom<11) {
+			view.setZoom(11);
+			const lonlat = ol.proj.toLonLat(evt.coordinate); //chuyen tu 3857 sang longlat
+			view.setCenter(ol.proj.fromLonLat([lonlat[0], lonlat[1]], 'EPSG:3857'));
+		}
+		nhanVaoBando(map,view,lop_vung_bt,evt['coordinate'],'bt');
+		return;
+	}
+	//info
+	if (dangnhan[1]=='dodac') return;
+	huychon();
+	//--
+	/*
+	const elem = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+		//const ma = feature.get("ma");
+    return feature;
+  });
+  //nhan vao diem chuyen mon
+  /*
+  if (elem) {
+  	cott_diem_cm(evt,elem);
+	} else nhanVaoBando(map,view,lop_tim,evt['coordinate'],'xem');
+	*/
+	nhanVaoBando(map,view,lop_tim,evt['coordinate'],'xem');
+});
+//toa do
+map.on('pointermove', e => {
+	const [lon, lat] = ol.proj.toLonLat(e.coordinate);
+	document.getElementById('lon').textContent = lon.toFixed(6);
+	document.getElementById('lat').textContent = lat.toFixed(6);
+});
+//thay doi zoom
+view.on('change:resolution',()=>{
+	thaydoi_dophangiai();
+});
+//chỉ clamp khi drag (pan)
+map.on('pointerdrag', () => {
+	if (!isZooming) {
+		clampCenter();
+	}
+});
+}
+//end
+batdau();
+//--
+//==
+function dat_opacity(lop,x) {
+	lop.setOpacity(x);
+}
+//co_nguon_cm_chung();
+function co_nguon_cm_chung() {
+	goiSV('pco_dulieu_chung','post','text',{ma:'0'},function(kq) {
+		if (kq.trim()!='[]') {
+			var sy=$.parseJSON(kq.trim());
+			var elems=[];
+			nguon_cm_chung.clear();
+			sy.forEach((elem,id)=>{
+				elems.push({label:elem.ten,ma:elem.ma});
+				nguon_cm_chung.addFeature(tao_diem(elem.x,elem.y,elem.ma));
+			});
+			//tim kiem
+			$('#timnhanh').autocomplete({
+				source:elems,
+				select: function(event, ui) {
+      		$('#timnhanh').val(ui.item.label);
+      		timBoiMa(ui.item.ma,nguon_cm_chung,'ma');
+      		$('.clear-btn').show();
+      		return false;
+      	}
+			});
+			// Hiện nút X khi có dữ liệu
+	    $('#timnhanh').on('input', function () {
+        $('.clear-btn').toggle($(this).val().length > 0);
+	    });
+	    // Xóa nội dung khi bấm nút X
+	    $('.clear-btn').on('click', function () {
+        $('#timnhanh').val('').focus();
+        $(this).hide();
+	    });
+	    //==
+		}
+	});
+}
+function timBoiMa(ma,nguon,thuoctinh) {
+	//Duyệt qua tất cả các feature trong vector source
+  nguon.forEachFeature(function(feature) {
+  	if (feature.get(thuoctinh) === ma) {
+  		huychon();
+  		chonDoiTuong_vector(feature);
+  	}
+  });
+}
+//--
+function cott_diem_cm(evt,elem) {
+	const ma1=elem.get("ma");
+	goiSV('pco_elem_id','post','text',{ma:ma1},function(kq) {
+		if (kq.trim()!='[]') {
+			var sy=$.parseJSON(kq.trim());
+			var k='';
+			k='Tên: <strong>'+sy[0].ten+'</strong><br>';
+			k=k+'Địa chỉ: '+sy[0].dc+'<br>';
+			k=k+'Điện thoại: '+sy[0].dt+'<br>';
+			k=k+'Thông tin:<br>'+sy[0].mt+'<br>';
+			k=k+'Ảnh:<br><img src="sda/'+sy[0].anh+'" style="width:100%" onclick="xemanh_lon(this)"><br>';
+			hienthi_overlay(evt,k);
+			chonDoiTuong_vector(elem);
+		}
+	});
+}
+function chonDoiTuong_vector(elem) {
+	var style = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: '#FFFF00',
+			lineDash: [4],
+			width: 7
+		}),
+		fill: new ol.style.Fill({
+			color: 'rgba(235, 35, 205, 0.3)',
+		}),
+		image: new ol.style.Circle({
+			radius: 7,
+			fill: new ol.style.Fill({
+				color: '#ffff00'
+			})
+		})
+	});
+	var vectorSource= new ol.source.Vector({});
+	vectorSource.addFeature(elem);
+	choosedFeature = new ol.layer.Vector({
+		source: vectorSource,
+		style: style,
+		zIndex: 10,
+	});
+	map.addLayer(choosedFeature);
+	choosedFeature.getSource().on('addfeature', function () {
+	});
+	//--
+	var geometry = elem.getGeometry();
+  var extent = geometry.getExtent();
+  map.getView().fit(extent, { duration: 1000, padding: [100, 100, 100, 100], maxZoom:17});
+	//--
+	blinkVectorLayer(choosedFeature,9000,400);
+}
+//==
+function molopNEN(ma) {
+	const s1='#mo_'+ma;
+	const s2='#tat_'+ma;
+	$(s1).hide();
+	$(s2).show();
+	switch(ma) {
+		case 'vn1tr':
+			/*
+			if (tylebando<=350000) {
+				lop_vn350k.setVisible(true);
+				lop_vn1tr.setVisible(false);
+			} else {
+				lop_vn350k.setVisible(false);
+				lop_vn1tr.setVisible(true);
+			}
+			*/
+			lop_vn1tr.setVisible(true);
+			lop_vn1tr_label.setVisible(true);
+			break;
+		case 'anhvetinh':
+			lop_anhvetinh.setVisible(true);
+			break;
+		case 'anhdiahinh':
+			lop_anhdiahinh.setVisible(true);
+			break;
+		default: break;
+	}
+}
+function tatlopNEN(ma) {
+	const s1='#mo_'+ma;
+	const s2='#tat_'+ma;
+	$(s1).show();
+	$(s2).hide();
+	switch(ma) {
+		case 'vn1tr':
+			/*
+			if (tylebando<=350000) {
+				lop_vn350k.setVisible(false);
+			} else {
+				lop_vn1tr.setVisible(false);
+			}
+			*/
+			lop_vn1tr.setVisible(false);
+			lop_vn1tr_label.setVisible(false);
+			break;
+		case 'anhvetinh':
+			lop_anhvetinh.setVisible(false);
+			break;
+		case 'anhdiahinh':
+			lop_anhdiahinh.setVisible(false);
+			break;
+		default: break;
+	}
+}
+//cong cu ban do
+function anhien_lop() {
+	$("#cuasothongtin").dialog('close');
+	$('#cuasolop').dialog("option", "title", "Các lớp bản đồ");
+	if ($("#cuasolop").dialog("isOpen")) {
+		$("#cuasolop").dialog('close');
+	} else {
+		$("#cuasolop").dialog('open');
+	}
+}
+//--
+tao_hop_cuatoi();
+function tao_hop_cuatoi() {
+	var k='';
+	k=k+tao_lop_cm('lop1','Điểm',false);
+	k=k+tao_lop_cm('lop2','Đường',false);
+	k=k+tao_lop_cm('lop3','Vùng',false);
+	k='Chức năng này đang được hoàn thiện';
+	datHTML($('#hoplop_cuatoi'),k).then(()=> {
+		tao_hop_chiase();
+	});
+}
+function tao_hop_chiase() {
+	var k='';
+	k=k+tao_lop_cm('lopa1','Dữ liệu của A',false);
+	k=k+tao_lop_cm('lopb1','Dữ liệu của...',false);
+	k='Chức năng này đang được hoàn thiện';
+	datHTML($('#hoplop_chiase'),k).then(()=> {
+		tao_hop_bandonen();
+	});
+}
+function tao_lop_cm(ma,ten,tat) {
+	var k=`<div class="nutmn w3-border" style="display:flex">
+		<div style="width:30px; padding:6px" onclick="moHopCon('${ma}')"><i class="fa-solid fa-caret-down fa-xl"></i></div>
+		<div style="flex:1; width:100%" onclick="zoomLop('${ma}')">${ten}<sup class="w3-circle w3-green w3-small" style="padding:2px 5px 2px 5px" id="sl_${ma}"></sup></div>
+		<div style="width:60px; display:flex">`;
+	if (tat) {
+		k=k+`<a id="mo_${ma}" href="javascript:void(0)" onclick="molopCM('${ma}')" style="display:none" title="Bật lớp"><i class="fa-regular fa-eye-slash" style="margin:5px"></i></a>
+		<a id="tat_${ma}" href="javascript:void(0)" onclick="tatlopCM('${ma}')" title="Tắt lớp"><i class="fa-regular fa-eye" style="margin:5px"></i></a>`;
+	} else {
+		k=k+`<a id="mo_${ma}" href="javascript:void(0)" onclick="molopCM('${ma}')" title="Bật lớp"><i class="fa-regular fa-eye-slash" style="margin:5px"></i></a>
+		<a id="tat_${ma}" href="javascript:void(0)" onclick="tatlopCM('${ma}')" style="display:none" title="Tắt lớp"><i class="fa-regular fa-eye" style="margin:5px"></i></a>`;
+	}
+	//--
+	k=k+`<a href="javascript:void(0)" onclick="doiKyHieu('${ma}')" title="Thay đổi ký hiệu"><i class="fa-solid fa-gears" style="margin:5px"></i></a>
+		</div>
+		</div>`;
+	k=k+`<div id="hopcon_${ma}" class="mn_con"></div>`;
+	return k;
+}
+//==
+function tao_hop_bandonen() {
+	var k='';
+	k=k+tao_lop_nen('vn1tr','Bản đồ nền Việt Nam',true);
+	//k=k+tao_lop_nen('osm','Bản đồ nền OSM',false);
+	k=k+tao_lop_nen('anhvetinh','Ảnh vệ tinh (tham khảo)',false); 
+	k=k+tao_lop_nen('anhdiahinh','Ảnh địa hình (tham khảo)',true);
+	datHTML($('#hoplop_bandonen'),k).then(()=> {
+		//tao_dulieu_cm();
+	});
+}
+function tao_lop_nen(ma,ten,tat) {
+	var k='';
+	if (tat)
+	k=`<div class="nutmn w3-border" style="display:flex">
+		<div style="flex:1">${ten}</div>
+		<div style="width:30px; display:flex">
+			<a id="mo_${ma}" href="javascript:void(0)" onclick="molopNEN('${ma}')" style="display:none" title="Bật lớp"><i class="fa-regular fa-eye-slash"></i></a><a id="tat_${ma}" href="javascript:void(0)" onclick="tatlopNEN('${ma}')" title="Tắt lớp"><i class="fa-regular fa-eye"></i></a>
+		</div>
+	</div>`;
+	else
+	k=`<div class="nutmn w3-border" style="display:flex">
+		<div style="flex:1">${ten}</div>
+		<div style="width:30px; display:flex">
+			<a id="mo_${ma}" href="javascript:void(0)" onclick="molopNEN('${ma}')" title="Bật lớp"><i class="fa-regular fa-eye-slash"></i></a><a id="tat_${ma}" href="javascript:void(0)" onclick="tatlopNEN('${ma}')" style="display:none" title="Tắt lớp"><i class="fa-regular fa-eye"></i></a>
+		</div>
+	</div>`;
+	return k;
+}
+//--
+function tao_dulieu_cm() {
+	//cua toi
+	co_dulieu_cm('ck','vn','1');
+	co_dulieu_cm('moc','vn','1');
+	co_dulieu_cm('ca','vn','1');
+	//chia se
+	co_dulieu_cm('ck','vn','0');
+	co_dulieu_cm('moc','vn','0');
+	co_dulieu_cm('ca','vn','0');
+}
+function co_dulieu_cm(lop,qg,dk) {
+	var s='#hopcon_'+lop;
+	var lopX=lop;
+	if (dk=='0') {
+		s='#hopcon_db'+lop;
+		lopX='db'+lop;
+	}
+	const nguonCM=nguon_cm[lopX];
+	const lopCM=lop_cm[lopX];
+	nguonCM.clear();
+	goiSV('pco_dulieu_dave','post','text',{lop:lop,qg:qg,bang:dk},function(kq) {
+		if (kq.trim()!='[]') {
+			var sy=$.parseJSON(kq.trim());
+			var k='';
+			const kieu=tao_style_diem('url','sda/kyhieu/'+sy[0].kyhieu,sy[0].kco,'#000000',2,'#000000');
+			lopCM.setStyle(kieu);
+			sy.forEach((elem,id)=>{
+				k=k+'<div class="w3-button w3-border" onclick="timElem(\''+elem.ma+'\',\'ma\')" style="width:100%; text-align:left">'+elem.ten+'</div>';
+				nguonCM.addFeature(tao_diem(elem.x,elem.y,elem.ma));
+			});
+			$(s).html(k);
+			hienthi_soluong(lopX,sy.length);
+		} else {
+			hienthi_soluong(lopX,0);
+		}
+	});
+}
+function hienthi_soluong(ma,sl) {
+	const s='#sl_'+ma;
+	$(s).text(sl);
+}
+function timElem(ma,thuoctinh) {
+	timBoiMa(ma,nguon_cm_chung,thuoctinh);
+}
+//--
+function moHopCon(lop) {	
+	const s='#hopcon_'+lop;
+	if ($(s).is(':visible')) {
+		$(s).hide();
+	} else {
+		$('.mn_con').hide();
+		$(s).show();
+	}
+}
+//--
+function molopCM(ma) {
+	const s1='#mo_'+ma;
+	const s2='#tat_'+ma;
+	$(s1).hide();
+	$(s2).show();
+	lop_cm[ma].setVisible(true);
+}
+function tatlopCM(ma) {
+	const s1='#mo_'+ma;
+	const s2='#tat_'+ma;
+	$(s1).show();
+	$(s2).hide();
+	lop_cm[ma].setVisible(false);
+}
+function tatlopCM_tat() {
+	tatlopCM('ck');
+	tatlopCM('moc');
+}
+function molopCM_tat() {
+	molopCM('ck');
+	molopCM('moc');
+}
+//--
+function zoomLop(ma) {
+	var lop=lop_cm[ma];
+	const extent = lop.getSource().getExtent();
+	if (!ol.extent.isEmpty(extent)) {
+		map.getView().fit(extent, {
+		  duration: 1000, // hiệu ứng zoom mượt trong 1 giây
+		  padding: [50, 50, 50, 50], // padding nếu muốn chừa khoảng cách
+		  maxZoom: 16 // đặt zoom tối đa nếu cần
+		});
+	}
+	//--
+	blinkVectorLayer(lop,9000,400);
+}
+//--
+function phongtobando() {
+	const view = map.getView();
+  const zoom = view.getZoom();
+  view.setZoom(zoom + 1);
+}
+function thunhobando() {
+	const view = map.getView();
+  const zoom = view.getZoom();
+  view.setZoom(zoom - 1);
+}
+function kinkhungnhin() {
+  view.setCenter(ol.proj.fromLonLat([o_map.tam_x,o_map.tam_y], 'EPSG:3857'));
+	//view.setZoom(o_map.zoom);
+	dat_tyle('15000000');
+}
+function dichuyenbando() {
+	huychon();
+	huydodac();
+	if (dangnhan[1]=='dodac') huydodac();
+	dangnhan[1]='pan';
+	$('.nutcongcu_nhan').attr('class','nutcongcu');
+	$('#nutpan').attr('class','nutcongcu_nhan');
+}
+function xemthongtin() {
+	huychon();
+	huydodac();
+	if (dangnhan[1]=='dodac') huydodac();
+	dangnhan[1]='info';
+	$('.nutcongcu_nhan').attr('class','nutcongcu');
+	$('#nutinfo').attr('class','nutcongcu_nhan');
+}
+function inbando() {
+	printControl.print();
+}
+//huy do dac
+function huydodac() {
+	//xoa cac overlay khoi map
+	clear_draw(map);
+	//gan lai overlay info
+	map.addOverlay(overlay);
+	//--
+	if (lop_dodac) {
+		lop_dodac.getSource().clear();
+	}
+}
+function dochieudai() {
+	huydodac();
+	huychon();
+	dangnhan[1]='dodac';
+	draw_dodac=new Draw("LineString", map, lop_dodac);
+}
+function dodientich() {
+	huydodac();
+	huychon();
+	dangnhan[1]='dodac';
+	draw_dodac=new Draw("Polygon", map, lop_dodac);
+}
+function xemchugiai() {
+	if (dangnhan[1]=='dodac') huydodac();
+	const cg='cg/cg6.jpg';
+	$('#vungthongtin').html('<center><img src="'+cg+'"></center>');
+	$('#cuasothongtin').dialog("option", "title", "Bảng chú giải");
+	if ($("#cuasothongtin").dialog("isOpen")) {
+		$("#cuasothongtin").dialog('close');
+	} else {
+		$("#cuasothongtin").dialog('open');
+	}
+}
+//==
+//Khóa pan theo center
+function clampCenter() {
+	const center = view.getCenter();
+	if (!center) return;
+	let [lon, lat] = ol.proj.toLonLat(center);
+	let changed = false;
+	if (lon < CENTER_LIMIT.minLon) {
+		lon = CENTER_LIMIT.minLon;
+		changed = true;
+	}
+	if (lon > CENTER_LIMIT.maxLon) {
+		lon = CENTER_LIMIT.maxLon;
+		changed = true;
+	}
+	if (lat < CENTER_LIMIT.minLat) {
+		lat = CENTER_LIMIT.minLat;
+		changed = true;
+	}
+	if (lat > CENTER_LIMIT.maxLat) {
+		lat = CENTER_LIMIT.maxLat;
+		changed = true;
+	}
+	if (changed) {
+		view.setCenter(ol.proj.fromLonLat([lon, lat]));
+	}
+}
+//==
+//nhập scale → đổi zoom
+scaleInput.addEventListener("keydown", function (event) {
+	if (event.key!='Enter') return;
+	dat_tyle(null);
+});
+function dat_tyle(tyle) {
+	const htyle=document.getElementById('scaleInput');
+	if (tyle!=null) htyle.value=tyle;
+	let value = htyle.value.replace(/\D/g, ""); // bỏ hết ký tự không phải số
+	if (value) {
+		htyle.value = Number(value).toLocaleString("vi-VN");
+		const rawValue = htyle.value.replace(/\./g, "");
+		const scale=Number(rawValue); //1000000
+		const resolution = scale / (DPI * 39.37 * mpu);
+		view.setResolution(resolution);
+	}
+}
+//=========================
+//Trạng thái zoom
+function thaydoi_dophangiai() {
+	isZooming = true;
+	//zoom kết thúc sau 120ms
+	clearTimeout(view._zoomTimer);
+	view._zoomTimer = setTimeout(() => {
+		isZooming = false;
+		clampCenter(); // fix lại 1 lần sau zoom
+	}, 120);
+	//hop ty le
+	const resolution = view.getResolution();
+	const scale = resolution * DPI * 39.37 * mpu;
+	const r_scale=Math.round(scale);
+	tylebando=scale;
+	scaleInput.value = r_scale.toLocaleString("vi-VN");
+	//thay doi vung khong che pan
+	if (scale<=250000 && limit!='2') {
+		CENTER_LIMIT=CENTER_LIMIT2;
+	}	
+	if (scale>250000 && limit!=1) {
+		CENTER_LIMIT=CENTER_LIMIT1;
+	}
+	//--
+	theotyle();
+}
+//an hien lop theo ty le va dang nhap
+function theotyle() {
+	const tyle=tylebando;
+	if (tyle>=900000 && mucview!=1) {
+		mucview=1;
+		molopNEN('anhdiahinh');
+		tatlopNEN('anhvetinh');
+		dat_opacity(lop_vn1tr,0.6);
+	}
+	if (tyle<900000 && mucview!=2) {
+		mucview=2;
+		tatlopNEN('anhdiahinh');
+		molopNEN('anhvetinh');
+		dat_opacity(lop_vn1tr,0.2);
+	}
+	//--
+	if (tyle>250000 && mucviewC!=1) {
+		mucviewC=1;
+		//tatlopCM_tat();
+	}
+	if (tyle<=250000 && mucviewC!=2) {
+		mucviewC=2;
+		//molopCM_tat();
+	}
+}
+//nhan vao ban do
+function huychon() {
+	if (choosedFeature) {
+		//choosedFeature.getSource().clear();
+		map.removeLayer(choosedFeature);
+	}
+	if (lop_vector_tam) lop_vector_tam.getSource().clear();
+	if (td_vectorSource) td_vectorSource.clear();
+	//--
+	huyBienTap();
+}
+function nhanVaoBando(map,view,lop_tile,toadodiem,khoa) {
+	//convert sang projection của map
+  //const toadodiem = ol.proj.fromLonLat([lon, lat]);
+	var viewResolution = view.getResolution();
+	var urlfeature = lop_tile.getSource().getFeatureInfoUrl(
+		toadodiem,
+		viewResolution,
+		'EPSG:3857',
+		{'INFO_FORMAT': 'application/json',
+			FEATURE_COUNT: 60,
+      FI_POINT_TOLERANCE:10, //Tolerance in pixels for point layers
+		}
+	);
+	if (urlfeature) {
+		fetch(urlfeature).then(function (response) {return response.json();}).then((res) => {
+			return res.features;
+		}).then(function (features) {
+			const elems=features;
+			if (elems.length>0) {
+				if (khoa=='bt') {
+					const o=elems[0].properties;
+					//console.log(o);
+					vung_bientap.qg=o.qg;
+					vung_bientap.tinh=o.tinh;
+					vung_bientap.huyen=o.huyen;
+					vung_bientap.xa=o.xa;
+				} else {
+					var props=elems[0];
+					delete props.properties.geometry; //xoa thuoc tinh hinh hoc
+					delete props.properties.fid; //xoa thuoc tinh fid
+					taoBangTT(props,toadodiem);
+				}
+			} else {
+				if (khoa=='bt') {
+					vung_bientap.qg='0';
+					alert('Điểm nằm ngoài phạm vi dữ liệu phiên bản Demo. Tạm thời không cho lưu.\Hãy di chuyển vào bên trong vùng đất liền Việt Nam và các xã Trung Quốc giáp Việt Nam.');
+					$("#cuasobientap").dialog("close");
+					huychon();
+				}
+			}
+		});
+	} //end if
+}
+function taoBangTT(elem,toadodiem) {
+	const ma=elem.id;
+	if (ma.includes('diaphanhanhchinhcapxa') || ma.includes('diaphanhanhchinhcaptinh')) {
+		const malk=ma.replaceAll('.','_');
+		chon_node(malk);
+	} else { //uy ban
+		chonDoiTuong(elem.id);
+		coThongTin(elem,toadodiem);
+	}
+	//console.log(elem.id);
+}
+function coThongTin(elem,toadodiem) {
+	//Co array ten cac truong thuoc tinh cua elem
+	const tieude=Object.keys(elem.properties); //.reverse();
+	//Co array gia tri cac thuoc tinh cua elem tuong ung voi cac truong thuoc tinh
+	const giatri=Object.values(elem.properties); //.reverse();
+	//--
+	var k = '';
+	var td='';
+	var td1='';
+	var gt='';
+	for (var i=0; i<tieude.length; i++) {
+		td=tieude[i].substr(4);
+		td1=td;
+		switch(td) {
+			case 'ten': td=''; break;
+			case 'gc': td='- Ghi chú: '; break;
+			case 'tenxa': td='- Thuộc xã: '; break;
+			case 'tentinh': td='- Thuộc tỉnh: '; break;
+			case 'truocsn': td='- Sáp nhập từ: '; break;
+			case 'trungtamhc': td='- Trung tâm hành chính mới: '; break;
+			case 'dt': td='- Diện tích (km2): '; break;
+			case 'ds': td='- Dân số (người): '; break;
+			case 'diachi': td='- Dân số (người): '; break;
+			case 'dthoai': td='- Điện thoại: '; break;
+			case 'web': td='- Website: '; break;
+			default: break;
+		}
+		if (td1!='tinh' && td1!='xa' && td1!='ma') {
+			gt=giatri[i];
+			if (td1=='ten') gt='<span style="color:red"><b>'+gt+'</b></span>';
+			if (gt==null) gt='đang cập nhật';
+			if (td1=='web' && gt!='') gt='<a href="'+gt+' target="blank">'+gt+'</a>';
+			k=k+'<b>'+td+'</b>'+gt+'<br>';
+		}
+	}
+	co_thongke_cm(elem.id,toadodiem,k);
+}
+function co_thongke_cm(ma,toadodiem,thongtin) {
+	hienthi_overlay(toadodiem,thongtin);
+	/*
+	if (ma.includes('diaphanhanhchinhcapxa') || ma.includes('diaphanhanhchinhcaptinh')) {
+	} else {
+		//hien thi thong tin goc
+		hienthi_overlay(evt,thongtin);
+		return;
+	}
+	//hien thi them thong tin thong ke
+	var ma1=ma;
+	var cap='qg';
+	if (ma.includes('captinh') || ma.includes('adm1')) cap='tinh';
+	if (ma.includes('adm2')) cap='huyen';
+	if (ma.includes('capxa') || ma.includes('adm3')) cap='xa';
+	if (cap=='qg') {
+		//can xem lai: phai ket hop voi chieu cua tuyen: vntq, tqvn?...
+		switch (ma) {
+			case 'biengioi_duong1.3': ma1='vn'; break;
+			case 'biengioi_duong1.2': ma1='vn'; break;
+			default: ma1='vn'; break;
+		}
+	}
+	goiSV('pco_thongke','post','text',{ma:ma1,cap:cap},function(kq) {
+		var k=thongtin+'<br>';
+		var dem={'ck':0,'moc':0,'ca':0,'hc':0,'qs':0,'kt':0,'cho':0,'th':0,'bv':0};
+		if (kq!='[]') {
+			var sy=$.parseJSON(kq.trim());
+			sy.forEach((elem,id)=>{
+				dem[elem.lop]=elem.tong;
+			});
+		}
+		k=k+'------<br>';
+			k=k+'<b>Thông tin thống kê:</b><br>';
+			k=k+'+ Cửa khẩu: '+dem['ck']+'<br>';
+			k=k+'+ Mốc biên giới: '+dem['moc']+'<br>';
+			k=k+'+ Trụ sở công an: '+dem['ca']+'<br>';
+			k=k+'+ Trụ sở hành chính: '+dem['hc']+'<br>';
+			k=k+'+ Khu vực quân sự: '+dem['qs']+'<br>';
+			k=k+'+ Khu vực kinh tế: '+dem['kt']+'<br>';
+			k=k+'+ Chợ, TT thương mại: '+dem['cho']+'<br>';
+			k=k+'+ Trường học: '+dem['th']+'<br>';
+			k=k+'+ Bệnh viện: '+dem['bv']+'<br>';
+			k=k+'<br>';
+			hienthi_overlay(evt,k);
+	});
+	*/
+}
+function hienthi_overlay(toadodiem,thongtin) {
+	if (thongtin!='') {
+		content.innerHTML=thongtin;
+		overlay.setPosition(toadodiem);
+		//note: toadodiem: toado cua ban do hien tai, thuong la: 3587
+		//neu o dang [long lat] thi phai chuyen sang 3587
+		//const coord = ol.proj.fromLonLat([lon, lat]);
+  } else {
+		overlay.setPosition(undefined);
+	}
+}
+function chonDoiTuong(id) {
+	huychon();
+	var style = new ol.style.Style({
+		stroke: new ol.style.Stroke({
+			color: '#FFFF00',
+			lineDash: [4],
+			width: 7
+		}),
+		fill: new ol.style.Fill({
+			color: 'rgba(235, 35, 205, 0.3)',
+		}),
+		image: new ol.style.Circle({
+			radius: 7,
+			fill: new ol.style.Fill({
+				color: '#f08951'
+			})
+		})
+	});
+	var vectorSource= new ol.source.Vector({
+		strategy: ol.loadingstrategy.bbox,
+		loader: function() {
+			const o1={id:id};
+			goiSV('pread_json','post','text',o1,function(kq) {
+				if (kq!='') {
+					var dat=$.parseJSON(kq.trim());
+					const features = new ol.format.GeoJSON().readFeatures(dat,{defaultDataProjection:"EPSG:4326",featureProjection:"EPSG:3857"});
+					vectorSource.addFeatures(features);
+				}
+			});
+		},
+		format: new ol.format.GeoJSON(),
+	});
+	choosedFeature = new ol.layer.Vector({
+		source: vectorSource,
+		style: style,
+		zIndex: 10,
+	});
+	map.addLayer(choosedFeature);
+	choosedFeature.getSource().on('addfeature', function () {
+		map.getView().fit(
+			choosedFeature.getSource().getExtent(),
+			{duration: 500, size: map.getSize(), maxZoom:13}
+		);
+	});
+	blinkVectorLayer(choosedFeature,9000,400);
+}
+//tao hieu ung nhap nhay lop trong 5s
+function blinkVectorLayer(vectorLayer, duration = 5000, interval = 500) {
+  // Lưu lại style gốc (có thể là null nếu dùng style mặc định)
+  const originalStyle = vectorLayer.getStyle();
+  // Tạo một style "ẩn" (không hiển thị gì cả)
+  const hiddenStyle = function () {
+    return null;
+  };
+  let visible = true;
+  const start = Date.now();
+  const blinkInterval = setInterval(() => {
+    const now = Date.now();
+    if (now - start >= duration) {
+      clearInterval(blinkInterval);
+      vectorLayer.setStyle(originalStyle); // Khôi phục lại style ban đầu
+      return;
+    }
+    if (visible) {
+      vectorLayer.setStyle(hiddenStyle); // Ẩn
+    } else {
+      vectorLayer.setStyle(originalStyle); // Hiện
+    }
+    visible = !visible;
+  }, interval);
+}
+//==
+//===========
+function co_diem_vitri(ma,ten,x,y,zoom) {
+	if (view) {
+		huychon();
+		ve_diem_vitri(ten,Number(x), Number(y));
+		const maxView=view.getMaxZoom()-5;
+		if (zoom==0) view.setZoom(maxView);
+		else view.setZoom(zoom);
+  	view.setCenter(ol.proj.fromLonLat([Number(x), Number(y)], 'EPSG:3857'));
+	}
+}
+function ve_diem_vitri(ten,x,y) {
+	huychon();
+	var	pDiem = new ol.Feature({
+	  geometry: new ol.geom.Point(ol.proj.fromLonLat([x, y])),
+	  name: ten,
+	});
+	const iconStyle = new ol.style.Style({
+		image: new ol.style.Icon({
+			anchor: [0.5, 46],
+			anchorXUnits: 'fraction',
+  	  anchorYUnits: 'pixels',
+  	  src: 'img/pos1.jpg',
+    	scale: 0.1
+  	})
+	});
+	const labelStyle = new ol.style.Style({
+	  text: new ol.style.Text({
+	    font: '20px Calibri,sans-serif',
+	    overflow: true,
+	    fill: new ol.style.Fill({
+	      color: '#000'
+	    }),
+	    stroke: new ol.style.Stroke({
+	      color: '#fff',
+	      width: 3
+	    }),
+	    offsetY: -12
+	  })
+	});
+	var style = [iconStyle, labelStyle];
+	lop_vector_tam.getSource().addFeature(pDiem);
+	lop_vector_tam.setStyle(function(feature) {
+		labelStyle.getText().setText(feature.get('name'));
+		return style;
+	});
+}
+//==
+//tim duong
+function timduongdi(evt) {
+	const coord = ol.proj.toLonLat(evt.coordinate);
+	if (!start) {
+		start = coord;
+		addMarker(coord, 'green');
+		updateInfo("Đã chọn điểm bắt đầu.");
+		clearDirections();
+	} else if (!end) {
+		end = coord;
+		addMarker(coord, 'red');
+		const transport = document.getElementById('transport').value;
+		getRoute(start, end, transport);
+	} else {
+		td_vectorSource.clear();
+		clearDirections();
+		start = coord;
+		end = null;
+		addMarker(coord, 'green');
+		updateInfo("Đã chọn lại điểm bắt đầu.");
+	}
+}
+function addMarker(coord, color) {
+	const feature = new ol.Feature({
+		geometry: new ol.geom.Point(ol.proj.fromLonLat(coord))
+	});
+	feature.setStyle(new ol.style.Style({
+		image: new ol.style.Circle({
+			radius: 6,
+			fill: new ol.style.Fill({ color: color }),
+			stroke: new ol.style.Stroke({ color: '#fff', width: 2 })
+		})
+	}));
+	td_vectorSource.addFeature(feature);
+}
+
+function getRoute(start, end, transport) {
+	const url = `https://router.project-osrm.org/route/v1/${transport}/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
+	fetch(url)
+	.then(response => response.json())
+	.then(data => {
+		if (data.routes && data.routes.length > 0) {
+			const route = data.routes[0].geometry;
+			const legs = data.routes[0].legs;
+			//Vẽ tuyến đường
+			const format = new ol.format.GeoJSON();
+			const routeFeature = format.readFeature({
+				type: 'Feature',
+				geometry: route
+      }, {
+				dataProjection: 'EPSG:4326',
+				featureProjection: 'EPSG:3857'
+			});
+			td_vectorSource.addFeature(routeFeature);
+			//Thông tin quãng đường và thời gian
+			const distance = data.routes[0].distance / 1000; // km
+      const duration = data.routes[0].duration / 60;   // phút
+			updateInfo(`Độ dài: ${distance.toFixed(2)} km | Thời gian: ${duration.toFixed(1)} phút`);
+			//Hiển thị danh sách hướng dẫn
+      showDirections(legs[0].steps);
+		} else {
+			updateInfo("Không tìm thấy tuyến đường.");
+		}
+	})
+	.catch(err => {
+		console.error('Lỗi:', err);
+		updateInfo("Không thể lấy dữ liệu từ OSRM.");
+	});
+}
+function showDirections(steps) {
+	const directionsDiv = document.getElementById('vungthongtin');
+	if (!steps.length) {
+		directionsDiv.innerHTML = "<em>Không có hướng dẫn chi tiết.</em>";
+		return;
+	}
+	let html = "<strong>Hướng dẫn đi:</strong><ol>";
+	steps.forEach((step, index) => {
+		const instruction = step.maneuver.instruction || step.name || 'Đi tiếp';
+		const dist = (step.distance / 1000).toFixed(2);
+		html += `<li>${instruction} (${dist} km)</li>`;
+	});
+	html += "</ol>";
+	directionsDiv.innerHTML = html;
+	//--
+	$('#cuasothongtin').dialog("option", "title", "Chỉ dẫn đường đi");
+	$("#cuasothongtin").dialog("open");
+}
+function clearDirections() {
+	$('#vungthongtin').html("<em>Đã chọn điểm xuất phát.<br>Hãy nhấn vào bản đồ chọn điểm cần đến</em>");
+}
+function updateInfo(msg) {
+	$('#vungthongtin').html(msg);
+	$('#cuasothongtin').dialog("option", "title", "Chỉ dẫn đường đi");
+	$("#cuasothongtin").dialog("open");
+}
+//==
+//bien tap
+function nhanNut(nut) {
+	dangnhan[1]='pan';
+	huychon();
+	dangnhan[1]=nut;
+	switch(nut) {
+		case 'them': veDoiTuong(); break;
+		case 'suakg': suaDoiTuong(); break;
+		case 'xoa': xoaDoiTuong(); break;
+		case 'suatt': chonDoiTuong_ve(); break;
+		default: break;
+	}
+}
+let veElem=null;
+let suaElem=null;
+let chonElem=null;
+let da_luu=false;
+let elem_dave=null;
+let kieuve='Point';
+function huyBienTap() {
+	elem_dave=null;
+	da_luu=false;
+	if (veElem)	map.removeInteraction(veElem); //veElem.setActive(false);
+	if (suaElem) map.removeInteraction(suaElem); //suaElem.setActive(false);
+	if (chonElem) map.removeInteraction(chonElem); //chonElem.setActive(false);
+}
+function veDoiTuong() {
+	huychon();
+	nguonve=lop_vector_tam.getSource();
+	kieuve='Point';
+	veElem = new ol.interaction.Draw({
+		source: nguonve,
+		type: kieuve  // Change to 'Point', 'LineString', 'Polygon'
+	});
+	map.addInteraction(veElem);
+	//neu dang ve ma ve sang diem khac thi remove diem cu neu co
+	veElem.on('drawstart', function (evt) {
+		if (elem_dave) nguonve.removeFeature(elem_dave);
+	});
+	//--
+	//khi ve xong nguonve.on('addfeature',function(evt){}); thay vi veElem.on('drawend', function (event) {});
+	nguonve.on('addfeature', function(evt) {	
+		da_luu=false;
+    //mac dinh EPSG:3857
+    elem_dave=evt.feature; //.getGeometry().getCoordinates();
+    var k='<div class="w3-button w3-teal" style="width:50%" onclick="luu_thongtin()">Lưu</div><div class="w3-button w3-green" style="width:50%" onclick="khongluu_thongtin()">Không lưu</div><br><br>';
+    k=k+`<label>Lưu vào lớp*:</label>
+	<select id="lop_luu">
+		<option value="ca" selected="selected">Trụ sở công an</option>
+		<option value="ub">Trụ sở hành chính</option>
+		<option value="qs">Khu vực quân sự</option>
+		<option value="kt">Khu vực kinh tế</option>
+		<option value="ck">Cửa khẩu</option>
+		<option value="moc">Mốc biên giới</option>
+		<option value="cho">Trung tâm thương mại, chợ</option>
+		<option value="th">Trường học</option>
+		<option value="bv">Bệnh viện</option>
+	</select><br><br>`;
+		k=k+'<br><label>Tên đối tượng*:</label><input id="tendt" class="w3-input w3-border" type="text">';
+		k=k+'<label><br>Địa chỉ:</label><div id="dchi" class="w3-input w3-border" contenteditable="true" style="min-height:60px"></div>';
+		k=k+'<label><br>Điện thoại:</label><div id="dthoai" class="w3-input w3-border" contenteditable="true" style="min-height:60px"></div>';
+    k=k+'<label><br>Thông tin:</label><div id="gchudt" class="w3-input w3-border" contenteditable="true" style="min-height:160px"></div><br><br>';
+    k=k+'<label>Ảnh (max: 2000px x 2000px)</label>';
+		k=k+'<input id="anhdiem" class="w3-input w3-border w3-margin-bottom" type="file" onchange="testImage(event)" data-min-width="100" data-min-height="100" data-max-width="2000" data-max-height="2000" accept="image/*">';
+		k=k+'<img id="hienanh" src="sda/avatar/avt2.png" class="w3-border" style="width:100%" alt="" onclick="xemanh_lon(this)"><br><br<br><br>';
+    datHTML($('#vungbientap'),k).then(()=> {
+    	$('#cuasobientap').dialog("option", "title", "Thông tin thuộc tính");
+			$('#cuasobientap').dialog('open');
+			const myTimeout = setTimeout(myStopFunction,2000);
+			function myStopFunction() {
+  			clearTimeout(myTimeout);
+  			
+			}
+    });
+	});
+}
+//--
+var testImage=function(e) {
+	const file1=e.target.files[0];
+	//const bytes=file1.size;
+	const checkIMG=checkImageWH(file1,2000,2000);
+	checkIMG.then((kq)=>{
+		if (kq==false) {
+			alert('Kích thước ảnh lớn hơn giới hạn cho phép (2000x2000px)');
+			$('#anhdiem').val('');
+		} else {
+			var img = document.getElementById('hienanh');
+			img.src = window.URL.createObjectURL(file1);
+			img.onload=function() {
+				//free memory
+				window.URL.revokeObjectURL(img.src);
+			}
+		}
+	});
+}
+//--
+function upload() {
+	const ten=$('#tendt').val();
+	if (ten.trim()=='') {
+		alert('Phải nhập tên cho đối tượng'); $('#tendt').focus(); return;
+	}
+	const anh = $('#hienanh').attr('src');
+	if (anh=='sda/avatar/avt2.png') {
+		luuDL('');
+		return;
+	}
+	var file=document.getElementById('anhdiem');
+		var fdata = file.files[0];
+	  var ext = fdata.name.split('.').pop().toLowerCase();
+	  if (!$.inArray(ext,['gif','png','jpg','bmp'])) {
+	  	alert('Chỉ sử dụng file ảnh (gif,png,jpg,bmp)');
+	  	return;
+	  }
+	  var form_data = new FormData();
+		form_data.append('file_anh', fdata);
+		goiUL('p.upload_img','post','text',form_data,function(kq) {
+			if (kq.trim()!="0") {
+				luuDL(kq.trim());
+			}
+		});
+}
+function luu_thongtin() {
+	if (elem_dave==null) return;
+	upload();
+}
+//co toa do cua elem
+function co_xy(elem) {
+	const geom=elem.getGeometry();
+	const coord = geom.getCoordinates();
+	const lonlat = ol.proj.toLonLat(coord);
+	return lonlat;
+}
+function luuDL(anh) {
+	const o={};
+	o.lop=$('#lop_luu').val();
+	o.ten=$('#tendt').val();
+	o.mt=$('#gchudt').html();
+	o.dc=$('#dchi').html();
+	o.dt=$('#dthoai').html();
+	o.anh=anh;
+	//co long lat
+	const lonlat=co_xy(elem_dave);
+	o.x=lonlat[0];
+	o.y=lonlat[1];
+	//--
+	o.qg=vung_bientap.qg;
+	o.tinh=vung_bientap.tinh;
+	o.huyen=vung_bientap.huyen;
+	o.xa=vung_bientap.xa;
+	//--
+	goiSV('pthongtin_luu','post','text',o,function(kq) {
+		if (kq.trim()=='ok') {
+			co_nguon_cm_chung();
+			tao_dulieu_cm();
+			da_luu=true;
+			alert('Đã lưu');
+			huychon();
+			$('#cuasobientap').dialog('close');
+		}
+	});
+}
+function khongluu_thongtin() {
+	huychon();
+	$('#cuasobientap').dialog('close');
+}
+//xem anh lon
+function xemanh_lon(o) {
+	$('#hinhanh_lon').attr('src',o.src);
+	$('#modal01').show();
+}
+
+//--Sua hinh hoc, di chuyen doi tuong
+function suaDoiTuong() {
+	const features = new ol.Collection();
+	nguon_cm_chung.getFeatures().forEach(f => features.push(f));
+	//--
+	suaElem = new ol.interaction.Modify({
+		//source: nguonve
+		features:features
+	});
+  map.addInteraction(suaElem);
+  //--
+  // Bắt sự kiện khi sửa xong
+	suaElem.on('modifyend', function (event) {
+  	//Lấy danh sách feature đã bị sửa
+  	const features = event.features;
+  	//huy su kien sua
+  	//map.removeInteraction(suaElem);
+  	//--
+  	features.forEach((elem,id) => {
+  		elem_dave=elem;
+    	luuDL_sua_a(elem.get('ma'));
+  	});
+	});
+}
+//--
+function luuDL_sua_a(ma) {
+	if (elem_dave==null) return;
+	const o={};
+	//co long lat
+	const lonlat=co_xy(elem_dave);
+	o.x=lonlat[0];
+	o.y=lonlat[1];
+	o.ma=ma;
+	//--
+	goiSV('pthongtin_luu_sua_a','post','text',o,function(kq) {
+		if (kq=='ok') {
+			huychon();
+			co_nguon_cm_chung();
+			tao_dulieu_cm();
+		}
+	});
+}
+
+//==Chon de sua thong tin thuoc tinh doi tuong
+var ma_elem_sua='';
+var anh_sua='';
+function chonDoiTuong_ve() {
+	huychon();
+	chonElem = new ol.interaction.Select({
+		condition: ol.events.condition.click
+	});
+	map.addInteraction(chonElem);
+	//--
+	chonElem.on('select', function (e) {
+		if (dangnhan[1]=='xoa') return;
+		ma_elem_sua='';
+		anh_sua='';
+		//--
+		const selectedFeatures = e.selected;
+		if (selectedFeatures.length > 0) {
+			var elem=selectedFeatures[0];
+			elem.setStyle(kieuPLA1);
+ 			ma_elem_sua=elem.get('ma');
+ 			elem_dave=elem;
+ 			//--
+			//co thong tin doi tuong sua
+			goiSV('pco_elem_id','post','text',{ma:ma_elem_sua},function(kq) {
+				if (kq!='') {
+					var sy=$.parseJSON(kq.trim());
+					dien_tt_sua(sy[0]);
+				}
+			}); 		
+ 		}
+	});
+}
+//tao thongtin
+function dien_tt_sua(o) {
+	var k='<div class="w3-button w3-teal" style="width:50%" onclick="luu_thongtin_sua()">Lưu</div><div class="w3-button w3-green" style="width:50%" onclick="khongluu_thongtin()">Không lưu</div><br><br>';
+    k=k+`<label>Lưu vào lớp*:</label>
+	<select id="lop_luu">
+		<option value="ca">Trụ sở công an</option>
+		<option value="ub">Trụ sở ủy ban nhân dân</option>
+		<option value="qs">Khu vực quân sự</option>
+		<option value="kt">Khu vực kinh tế</option>
+		<option value="ck">Cửa khẩu</option>
+		<option value="moc">Mốc biên giới</option>
+		<option value="cho">Trung tâm thương mại, chợ</option>
+		<option value="th">Trường học</option>
+		<option value="bv">Bệnh viện</option>
+	</select><br><br>`;
+		k=k+'<br><label>Tên đối tượng*:</label><input id="tendt" class="w3-input w3-border" type="text" value="'+o.ten+'">';
+		k=k+'<label><br>Địa chỉ:</label><div id="dchi" class="w3-input w3-border" contenteditable="true" style="min-height:60px">'+o.dc+'</div>';
+		k=k+'<label><br>Điện thoại:</label><div id="dthoai" class="w3-input w3-border" contenteditable="true" style="min-height:60px">'+o.dt+'</div>';
+    k=k+'<label><br>Thông tin:</label><div id="gchudt" class="w3-input w3-border" contenteditable="true" style="min-height:160px">'+o.mt+'</div><br><br>';
+    k=k+'<label>Ảnh (max: 2000px x 2000px)</label>';
+		k=k+'<input id="anhdiem" class="w3-input w3-border w3-margin-bottom" type="file" onchange="testImage(event)" data-min-width="100" data-min-height="100" data-max-width="2000" data-max-height="2000" accept="image/*">';
+		if (o.anh!=undefined)
+			k=k+'<img id="hienanh" src="sda/'+o.anh+'" class="w3-border" style="width:100%" alt="" onclick="xemanh_lon(this)"><br><br<br><br>';
+    else
+    	k=k+'<img id="hienanh" src="sda/avatar/avt2.png" class="w3-border" style="width:100%" alt="" onclick="xemanh_lon(this)"><br><br<br><br>';
+    datHTML($('#vungbientap'),k).then(()=> {
+    	$('#cuasobientap').dialog("option", "title", "Sửa thông tin thuộc tính");
+    	$('#cuasobientap').dialog('open');
+ 			$('#lop_luu').val(o.lop);
+ 			$('#lop_luu').change();
+    });
+    anh_sua=o.anh;
+}
+//--
+function upload_sua() {
+	const ten=$('#tendt').val();
+	if (ten.trim()=='') {
+		alert('Phải nhập tên cho đối tượng'); $('#tendt').focus(); return;
+	}
+	const anh = $('#hienanh').attr('src');
+	if (anh=='sda/avatar/avt2.png' || anh==('sda/'+anh_sua)) {
+		luuDL_sua(anh_sua);
+		return;
+	}
+	var file=document.getElementById('anhdiem');
+		var fdata = file.files[0];
+	  var ext = fdata.name.split('.').pop().toLowerCase();
+	  if (!$.inArray(ext,['gif','png','jpg','bmp'])) {
+	  	alert('Chỉ sử dụng file ảnh (gif,png,jpg,bmp)');
+	  	return;
+	  }
+	  var form_data = new FormData();
+		form_data.append('file_anh', fdata);
+		goiUL('p.upload_img','post','text',form_data,function(kq) {
+			if (kq.trim()!="0") {
+				luuDL_sua(kq.trim());
+			}
+		});
+}
+function luu_thongtin_sua() {
+	if (elem_dave==null) return;
+	upload_sua();
+}
+function luuDL_sua(anh) {
+	const o={};
+	o.lop=$('#lop_luu').val();
+	o.ten=$('#tendt').val();
+	o.mt=$('#gchudt').html();
+	o.dc=$('#dchi').html();
+	o.dt=$('#dthoai').html();
+	o.anh=anh;
+	//--
+	o.ma=ma_elem_sua;
+	goiSV('pthongtin_luu_sua','post','text',o,function(kq) {
+		if (kq.trim()=='ok') {
+			co_nguon_cm_chung();
+			tao_dulieu_cm();
+			da_luu=true;
+			alert('Đã lưu sửa');
+			huychon();
+			$('#cuasobientap').dialog('close');
+		}
+	});
+}
+//xoa
+function xoaDoiTuong() {
+	huychon();
+	chonElem = new ol.interaction.Select({
+		condition: ol.events.condition.click
+	});
+	map.addInteraction(chonElem);
+	//--
+	chonElem.on('select', function (e) {
+		const selectedFeatures = e.selected;
+		if (selectedFeatures.length > 0) {
+			const result = confirm('Bạn có chắc muốn xóa đối tượng này?');
+			if (result) {
+			} else {
+				huychon();
+				return;
+			}
+			const elem=selectedFeatures[0];
+			goiSV('p.xoa_elem','post','text',{ma:elem.get('ma')},function(kq) {
+				if (kq=='ok') {
+					co_nguon_cm_chung();
+					tao_dulieu_cm();
+					da_luu=true;
+					alert('Đã xóa');
+					huychon();
+				}
+			});
+ 		}
+	});
+}
+document.addEventListener('keydown', function (event) {
+  if (event.key === 'Escape') {
+    if (veElem) veElem.abortDrawing(); // Hủy vẽ hiện tại
+  }
+});
+//thay ky hieu
+function doiKyHieu(ma) {
+	$('#vungbientap').html('');
+	goiSV('p.co_file','post','text',{url:'kyhieu'},function(kq) {
+		if (kq.trim()!='') {
+			var sy=$.parseJSON(kq.trim());
+			//--
+			var k='<div class="w3-button w3-teal" style="width:100%" onclick="luu_kyhieu(\''+ma+'\')">Lưu thay đổi</div>';
+			k=k+'<br>Kích cỡ: <input id="kcokyhieu" type="number" value="0.25" step="0.1">';
+			k=k+'<br><label>Chọn ký hiệu:</label>';
+			sy.forEach((elem,id)=>{
+				k=k+'<div style="display:flex; item-aligns:center"><input class="w3-radio" type="radio" name="chonkyhieu" value="'+elem+'">&nbsp;<img src="sda/kyhieu/'+elem+'" style="width:30px"></div>';
+			});
+			$('#vungbientap').html(k);
+			$('#cuasobientap').dialog("option", "title", "Thay đổi ký hiệu");
+			$('#cuasobientap').dialog('open');
+		}
+	});
+}
+function luu_kyhieu(ma) {
+	var ma1=ma;
+	if (ma.substr(0,2)=='db') ma1=ma.substr(2);
+	const chon=$('input[name="chonkyhieu"]:checked').val();
+	if (!chon) {
+		alert('Quí vị chưa chọn ký hiệu để thay');
+		return;
+	}
+	var kco=$('#kcokyhieu').val();
+	if (kco<0) kco=0.1;
+	$('#vungbientap').html('');
+	goiSV('p.kyhieu_thay','post','text',{lop:ma1,kyhieu:chon,kco:kco},function(kq) {
+		if (kq.trim()=='ok') {
+			thaydoiKieu(ma,chon,kco);
+			thaydoiKieu(ma1,chon,kco);
+			$('#vungbientap').html('Đã thay đổi ký hiệu cho lớp dữ liệu');
+		}
+	});
+}
+function thaydoiKieu(ma,kyhieu,kco) {
+	const kieu=tao_style_diem('url','sda/kyhieu/'+kyhieu,kco,'#000000',2,'#000000');
+	lop_cm[ma].setStyle(kieu);
+}
+</script>
+
+
+<script>
+//cay danh muc don vi hanh chinh
+co_dvhc();
+function co_dvhc() {
+	goiSV('p.co_dvhc','post','text',{ma:'0'},function(kq) {
+		if (kq.trim()!='') {
+			var sy=$.parseJSON(kq.trim());
+			let tinhs=[];
+			let xas=[];
+			sy.forEach((elem,id)=>{
+				if (elem.magoc=='0') tinhs.push(elem);
+				else xas.push(elem);
+			});
+			taocay_tracuu(tinhs,xas);
+		}
+	});
+}
+function taocay_tracuu(tinhs,xas) {
+	let dat=[];
+	let ctinh={};
+	let cxa={};
+	let axa=[];
+	let i=0;
+	let dau=true;
+	let malk='';
+	malk='vn';
+	ctinh={'id':malk,'text':`<b>VIỆT NAM</b><label class="gcsapnhap"><i>(theo Nghị quyết số 60-NQ/TW): 34 ĐVHC cấp tỉnh: 07 thành phố trực thuộc Trung Ương, 27 tỉnh; 3321 ĐVHC cấp xã: 13 đặc khu, 697 phường, 2.611 xã)</i></label>`};
+	dat.push(ctinh);
+	tinhs.forEach((tinh,id)=>{
+		axa=[];
+		dau=true;
+		for (i=0; i<xas.length; ++i) {
+			if (xas[i].magoc==tinh.ma) {
+				dau=false;
+				malk=xas[i].malk.replaceAll('.','_');
+				if (xas[i].truocsapnhap.includes('giữ')) cxa={'id':malk,'text':`${xas[i].ten}<label class="gcsapnhap"><i>(giữ nguyên, không sáp nhập)</i></label>`};
+				else cxa={'id':malk,'text':`${xas[i].ten}<label class="gcsapnhap"><i>(sáp nhập từ: ${xas[i].truocsapnhap})</i></label>`};
+				axa.push(cxa);
+			} else {
+				if (dau==false) break;
+			}
+		}
+		malk=tinh.malk.replaceAll('.','_');
+		if (tinh.truocsapnhap.includes('giữ')) ctinh={'id':malk,'text':`<b>${tinh.ten}</b><label class="gcsapnhap"><i>(giữ nguyên, không sáp nhập)</i></label>`,'children':axa};
+		else ctinh={'id':malk,'text':`<b>${tinh.ten}</b><label class="gcsapnhap"><i>(sáp nhập từ: ${tinh.truocsapnhap})</i></label>`,'children':axa};
+		dat.push(ctinh);
+	});
+	//--
+	$('#jstree').jstree({'core': {
+		"force_text": false,
+		"themes": {
+			"icons": false
+		},
+		'data': dat
+		},
+		"plugins": ["search"],
+		"search": {
+			case_sensitive:false,
+			show_only_matches:true, //chi hien thi ket qua tim thay
+			show_only_matches_children:true, //chi hien thi ket qua tim thay
+			//tim tieng viet khong dau
+			"search_callback": function (keyword, node) {
+				let nodeText = node.text.toLowerCase();
+				let searchText = keyword.toLowerCase();
+				if (hasVietnameseAccent(keyword)) {
+					//search có dấu
+					return nodeText.includes(searchText);
+				} else {
+					//search không dấu
+					return removeVietnameseTones(nodeText).includes(removeVietnameseTones(searchText));
+				}
+	    }
+		}
+	});
+	//==
+}
+//xoa dau tieng viet de tim kiem
+function removeVietnameseTones(str) {
+  return str
+        .normalize("NFD")                 // tách dấu
+        .replace(/[\u0300-\u036f]/g, "")  // bỏ dấu
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "d")
+        .toLowerCase()                    // không phân biệt hoa thường
+        .trim();
+}
+//--
+$('#jstree').on("select_node.jstree", function(e, data) {
+	//console.log("Selected node id:", data.node.id);
+	//--neu la cap tinh thi mo cay
+	if (data.node.id.includes('diaphanhanhchinhcaptinh')) {
+		//$('#jstree').jstree('close_all');
+		$('#jstree').jstree('open_node',data.node.id);
+	}
+	//--
+	var tree = $('#jstree').jstree(true);
+ 	var node=tree.get_node(data.node.id, true);
+	if (node.length) {
+    $('#jstree-box').animate({
+			scrollTop: $('#jstree-box').scrollTop() + node.position().top - 86
+    }, 300);
+	}
+	//--
+	if (data.node.id=='vn') {
+		var gc='Việt Nam sau sắp xếp ĐVHC (theo Nghị quyết số 60-NQ/TW):\n';
+		gc=gc+'- Số đơn vị hành chính hai cấp cả nước là:\n';
+		gc=gc+'  + Cấp tỉnh (34 đvhc): 07 thành phố trực thuộc Trung Ương (Đồng Nai lên thành phố từ ngày 30/4/2026), 27 tỉnh.\n';
+		gc=gc+'  + Cấp xã (3.321 đvhc): 13 đặc khu, 697 phường (10 xã của Đồng Nai chuyển thành phường từ ngày 30/4/2026), 2.611 xã.\n';
+		gc=gc+'- Diện tích: 331.338 km2.\n';
+		gc=gc+'- Dân số: 101.344.000 người.\n';
+		gc=gc+'- Thủ đô: Hà Nội.';
+		alert(gc);
+		return;
+	}
+	//thay the ky tu _ cuoi bang .
+	const id1=(data.node.id).replace(/_(?!.*_)/, ".");
+	co_elem_wfs_id(id1);
+});
+function dong_hop_dvhc() {
+	if ($('#hop_dvhc').is(':visible')) nhan_nutA('dvhc');
+}
+function chon_node(id) {
+	$('#jstree').jstree('deselect_all');
+	$('#jstree').jstree('select_node',id);
+	//console.log(id);
+}
+//==
+var to = false;
+$('#search').keyup(function() {
+	if (to) { clearTimeout(to); }
+	to = setTimeout(function () {
+		var v = $('#search').val();
+		if (v.length) {
+			$('#clear-search').show();
+    } else {
+			$('#clear-search').hide();
+    }
+		$('#jstree').jstree(true).search(v);
+	}, 500);
+});
+//click nút xoa search
+$('#clear-search').click(function () {
+	$('#search').val('');
+	$('#clear-search').hide();
+	$('#jstree').jstree('clear_search');
+});
+//--
+//kiem tra go co dau hay khong
+function hasVietnameseAccent(str) {
+	return str !== removeVietnameseTones(str);
+}
+//==
+function co_elem_wfs_id(id) {
+	goiSV('pread_json','post','text',{id:id},function(kq) {
+		if (kq.trim()!='') {
+			var sy=$.parseJSON(kq.trim());
+			const features = new ol.format.GeoJSON().readFeatures(sy,{defaultDataProjection:"EPSG:4326",featureProjection:"EPSG:3857"});
+			const elem=features[0];
+			//co toa do tam cua elem
+			const center = ol.extent.getCenter(elem.getGeometry().getExtent());
+			//console.log(center);
+			//chonDoiTuong(elem.id_);
+			//--
+			const props=elem.getProperties();
+			delete props.geometry;
+			thongtin_elem_id(props,center,elem.id_);
+		}
+	});
+}
+function thongtin_elem_id(props,toadodiem,id) {
+	var k = '';
+	var td='';
+	var gt='';
+	//---
+	//Co array ten cac truong thuoc tinh cua elem
+	const tieude=Object.keys(props); //.reverse();
+	//Co array gia tri cac thuoc tinh cua elem tuong ung voi cac truong thuoc tinh
+	const giatri=Object.values(props); //.reverse();
+	if (id.includes('uyban')) {
+		for (i=0; i<tieude.length; i++) {
+			td=tieude[i].substr(4);
+			gt=giatri[i];
+			if (td=='ten' || td=='tenxa' || td=='tentinh') {
+				if (td=='ten') k='<span style="color:red"><b>'+gt+'</b></span> <i>(';
+				if (td=='tenxa') k=k+gt+' - ';
+				if (td=='tentinh') k=k+gt+')</i>';
+			}
+		}
+		hienthi_overlay(toadodiem,k);
+		chonDoiTuong(id);
+		return;
+	}
+	goiSV('p.co_dvhc_id','post','text',{malk:id},function(kq) {
+		if (kq.trim()!='') {
+			var sy=$.parseJSON(kq.trim());
+			const e=sy[0];
+			ma_chon_lk=e.malk;
+			k='<span style="color:red"><b>'+e.ten+'</b></span><br>';
+			//cap tinh
+			if (e.magoc=='0') {
+				if (e.truocsapnhap.toLowerCase()=='giữ nguyên') k=k+'<span style="color:green"><b>Giữ nguyên, không sáp nhập.</b></span><br>';
+				else k=k+'<span style="color:green"><b>Sáp nhập từ:</b> '+e.truocsapnhap+'</span><br>';
+				k=k+'<span style="color:blue"><b>Số đơn vị hành chính cấp xã:</b> '+e.con+'</span><br>';
+			//cap xa
+			} else {
+				k=k+'<span style="color:blue">('+e.tentinh+')</span><br>';
+				if (e.truocsapnhap.toLowerCase()=='giữ nguyên') k=k+'<span style="color:green"><b>Giữ nguyên, không sáp nhập</b></span><br>';
+				else k=k+'<span style="color:green"><b>Sáp nhập từ:</b> '+e.truocsapnhap+'</span><br>';
+			}
+			k=k+'<b>- Trung tâm hành chính:</b> '+e.trungtamhc+'<br>';
+			if (e.diachi!=null) k=k+'+ Địa chỉ: '+e.diachi+'<br>';
+			if (e.dthoai!=null) k=k+'+ Điện thoại: '+e.dthoai+'<br>';
+			k=k+'<b>- Diện tích:</b> '+e.dientichkm2+' (km<sup>2</sup>)<br>';
+			k=k+'<b>- Dân số:</b> '+e.dansonguoi+' (người)<br>';
+			k=k+'<b>- Mã số ĐVHC</b> (<a href="https://vanban.chinhphu.vn/?pageid=27160&docid=214409" target="_blank" title="https://vanban.chinhphu.vn/?pageid=27160&docid=214409"><i>theo Quyết định 19/2025/QĐ-TTg</i></a>): '+e.ma+'<br>';
+			k=k+'<div class="kengang" style="margin-top:8px; margin-bottom:8px"></div>';
+			k=k+'<div style="text-align:center; width:100%; color:gray"><i><a href="'+e.link+'" target="_blank" title="'+e.link+'"><i class="fa fa-link" aria-hidden="true"></i> Căn cứ: '+e.cancu+'</a></i></div>';
+			k=k+'<div class="kengang" style="margin-top:8px; margin-bottom:8px"></div>';
+			const tam='/bangbieu='+e.malk+'&kieu=0';
+			k=k+'<div style="text-align:center; width:100%; color:gray"><i><a href="'+tam+'" title="'+tam+'"><i class="fa-solid fa-file-export"></i> Xem/Xuất bảng biểu dữ liệu</a></i></div>';
+			hienthi_overlay(toadodiem,k);
+			chonDoiTuong(id);
+		}
+	});
+	/*
+	//--
+	//Co array ten cac truong thuoc tinh cua elem
+	const tieude=Object.keys(props); //.reverse();
+	//Co array gia tri cac thuoc tinh cua elem tuong ung voi cac truong thuoc tinh
+	const giatri=Object.values(props); //.reverse();
+	//--
+	var k = '';
+	var td='';
+	var td1='';
+	var gt='';
+	var i;
+	var check=false;
+	for (i=0; i<tieude.length; i++) {
+		td=tieude[i].substr(4);
+		if (td=='ten') {
+			if (giatri[i].toLowerCase().includes("ủy ban")) check=true;
+			else if (giatri[i].toLowerCase().includes("đặc khu")) check=true;
+		}
+	}
+	//neu la uy ban
+	if (check) {
+		for (i=0; i<tieude.length; i++) {
+			td=tieude[i].substr(4);
+			gt=giatri[i];
+			if (td=='ten' || td=='tenxa' || td=='tentinh') {
+				if (td=='ten') k='<span style="color:red"><b>'+gt+'</b></span> <i>(';
+				if (td=='tenxa') k=k+gt+' - ';
+				if (td=='tentinh') k=k+gt+')</i>';
+			}
+		}
+		hienthi_overlay(toadodiem,k);
+		return;		
+	}
+	//con thi
+	for (i=0; i<tieude.length; i++) {
+		td=tieude[i].substr(4);
+		td1=td;
+		switch(td) {
+			case 'ten': td=''; break;
+			case 'gc': td='- Số lượng đơn vị hành chính: '; break;
+			case 'tenxa': td='- Thuộc: '; break;
+			case 'tentinh': td='- Thuộc: '; break;
+			case 'truocsn': td='- Sáp nhập từ: '; break;
+			case 'trungtamhc': td='- Trung tâm hành chính: '; break;
+			case 'dt': td='- Diện tích (km2): '; break;
+			case 'ds': td='- Dân số (người): '; break;
+			//case 'dthoai': td='- Điện thoại: '; break;
+			//case 'web': td='- Website: '; break;
+			default: break;
+		}
+		if (td1!='tinh' && td1!='xa' && td1!='ma' && td1!='dthoai' && td1!='web') {
+			gt=giatri[i];
+			if (td1=='ten') gt='<span style="color:red"><b>'+gt+'</b></span>';
+			if (td1=='tentinh') k=k+'<i>('+gt+')</i><br>';
+			else k=k+'<b>'+td+'</b>'+gt+'<br>';
+		}
+	}
+	hienthi_overlay(toadodiem,k);
+	*/
+}
+//==
+//de tim kiem
+co_timkiem();
+function co_timkiem() {
+	goiSV('p.co_uyban','post','text',{ma:'0'},function(kq) {
+		if (kq.trim()!='[]') {
+			var sy=$.parseJSON(kq.trim());
+			var elems=[];
+			sy.forEach(function(elem,id) {
+				elems.push({label:elem.ten,value:elem.ma});
+			});
+			$('#timnhanh').autocomplete({
+				source:elems,
+				select: function(event, ui) {
+      		//alert(ui.item.value + " & " + ui.item.id);
+      		$('#timnhanh').val(ui.item.label);
+      		co_elem_wfs_id(ui.item.value);
+      		$('.clear-btn').show();
+      		return false;
+      	}
+			});
+			//--
+			// Hiện nút X khi có dữ liệu
+	    $('#timnhanh').on('input', function () {
+        $('.clear-btn').toggle($(this).val().length > 0);
+	    });
+	    // Xóa nội dung khi bấm nút X
+	    $('.clear-btn').on('click', function () {
+        $('#timnhanh').val('').focus();
+        $(this).hide();
+	    });
+		}
+	});
+}
+//==
+//chia se vi tri
+function tao_url_vitri() {
+	var view = map.getView();
+	//Lấy tọa độ trung tâm (Kinh độ, Vĩ độ)
+	var center = ol.proj.toLonLat(view.getCenter()); // Chuyển đổi từ Spherical Mercator sang WGS84
+	var lon = center[0].toFixed(6); // Kinh độ
+	var lat = center[1].toFixed(6); // Vĩ độ
+	// Lấy mức thu phóng hiện tại
+	var zoom = view.getZoom().toFixed(3);
+	//--
+	var tam='vn';
+	const ma_elems=$('#jstree').jstree(true).get_selected(false);
+	if (ma_elems.length>0) tam=ma_elems[0];
+	const u1='?'+lon+'&'+lat+'&'+zoom+'&'+tam+'&narenca=10';
+	return u1;
+}
+function chiase_vitri() {
+	const u=window.location.href;
+	const uu=u.split('?')[0]+tao_url_vitri();
+	$('#link_chiase').val(uu);
+	document.getElementById('id01').style.display='block';
+	$('#link_chiase').focus().select();
+	document.execCommand('copy');
+}
+function copy_link() {
+	try {  
+		var successful = document.execCommand('copy');
+		document.getElementById('id01').style.display='none';
+	} catch(err) {
+		console.error('Unable to copy'); 
+	}
+}
+//==
+//kiem tra vi tri share (neu co)
+function kiemtra_chiase() {
+	const u=window.location.href;
+	if (u.includes('&narenca=10')) {
+		const uu=u.split('?')[1];
+		const uuu=uu.split('&narenca=')[0];
+		const uuuu=uuu.split('&');
+		if (uuuu[3]!='vn') chon_node(uuuu[3]);
+		else co_diem_vitri('0.5','',uuuu[0],uuuu[1],uuuu[2]);
+	}
+}
+</script></body>
+
+</html>
+
+
+

@@ -1,0 +1,48 @@
+[
+  {
+    "id": "SOS-MTPL3MLZ-940",
+    "createdAt": "2026-09-06T09:03:13.471Z",
+    "flaggedAt": "2026-09-06T09:03:13.478Z",
+    "agency": "police",
+    "agencyName": "Công An Nhân Dân",
+    "reporterName": "Nguyen Van Test",
+    "reporterPhone": "0912345678",
+    "clientIp": "113.161.72.45",
+    "address": "Đường 30 Tháng 4, Ninh Kiều, Cần Thơ",
+    "lat": 10.0452,
+    "lng": 105.7469,
+    "osintTrace": {
+      "clientIp": "113.161.72.45",
+      "reportedGps": {
+        "lat": 10.0452,
+        "lng": 105.7469,
+        "accuracy": 15
+      },
+      "address": "Đường 30 Tháng 4, Ninh Kiều, Cần Thơ",
+      "deviceTelemetry": {
+        "ip": "113.161.72.45",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "platform": "Linux x86_64",
+        "screenResolution": "1920x1080 (DPI: 1)",
+        "language": "vi-VN",
+        "networkType": "4G LTE",
+        "hardwareConcurrency": 0,
+        "reportedAt": "2026-09-06T09:03:13.471Z"
+      },
+      "reporterName": "Nguyen Van Test",
+      "reporterPhone": "0912345678",
+      "flaggedReason": "Đến hiện trường không có sự việc xảy ra / Địa chỉ ma",
+      "officerNotes": "Tổ công tác tuần tra tiếp cận tọa độ lúc 15:40, hiện trường bình yên, không hề có vụ việc nào xảy ra.",
+      "flaggedBy": "Trung tá Trần Văn Hùng (Chỉ huy tuần tra)",
+      "flaggedAt": "2026-09-06T09:03:13.478Z",
+      "legalNotice": "Căn cứ Khoản 3, Điều 7, Nghị định 144/2021/NĐ-CP (Phạt 4.000.000đ - 6.000.000đ) & Bộ luật Hình sự",
+      "linuxOsintCommands": {
+        "whois": "whois 113.161.72.45",
+        "traceroute": "traceroute -m 20 113.161.72.45",
+        "curlGeoIp": "curl -s \"http://ip-api.com/json/113.161.72.45?fields=status,message,country,regionName,city,district,zip,lat,lon,timezone,isp,org,as,query\"",
+        "nslookup": "nslookup 113.161.72.45",
+        "ping": "ping -c 4 113.161.72.45"
+      }
+    }
+  }
+]

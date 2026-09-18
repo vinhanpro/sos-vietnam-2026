@@ -1,0 +1,1911 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viet Nam Basemap</title>
+
+  <!-- OpenLayers -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@9.2.4/ol.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ol@9.2.4/dist/ol.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol-ext@4.0.34/dist/ol-ext.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ol-ext@4.0.34/dist/ol-ext.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Mapillary CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/mapillary-js@4.1.2/dist/mapillary.css" />
+  <script src="https://unpkg.com/mapillary-js@4.1.2/dist/mapillary.js"></script>
+
+  <link rel="stylesheet" href="/static/map/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.7/css/dataTables.dataTables.min.css" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/2.3.7/js/dataTables.min.js"></script>
+</head>
+
+<body>
+  <div id="globalToast" class="global-toast" style="display:none;"></div>
+
+  <!-- ========== HEADER ========== -->
+  <header>
+    <div class="header-left">
+      <div class="logo">
+        <img
+          src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDh4ZXo1dWtscXVxNDdmZ3cwZGZqYjM4anp4bHl5ZzdhZ25hYm5nayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eewkGM4VWyqZzRRumr/giphy.gif"
+          alt="NARENCA Logo" />
+      </div>
+      <div class="brand-block">
+        <div class="brand-name">BỘ NÔNG NGHIỆP VÀ MÔI TRƯỜNG</div>
+        <div class="brand-name">NHÀ XUẤT BẢN TÀI NGUYÊN - MÔI TRƯỜNG VÀ BẢN ĐỒ VIỆT NAM</div>
+
+        <div class="brand-sub marquee">
+          <div class="marquee-track">
+            <span>Bản đồ nền Việt Nam</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search / Geocoder -->
+    <div class="header-search" id="headerSearch">
+      <div class="search-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="geocoderInput" class="geocoder-input"
+          placeholder="Tìm địa danh hoặc nhập tọa độ (Lat, Lon)..." autocomplete="off"
+          oninput="MapApp.Tools.Search.onInput(this)" onkeydown="MapApp.Tools.Search.onKeydown(event)"
+          onblur="MapApp.Tools.Search.onBlur()" />
+        <button class="search-clear-btn" id="searchClearBtn" onclick="MapApp.Tools.Search.clear()"
+          style="display:none"><i class="fa-solid fa-delete-left"></i></button>
+
+      <button class="mobile-search-close-btn" type="button" onclick="MapApp.UI.toggleMobileSearch()" title="Đóng tìm kiếm">
+        <i class="fas fa-times"></i> Đóng
+      </button>
+      </div>
+      <div class="geocoder-dropdown" id="geocoderDropdown"></div>
+    </div>
+
+    <div class="header-user">
+      
+      <a class="login-btn" href="/users/auth/login/" title="Đăng nhập">
+        <i class="fa-solid fa-user"></i>
+      </a>
+      
+    </div>
+  </header>
+
+  <!-- ========== MAIN ========== -->
+  <main>
+    <!-- 2D Map -->
+    <div id="map-2d"></div>
+
+    <div id="thongbao_dangnhap"
+      style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2100000; max-width:460px; background:rgba(255,245,230,0.96); color:#8a2b06; border:1px solid #f59e0b; border-radius:10px; padding:14px 16px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.25); font-size:13px; line-height:1.6;">
+      <strong>Để xem bản đồ ở mức chi tiết hơn, vui lòng đăng nhập tài khoản.</strong>
+    </div>
+    <div id="thongbao_khuyenmai"
+      style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2100000; max-width:480px; background:rgba(255,251,230,0.96); color:#7a5a00; border:1px solid #f0c040; border-radius:10px; padding:14px 16px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.25); font-size:13px; line-height:1.6;">
+      <strong>Tài khoản PRO đang hiển thị lớp chi tiết Hà Nội ở mức tỷ lệ 1/50.000 trở lên.</strong>
+    </div>
+
+    <!-- Toolbar Toggle Button -->
+    <button class="toolbar-toggle-btn" id="toolbarToggleBtn" onclick="MapApp.UI.toggleToolbar()"
+      title="Ẩn/hiện thanh công cụ"><i class="fas fa-chevron-left" id="toolbarToggleIcon"></i></button>
+    <!-- Toolbar -->
+    <div class="map-toolbar" id="map-toolbar">
+      <!-- Nhóm 1: Điều hướng bản đồ -->
+      <button class="tool-btn" onclick="MapApp.Map.gotoVN()" title="Việt Nam"><i class="fas fa-home"></i></button>
+      <button class="tool-btn mobile-search-btn" id="mobileSearchToggleBtn" onclick="MapApp.UI.toggleMobileSearch()" title="Tìm kiếm"><i class="fas fa-search"></i></button>
+
+      <button class="tool-btn" onclick="MapApp.Map.zoomIn()" title="Phóng to"><i class="fas fa-plus"></i></button>
+      <button class="tool-btn" onclick="MapApp.Map.zoomOut()" title="Thu nhỏ"><i class="fas fa-minus"></i></button>
+      <button class="tool-btn" onclick="MapApp.UI.toggleFullscreen()" title="Toàn màn hình"><i class="fas fa-expand"
+          id="fsIcon"></i></button>
+
+      <!-- Nhóm 2: Lớp & thông tin -->
+      <button class="tool-btn" id="layerToggleBtn" onclick="MapApp.UI.toggleLayerPanel()" title="Lớp bản đồ"><i
+          class="fas fa-layer-group"></i></button>
+
+      <button class="tool-btn" id="infoToggleBtn" onclick="MapApp.Tools.WMSInfo.toggle()" title="Thông tin đối tượng"><i
+          class="fas fa-info-circle"></i></button>
+
+      
+
+
+      <button class="tool-btn" id="measureToggleBtn" onclick="MapApp.Tools.Measure.toggleQuickMeasureMode()"
+        title="Đo đạc"><i class="fas fa-ruler-combined"></i></button>
+
+      <button class="tool-btn" id="streetViewToggleBtn" onclick="MapApp.Tools.StreetView.toggle()"
+        title="Street View (Ảnh đường phố)"><i class="fas fa-street-view"></i></button>
+      <button class="tool-btn" id="routeToggleBtn" onclick="MapApp.Tools.Route.togglePanel()" title="Tìm đường"><i
+          class="fas fa-route"></i></button>
+      <button class="tool-btn" onclick="MapApp.Tools.Convert.togglePanel()" title="Chuyển đổi tọa độ"><i
+          class="fas fa-exchange-alt"></i></button>
+        <button class="tool-btn" id="sapnhapToggleBtn" onclick="MapApp.Tools.SapNhapTree.togglePanel()" title="Tra cứu sáp nhập"><i
+          class="fas fa-sitemap"></i></button>
+
+      <button class="tool-btn" onclick="MapApp.Map.locateMe()" title="Vị trí của tôi"><i
+           class="fas fa-crosshairs"></i></button>
+      <button class="tool-btn" onclick="MapApp.Tools.Share.toggleModal()" title="Chia sẻ vị trí"><i
+           class="fas fa-share-alt"></i></button>
+      <button class="tool-btn" id="uploadDataBtn" title="Tải lên GeoJSON/KML"><i class="fas fa-upload"></i></button>
+      <!-- Chú giải bản đồ -->
+      <button class="tool-btn" id="legendToggleBtn" onclick="MapApp.UI.toggleLegendPanel()" title="Chú giải bản đồ"><i
+          class="fas fa-map-signs"></i></button>
+      <button class="tool-btn" id="weatherToggleBtn" onclick="MapApp.Tools.Weather.togglePanel()" title="Thời tiết"><i
+          class="fas fa-cloud-sun"></i></button>
+        <button class="tool-btn" id="aqiToggleBtn" onclick="MapApp.Tools.AQI.togglePanel()" title="Chất lượng không khí"><i
+          class="fas fa-wind"></i></button>
+
+       <button class="tool-btn" id="printToggleBtn" onclick="MapApp.Tools.Print.openDialog()" title="In bản đồ"><i
+          class="fas fa-print"></i></button>
+
+      
+
+    </div>
+
+    
+
+<div id="drawQuickPanel"
+  style="display:none; position:absolute; left:74px; top:176px; z-index:2050; background:rgba(15,23,42,0.95); border:1px solid rgba(148,163,184,0.35); border-radius:10px; padding:28px 8px 8px; box-shadow:0 10px 28px rgba(0,0,0,0.35); min-width:200px;">
+  <div class="quick-panel-drag-handle"
+    style="position:absolute; left:8px; right:36px; top:6px; height:16px; border-radius:6px; background:rgba(30,41,59,0.55); color:#94a3b8; font-size:16px; display:flex; align-items:center; justify-content:center; user-select:none;">
+    <i class="fa-solid fa-arrows-up-down-left-right" style="margin-right:6px;"></i>
+  </div>
+
+  <button type="button" aria-label="Đóng panel vẽ"
+    onclick="MapApp.Tools.Draw.toggleQuickDrawMode()"
+    style="position:absolute; top:6px; right:6px; width:22px; height:22px; border:none; border-radius:6px; background:rgba(30,41,59,0.9); color:#cbd5e1; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px; line-height:1;">
+    <i class="fas fa-times"></i>
+  </button>
+
+  <div style="display:flex; flex-direction:column; gap:6px;">
+
+    <div style="font-size:10px; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px;">
+      <i class="fas fa-pencil-alt" style="margin-right:3px;"></i> Vẽ tự do
+    </div>
+
+    <button type="button" id="quickDrawPointBtn" onclick="MapApp.Tools.Draw.startFromQuick('POINT')"
+      style="display:flex; align-items:center; gap:8px; width:100%; border:1px solid rgba(148,163,184,0.28); border-radius:8px; background:rgba(30,41,59,0.85); color:#e2e8f0; padding:8px 10px; font-size:12px; cursor:pointer;">
+      <span class="quick-draw-icon"><i class="fa-solid fa-location-dot"></i></span>
+      <span class="quick-draw-text">Vẽ điểm</span>
+    </button>
+    <button type="button" id="quickDrawLineBtn" onclick="MapApp.Tools.Draw.startFromQuick('POLYLINE')"
+      style="display:flex; align-items:center; gap:8px; width:100%; border:1px solid rgba(148,163,184,0.28); border-radius:8px; background:rgba(30,41,59,0.85); color:#e2e8f0; padding:8px 10px; font-size:12px; cursor:pointer;">
+      <span class="quick-draw-icon"><i class="fas fa-minus"></i></span>
+      <span class="quick-draw-text">Vẽ đường</span>
+    </button>
+    <button type="button" id="quickDrawPolygonBtn" onclick="MapApp.Tools.Draw.startFromQuick('POLYGON')"
+      style="display:flex; align-items:center; gap:8px; width:100%; border:1px solid rgba(148,163,184,0.28); border-radius:8px; background:rgba(30,41,59,0.85); color:#e2e8f0; padding:8px 10px; font-size:12px; cursor:pointer;">
+      <span class="quick-draw-icon"><i class="fas fa-draw-polygon"></i></span>
+      <span class="quick-draw-text">Vẽ vùng</span>
+    </button>
+
+    <div style="height:1px; background:rgba(148,163,184,0.2); margin:4px 0;"></div>
+
+    <div style="font-size:10px; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px;">
+      <i class="fas fa-layer-group" style="margin-right:3px;"></i> Vẽ vào lớp dữ liệu
+    </div>
+
+    <select id="dynLayerSelector"
+      style="width:100%; background:rgba(15,23,42,0.6); border:1px solid rgba(148,163,184,0.28); border-radius:8px; padding:8px 10px; color:#e2e8f0; font-size:12px; cursor:pointer;">
+      <option value="">-- Chọn lớp --</option>
+    </select>
+
+    <button type="button" id="dynLayerDrawBtn"
+      style="display:flex; align-items:center; gap:8px; width:100%; border:1px solid rgba(148,163,184,0.28); border-radius:8px; background:rgba(30,41,59,0.85); color:#e2e8f0; padding:8px 10px; font-size:12px; cursor:pointer;">
+      <span class="quick-draw-icon"><i class="fas fa-pencil-alt"></i></span>
+      <span class="quick-draw-text">Bắt đầu vẽ vào lớp</span>
+    </button>
+
+  </div>
+</div>
+
+<div id="gpsTrackPanel" class="gps-track-panel" style="display:none;">
+  <div class="gps-track-panel__header">
+    <div class="gps-track-panel__title"><i class="fas fa-location-arrow"></i> GPS Track</div>
+    <button type="button" class="gps-track-panel__close" onclick="MapApp.Tools.Draw.closeGpsTrackPanel()" title="Đóng">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="gps-track-panel__body">
+    <div class="gps-track-status" id="gpsTrackStatus">Sẵn sàng ghi tuyến.</div>
+
+    <div class="gps-track-stats">
+      <div class="gps-track-stat-card">
+        <div class="gps-track-stat-label">Điểm</div>
+        <div class="gps-track-stat-value" id="gpsTrackPointCount">0</div>
+      </div>
+      <div class="gps-track-stat-card">
+        <div class="gps-track-stat-label">Khoảng cách</div>
+        <div class="gps-track-stat-value" id="gpsTrackDistance">0.00 km</div>
+      </div>
+      <div class="gps-track-stat-card">
+        <div class="gps-track-stat-label">Thời gian</div>
+        <div class="gps-track-stat-value" id="gpsTrackDuration">00:00</div>
+      </div>
+    </div>
+
+    <div class="gps-track-mode-row">
+      <span class="gps-track-mode-label">Mode:</span>
+      <span id="gpsTrackModeBadge" class="gps-track-mode-badge">REAL</span>
+    </div>
+
+    <div class="gps-track-actions">
+      <button type="button" id="gpsTrackStartBtn" class="gps-track-btn primary">Start</button>
+      <button type="button" id="gpsTrackStopBtn" class="gps-track-btn warning" disabled>Stop</button>
+      <button type="button" id="gpsTrackSaveBtn" class="gps-track-btn success" disabled>Save</button>
+    </div>
+
+    
+    <div class="gps-track-dev-row">
+      <button type="button" id="gpsTrackFakeBtn" class="gps-track-btn ghost">
+        <i class="fas fa-flask"></i> Fake GPS (dev)
+      </button>
+    </div>
+    
+  </div>
+</div>
+
+    <!-- Panel Street View -->
+    <div id="streetViewPanel" style="
+                display: none;
+                position: absolute;
+                bottom: 40px;
+                width: 60vw;
+                left:90px;
+                top:120px;
+                max-width: calc(100vw - 40px);
+                height: 380px;
+                max-height: 70vh;
+                background: #0f172a;
+                border: 1px solid rgba(255,255,255,0.12);
+                border-radius: 12px;
+                z-index: 2000;
+                overflow: hidden;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            ">
+      <!-- Header -->
+      <div id="streetViewHeader" style="
+                    display: flex; align-items: center; justify-content: space-between;
+                    padding: 10px 14px;
+                    background: rgba(255,255,255,0.05);
+                    border-bottom: 1px solid rgba(255,255,255,0.08);
+                    cursor: grab;
+                ">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-street-view" style="color:#1a73e8;"></i>
+          <span style="color:#e2e8f0; font-size:13px; font-weight:600;">Street View</span>
+        </div>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span id="streetViewStatus" style="
+                font-size:11px; color:#64748b;
+                padding: 2px 8px; border-radius:10px;
+                background: rgba(255,255,255,0.05);
+            "></span>
+          <button onclick="MapApp.Tools.StreetView.close()" style="
+                background:none; border:none; color:#94a3b8;
+                cursor:pointer; font-size:14px; padding:2px 6px;
+            " title="Đóng"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+
+      <!-- Viewer container -->
+      <div id="mapillaryViewer" style="width:100%; height:calc(100% - 44px); background:#1e293b;">
+        <div id="streetViewPlaceholder" style="
+                    width:100%; height:100%;
+                    display:flex; flex-direction:column;
+                    align-items:center; justify-content:center;
+                    color:#475569; gap:12px;
+                ">
+          <i class="fas fa-street-view" style="font-size:48px; opacity:0.3;"></i>
+          <p style="font-size:13px; text-align:center; max-width:280px; line-height:1.6;">
+            <b style="color:#60a5fa;">Click lên bản đồ</b> để xem ảnh đường phố
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CREATE LAYER MODAL ===== -->
+    <div class="draw-meta-modal" id="createLayerModal" style="display:none;" aria-hidden="true">
+      <div class="draw-meta-backdrop" onclick="MapApp.Tools.DrawLayer.closeCreateLayerModal()"></div>
+      <div class="draw-meta-dialog" role="dialog" aria-modal="true" aria-labelledby="createLayerTitle">
+        <div class="draw-meta-header">
+          <h3 id="createLayerTitle"><i class="fas fa-layer-group"></i> Tạo lớp dữ liệu mới</h3>
+          <button class="draw-meta-close" type="button" onclick="MapApp.Tools.DrawLayer.closeCreateLayerModal()"
+            title="Đóng"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="draw-meta-body">
+          <div class="draw-meta-field">
+            <label for="createLayerNameInput">Tên lớp <span style="color:#fca5a5;">*</span></label>
+            <input id="createLayerNameInput" type="text" maxlength="255" placeholder="Ví dụ: Cột điện, Mốc địa giới..." />
+          </div>
+
+          <div class="draw-meta-field">
+            <label for="createLayerGeomType">Loại hình học <span style="color:#fca5a5;">*</span></label>
+            <select id="createLayerGeomType">
+              <option value="POINT">Điểm (Point)</option>
+              <option value="LINESTRING">Đường (LineString)</option>
+              <option value="POLYGON">Vùng (Polygon)</option>
+            </select>
+          </div>
+
+          <div class="draw-meta-field">
+            <label><i class="fas fa-search-plus"></i> Cấu hình hiển thị theo tỷ lệ (Zoom)</label>
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="createLayerMinZoom">Min Zoom</label>
+                <input id="createLayerMinZoom" type="number" min="0" max="22" step="1" value="0" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="createLayerMaxZoom">Max Zoom</label>
+                <input id="createLayerMaxZoom" type="number" min="0" max="22" step="1" value="22" />
+              </div>
+            </div>
+          </div>
+
+          <div class="draw-meta-symbol-block">
+            <div class="draw-meta-symbol-title">
+              <i class="fas fa-palette"></i>
+              <span>Ký hiệu mặc định của lớp</span>
+            </div>
+
+            <div id="createLayerSymbolPoint" class="draw-meta-symbol-group">
+              <div class="draw-meta-inline-grid">
+                <div class="draw-meta-field">
+                  <label for="createLayerPointShape">Loại ký hiệu điểm</label>
+                  <select id="createLayerPointShape">
+                    <option value="circle">Circle</option>
+                    <option value="square">Square</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="star">Star</option>
+                    <option value="cross">Cross</option>
+                  </select>
+                </div>
+                <div class="draw-meta-field">
+                  <label for="createLayerPointSize">Kích thước</label>
+                  <input id="createLayerPointSize" type="number" min="4" max="30" step="1" value="8" />
+                </div>
+              </div>
+              <div class="draw-meta-inline-grid three-col">
+                <div class="draw-meta-field">
+                  <label for="createLayerPointFill">Màu ký hiệu</label>
+                  <input id="createLayerPointFill" type="color" value="#00e5ff" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="createLayerPointStroke">Màu viền</label>
+                  <input id="createLayerPointStroke" type="color" value="#ffffff" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="createLayerPointStrokeWidth">Độ dày viền</label>
+                  <input id="createLayerPointStrokeWidth" type="number" min="0" max="10" step="0.5" value="2" />
+                </div>
+              </div>
+            </div>
+
+            <div id="createLayerSymbolLine" class="draw-meta-symbol-group" style="display:none;">
+              <div class="draw-meta-inline-grid">
+                <div class="draw-meta-field">
+                  <label for="createLayerLinePattern">Loại đường</label>
+                  <select id="createLayerLinePattern">
+                    <option value="solid">Nét liền</option>
+                    <option value="dash">Nét đứt</option>
+                    <option value="dot">Nét chấm</option>
+                    <option value="dashdot">Nét gạch chấm</option>
+                  </select>
+                </div>
+                <div class="draw-meta-field">
+                  <label for="createLayerLineWidth">Độ dày đường</label>
+                  <input id="createLayerLineWidth" type="number" min="1" max="16" step="0.5" value="2.5" />
+                </div>
+              </div>
+              <div class="draw-meta-field">
+                <label for="createLayerLineColor">Màu đường</label>
+                <input id="createLayerLineColor" type="color" value="#00e5ff" />
+              </div>
+            </div>
+
+            <div id="createLayerSymbolPolygon" class="draw-meta-symbol-group" style="display:none;">
+              <div class="draw-meta-inline-grid three-col">
+                <div class="draw-meta-field">
+                  <label for="createLayerPolyFill">Màu nền</label>
+                  <input id="createLayerPolyFill" type="color" value="#00e5ff" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="createLayerPolyOpacity">Độ trong suốt nền</label>
+                  <input id="createLayerPolyOpacity" type="number" min="0" max="1" step="0.05" value="0.18" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="createLayerPolyStroke">Màu viền</label>
+                  <input id="createLayerPolyStroke" type="color" value="#00e5ff" />
+                </div>
+              </div>
+              <div class="draw-meta-inline-grid">
+                <div class="draw-meta-field">
+                  <label for="createLayerPolyStrokeWidth">Độ dày viền</label>
+                  <input id="createLayerPolyStrokeWidth" type="number" min="1" max="16" step="0.5" value="2.5" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="createLayerPolyPattern">Kiểu viền</label>
+                  <select id="createLayerPolyPattern">
+                    <option value="solid">Nét liền</option>
+                    <option value="dash">Nét đứt</option>
+                    <option value="dot">Nét chấm</option>
+                    <option value="dashdot">Nét gạch chấm</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="draw-meta-field">
+            <label><i class="fas fa-list"></i> Các trường thuộc tính</label>
+            <div id="createLayerFieldsContainer" style="display:flex; flex-direction:column; gap:8px;"></div>
+            <button type="button" onclick="MapApp.Tools.DrawLayer.addFieldRow()" style="margin-top:8px; display:flex; align-items:center; gap:6px; background:rgba(59,130,246,0.14); border:1px solid rgba(59,130,246,0.45); color:#93c5fd; border-radius:6px; padding:6px 12px; cursor:pointer; font-size:12px;">
+              <i class="fas fa-plus"></i> Thêm trường thuộc tính
+            </button>
+          </div>
+
+          <div id="createLayerStatus" style="font-size:12px; color:#94a3b8; margin-top:4px;"></div>
+        </div>
+
+        <div class="draw-meta-actions">
+          <button class="draw-meta-btn secondary" type="button" onclick="MapApp.Tools.DrawLayer.closeCreateLayerModal()">Hủy</button>
+          <button class="draw-meta-btn primary" type="button" id="createLayerSubmitBtn" onclick="MapApp.Tools.DrawLayer.submitCreateLayer()">Tạo lớp</button>
+        </div>
+      </div>
+    </div>
+    <!-- ===== END CREATE LAYER MODAL ===== -->
+
+    <!-- ===== EXPORT MODAL ===== -->
+    <div class="draw-meta-modal" id="exportModal" style="display:none;" aria-hidden="true">
+      <div class="draw-meta-backdrop" onclick="MapApp.Tools.Draw.closeExportModal()"></div>
+      <div class="draw-meta-dialog" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle" style="width:min(520px,100%);">
+        <div class="draw-meta-header">
+          <h3 id="exportModalTitle"><i class="fas fa-file-export"></i> Xuất dữ liệu</h3>
+          <button class="draw-meta-close" type="button" onclick="MapApp.Tools.Draw.closeExportModal()"
+            title="Đóng"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="draw-meta-body">
+          <div class="draw-meta-field">
+            <label>Chọn lớp dữ liệu</label>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+              <input type="checkbox" id="exportSelectAllLayers"
+                onchange="MapApp.Tools.Draw.toggleAllExportLayers(this.checked)"
+                style="width:15px; height:15px; cursor:pointer; accent-color:#1a73e8;" />
+              <label for="exportSelectAllLayers" style="font-size:12px; font-weight:600; color:#334155; cursor:pointer;">Chọn tất cả</label>
+            </div>
+            <div id="exportLayerList"
+              style="max-height:200px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:8px; padding:6px; display:flex; flex-direction:column; gap:4px;">
+            </div>
+            <div id="exportNoLayersMsg" style="display:none; font-size:12px; color:#94a3b8; padding:8px 0;">
+              Chưa có lớp dữ liệu nào. Hãy tạo lớp trước khi xuất.
+            </div>
+          </div>
+          <div class="draw-meta-field">
+            <label>Định dạng xuất</label>
+            <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:4px;">
+              <label style="display:flex; align-items:center; gap:5px; font-size:12px; color:#334155; cursor:pointer;">
+                <input type="radio" name="exportFormat" value="kml" checked style="accent-color:#1a73e8;" /> KML
+              </label>
+              <label style="display:flex; align-items:center; gap:5px; font-size:12px; color:#334155; cursor:pointer;">
+                <input type="radio" name="exportFormat" value="geojson" style="accent-color:#1a73e8;" /> GeoJSON
+              </label>
+              <label style="display:flex; align-items:center; gap:5px; font-size:12px; color:#334155; cursor:pointer;">
+                <input type="radio" name="exportFormat" value="shapefile" style="accent-color:#1a73e8;" /> Shapefile
+              </label>
+              <label style="display:flex; align-items:center; gap:5px; font-size:12px; color:#334155; cursor:pointer;">
+                <input type="radio" name="exportFormat" value="excel" style="accent-color:#1a73e8;" /> Excel
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="draw-meta-footer" style="padding:10px 14px; display:flex; justify-content:flex-end; gap:8px; border-top:1px solid #e2e8f0;">
+          <button type="button" onclick="MapApp.Tools.Draw.closeExportModal()"
+            style="padding:7px 16px; border:1px solid #cbd5e1; border-radius:8px; background:#f8fafc; color:#475569; font-size:12px; font-weight:600; cursor:pointer;">
+            Đóng
+          </button>
+          <button type="button" id="exportDoBtn" onclick="MapApp.Tools.Draw.doExport()"
+            style="padding:7px 20px; border:none; border-radius:8px; background:linear-gradient(135deg,#1a73e8,#4f8ef7); color:#fff; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
+            <i class="fas fa-download"></i> Xuất
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- ===== END EXPORT MODAL ===== -->
+
+    <!-- ===== DYNAMIC ATTRIBUTE FORM MODAL ===== -->
+    <div class="draw-meta-modal" id="dynamicAttrModal" style="display:none;" aria-hidden="true">
+      <div class="draw-meta-backdrop" onclick="MapApp.Tools.DrawLayer.closeDynamicAttrModal('skip')"></div>
+      <div class="draw-meta-dialog" role="dialog" aria-modal="true" aria-labelledby="dynamicAttrTitle">
+        <div class="draw-meta-header">
+          <h3 id="dynamicAttrTitle"><i class="fas fa-edit"></i> Nhập thuộc tính đối tượng</h3>
+          <button class="draw-meta-close" type="button" onclick="MapApp.Tools.DrawLayer.closeDynamicAttrModal('skip')"
+            title="Đóng"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="draw-meta-body" id="dynamicAttrBody">
+        </div>
+
+        <div id="dynamicAttrSymbolBlock" class="draw-meta-symbol-block" style="display:none;">
+          <div class="draw-meta-symbol-title">
+            <i class="fas fa-palette"></i>
+            <span>Ký hiệu đối tượng</span>
+          </div>
+
+          <div id="dynAttrSymbolPoint" class="draw-meta-symbol-group">
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="dynAttrPointShape">Loại ký hiệu điểm</label>
+                <select id="dynAttrPointShape">
+                  <option value="circle">Circle</option>
+                  <option value="square">Square</option>
+                  <option value="triangle">Triangle</option>
+                  <option value="star">Star</option>
+                  <option value="cross">Cross</option>
+                </select>
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrPointSize">Kích thước</label>
+                <input id="dynAttrPointSize" type="number" min="4" max="30" step="1" value="8" />
+              </div>
+            </div>
+            <div class="draw-meta-inline-grid three-col">
+              <div class="draw-meta-field">
+                <label for="dynAttrPointFill">Màu ký hiệu</label>
+                <input id="dynAttrPointFill" type="color" value="#00e5ff" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrPointStroke">Màu viền</label>
+                <input id="dynAttrPointStroke" type="color" value="#ffffff" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrPointStrokeWidth">Độ dày viền</label>
+                <input id="dynAttrPointStrokeWidth" type="number" min="0" max="10" step="0.5" value="2" />
+              </div>
+            </div>
+          </div>
+
+          <div id="dynAttrSymbolLine" class="draw-meta-symbol-group" style="display:none;">
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="dynAttrLinePattern">Loại đường</label>
+                <select id="dynAttrLinePattern">
+                  <option value="solid">Nét liền</option>
+                  <option value="dash">Nét đứt</option>
+                  <option value="dot">Nét chấm</option>
+                  <option value="dashdot">Nét gạch chấm</option>
+                </select>
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrLineWidth">Độ dày đường</label>
+                <input id="dynAttrLineWidth" type="number" min="1" max="16" step="0.5" value="2.5" />
+              </div>
+            </div>
+            <div class="draw-meta-field">
+              <label for="dynAttrLineColor">Màu đường</label>
+              <input id="dynAttrLineColor" type="color" value="#00e5ff" />
+            </div>
+          </div>
+
+          <div id="dynAttrSymbolPolygon" class="draw-meta-symbol-group" style="display:none;">
+            <div class="draw-meta-inline-grid three-col">
+              <div class="draw-meta-field">
+                <label for="dynAttrPolyFill">Màu nền</label>
+                <input id="dynAttrPolyFill" type="color" value="#00e5ff" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrPolyOpacity">Độ trong suốt nền</label>
+                <input id="dynAttrPolyOpacity" type="number" min="0" max="1" step="0.05" value="0.18" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrPolyStroke">Màu viền</label>
+                <input id="dynAttrPolyStroke" type="color" value="#00e5ff" />
+              </div>
+            </div>
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="dynAttrPolyStrokeWidth">Độ dày viền</label>
+                <input id="dynAttrPolyStrokeWidth" type="number" min="1" max="16" step="0.5" value="2.5" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrPolyPattern">Kiểu viền</label>
+                <select id="dynAttrPolyPattern">
+                  <option value="solid">Nét liền</option>
+                  <option value="dash">Nét đứt</option>
+                  <option value="dot">Nét chấm</option>
+                  <option value="dashdot">Nét gạch chấm</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="dynamicAttrLabelBlock" class="draw-meta-symbol-block" style="display:none;">
+          <div class="draw-meta-symbol-title" style="display:flex; align-items:center; justify-content:space-between;">
+            <span><i class="fas fa-font"></i> Cấu hình nhãn đối tượng</span>
+            <label style="display:flex; align-items:center; gap:4px; font-size:11px; color:#cbd5e1; cursor:pointer;">
+              <input type="checkbox" id="dynAttrUseLayerDefaultLabel" checked onchange="MapApp.Tools.DrawLayer._toggleDynAttrLabelOverride(this.checked)" />
+              Dùng mặc định lớp
+            </label>
+          </div>
+
+          <div id="dynAttrLabelFieldsWrap" style="display:none;">
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelField">Trường dữ liệu hiển thị</label>
+                <select id="dynAttrLabelField">
+                  <option value="">-- Không hiển thị nhãn --</option>
+                </select>
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelPlacement">Vị trí nhãn</label>
+                <select id="dynAttrLabelPlacement">
+                  <option value="point">Điểm (Point)</option>
+                  <option value="line">Theo đường (Line)</option>
+                  <option value="interior">Trong vùng (Interior)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="draw-meta-inline-grid three-col">
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelFontFamily">Font chữ</label>
+                <select id="dynAttrLabelFontFamily">
+                  <option value="Inter">Inter</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Helvetica">Helvetica</option>
+                  <option value="Roboto">Roboto</option>
+                  <option value="Open Sans">Open Sans</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Courier New">Courier New</option>
+                </select>
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelFontSize">Cỡ chữ (px)</label>
+                <input id="dynAttrLabelFontSize" type="number" min="6" max="72" step="1" value="12" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelFontWeight">Độ đậm</label>
+                <select id="dynAttrLabelFontWeight">
+                  <option value="normal">Normal</option>
+                  <option value="bold">Bold</option>
+                  <option value="600">Semi Bold (600)</option>
+                  <option value="300">Light (300)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelFontStyle">Kiểu chữ</label>
+                <select id="dynAttrLabelFontStyle">
+                  <option value="normal">Bình thường</option>
+                  <option value="italic">Nghiêng (Italic)</option>
+                </select>
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelFillColor">Màu chữ</label>
+                <input id="dynAttrLabelFillColor" type="color" value="#f8fafc" />
+              </div>
+            </div>
+
+            <div class="draw-meta-inline-grid three-col">
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelHaloColor">Màu viền (Halo)</label>
+                <input id="dynAttrLabelHaloColor" type="color" value="#0f172a" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelHaloWidth">Độ dày viền</label>
+                <input id="dynAttrLabelHaloWidth" type="number" min="0" max="10" step="0.5" value="3" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelVisible">Hiện nhãn</label>
+                <select id="dynAttrLabelVisible">
+                  <option value="true">Có</option>
+                  <option value="false">Không</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelOffsetX">Dịch chuyển X</label>
+                <input id="dynAttrLabelOffsetX" type="number" min="-100" max="100" step="1" value="0" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelOffsetY">Dịch chuyển Y</label>
+                <input id="dynAttrLabelOffsetY" type="number" min="-100" max="100" step="1" value="-14" />
+              </div>
+            </div>
+
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelMinZoom"><i class="fas fa-search-plus"></i> Zoom tối thiểu</label>
+                <input id="dynAttrLabelMinZoom" type="number" min="0" max="22" step="1" value="0" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="dynAttrLabelMaxZoom"><i class="fas fa-search-minus"></i> Zoom tối đa</label>
+                <input id="dynAttrLabelMaxZoom" type="number" min="0" max="22" step="1" value="22" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="draw-meta-actions">
+          <button class="draw-meta-btn secondary" type="button" onclick="MapApp.Tools.DrawLayer.closeDynamicAttrModal('skip')">Bỏ qua</button>
+          <button class="draw-meta-btn primary" type="button" id="dynamicAttrSaveBtn" onclick="MapApp.Tools.DrawLayer.saveDynamicFeature()">Lưu</button>
+        </div>
+      </div>
+    </div>
+    <!-- ===== END DYNAMIC ATTRIBUTE FORM MODAL ===== -->
+
+    <!-- ===== EDIT LAYER MODAL ===== -->
+    <div class="draw-meta-modal" id="editLayerModal" style="display:none;" aria-hidden="true">
+      <div class="draw-meta-backdrop" onclick="MapApp.Tools.DrawLayer.closeEditLayerModal()"></div>
+      <div class="draw-meta-dialog" role="dialog" aria-modal="true" aria-labelledby="editLayerTitle">
+        <div class="draw-meta-header">
+          <h3 id="editLayerTitle"><i class="fas fa-cog"></i> Chỉnh sửa cấu hình lớp</h3>
+          <button class="draw-meta-close" type="button" onclick="MapApp.Tools.DrawLayer.closeEditLayerModal()"
+            title="Đóng"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="draw-meta-body">
+          <div class="draw-meta-field">
+            <label for="editLayerNameInput">Tên lớp</label>
+            <input id="editLayerNameInput" type="text" maxlength="255" disabled style="opacity:0.6;" />
+          </div>
+
+          <div class="draw-meta-field">
+            <label for="editLayerGeomType">Loại hình học</label>
+            <input id="editLayerGeomType" type="text" disabled style="opacity:0.6;" />
+          </div>
+
+          <div class="draw-meta-field">
+            <label><i class="fas fa-search-plus"></i> Cấu hình hiển thị theo tỷ lệ (Zoom)</label>
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="editLayerMinZoom">Min Zoom</label>
+                <input id="editLayerMinZoom" type="number" min="0" max="22" step="1" value="0" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="editLayerMaxZoom">Max Zoom</label>
+                <input id="editLayerMaxZoom" type="number" min="0" max="22" step="1" value="22" />
+              </div>
+            </div>
+          </div>
+
+          <div class="draw-meta-symbol-block">
+            <div class="draw-meta-symbol-title">
+              <i class="fas fa-palette"></i>
+              <span>Ký hiệu mặc định của lớp</span>
+            </div>
+
+            <div id="editLayerSymbolPoint" class="draw-meta-symbol-group">
+              <div class="draw-meta-inline-grid">
+                <div class="draw-meta-field">
+                  <label for="editLayerPointShape">Loại ký hiệu điểm</label>
+                  <select id="editLayerPointShape">
+                    <option value="circle">Circle</option>
+                    <option value="square">Square</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="star">Star</option>
+                    <option value="cross">Cross</option>
+                  </select>
+                </div>
+                <div class="draw-meta-field">
+                  <label for="editLayerPointSize">Kích thước</label>
+                  <input id="editLayerPointSize" type="number" min="4" max="30" step="1" value="8" />
+                </div>
+              </div>
+              <div class="draw-meta-inline-grid three-col">
+                <div class="draw-meta-field">
+                  <label for="editLayerPointFill">Màu ký hiệu</label>
+                  <input id="editLayerPointFill" type="color" value="#00e5ff" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="editLayerPointStroke">Màu viền</label>
+                  <input id="editLayerPointStroke" type="color" value="#ffffff" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="editLayerPointStrokeWidth">Độ dày viền</label>
+                  <input id="editLayerPointStrokeWidth" type="number" min="0" max="10" step="0.5" value="2" />
+                </div>
+              </div>
+            </div>
+
+            <div id="editLayerSymbolLine" class="draw-meta-symbol-group" style="display:none;">
+              <div class="draw-meta-inline-grid">
+                <div class="draw-meta-field">
+                  <label for="editLayerLinePattern">Loại đường</label>
+                  <select id="editLayerLinePattern">
+                    <option value="solid">Nét liền</option>
+                    <option value="dash">Nét đứt</option>
+                    <option value="dot">Nét chấm</option>
+                    <option value="dashdot">Nét gạch chấm</option>
+                  </select>
+                </div>
+                <div class="draw-meta-field">
+                  <label for="editLayerLineWidth">Độ dày đường</label>
+                  <input id="editLayerLineWidth" type="number" min="1" max="16" step="0.5" value="2.5" />
+                </div>
+              </div>
+              <div class="draw-meta-field">
+                <label for="editLayerLineColor">Màu đường</label>
+                <input id="editLayerLineColor" type="color" value="#00e5ff" />
+              </div>
+            </div>
+
+            <div id="editLayerSymbolPolygon" class="draw-meta-symbol-group" style="display:none;">
+              <div class="draw-meta-inline-grid three-col">
+                <div class="draw-meta-field">
+                  <label for="editLayerPolyFill">Màu nền</label>
+                  <input id="editLayerPolyFill" type="color" value="#00e5ff" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="editLayerPolyOpacity">Độ trong suốt nền</label>
+                  <input id="editLayerPolyOpacity" type="number" min="0" max="1" step="0.05" value="0.18" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="editLayerPolyStroke">Màu viền</label>
+                  <input id="editLayerPolyStroke" type="color" value="#00e5ff" />
+                </div>
+              </div>
+              <div class="draw-meta-inline-grid">
+                <div class="draw-meta-field">
+                  <label for="editLayerPolyStrokeWidth">Độ dày viền</label>
+                  <input id="editLayerPolyStrokeWidth" type="number" min="1" max="16" step="0.5" value="2.5" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="editLayerPolyPattern">Kiểu viền</label>
+                  <select id="editLayerPolyPattern">
+                    <option value="solid">Nét liền</option>
+                    <option value="dash">Nét đứt</option>
+                    <option value="dot">Nét chấm</option>
+                    <option value="dashdot">Nét gạch chấm</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="draw-meta-symbol-block" id="editLayerLabelBlock">
+            <div class="draw-meta-symbol-title">
+              <i class="fas fa-font"></i>
+              <span>Cấu hình nhãn (Label) mặc định</span>
+            </div>
+
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="editLayerLabelField">Trường dữ liệu hiển thị</label>
+                <select id="editLayerLabelField">
+                  <option value="">-- Không hiển thị nhãn --</option>
+                </select>
+              </div>
+              <div class="draw-meta-field">
+                <label for="editLayerLabelPlacement">Vị trí nhãn</label>
+                <select id="editLayerLabelPlacement">
+                  <option value="point">Điểm (Point)</option>
+                  <option value="line">Theo đường (Line)</option>
+                  <option value="interior">Trong vùng (Interior)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="draw-meta-inline-grid three-col">
+              <div class="draw-meta-field">
+                <label for="editLayerLabelFontFamily">Font chữ</label>
+                <select id="editLayerLabelFontFamily">
+                  <option value="Inter">Inter</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Helvetica">Helvetica</option>
+                  <option value="Roboto">Roboto</option>
+                  <option value="Open Sans">Open Sans</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Courier New">Courier New</option>
+                </select>
+              </div>
+              <div class="draw-meta-field">
+                <label for="editLayerLabelFontSize">Cỡ chữ (px)</label>
+                <input id="editLayerLabelFontSize" type="number" min="6" max="72" step="1" value="12" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="editLayerLabelFontWeight">Độ đậm</label>
+                <select id="editLayerLabelFontWeight">
+                  <option value="normal">Normal</option>
+                  <option value="bold">Bold</option>
+                  <option value="600">Semi Bold (600)</option>
+                  <option value="300">Light (300)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="editLayerLabelFontStyle">Kiểu chữ</label>
+                <select id="editLayerLabelFontStyle">
+                  <option value="normal">Bình thường</option>
+                  <option value="italic">Nghiêng (Italic)</option>
+                </select>
+              </div>
+              <div class="draw-meta-field">
+                <label for="editLayerLabelFillColor">Màu chữ</label>
+                <input id="editLayerLabelFillColor" type="color" value="#f8fafc" />
+              </div>
+            </div>
+
+            <div class="draw-meta-inline-grid three-col">
+              <div class="draw-meta-field">
+                <label for="editLayerLabelHaloColor">Màu viền (Halo)</label>
+                <input id="editLayerLabelHaloColor" type="color" value="#0f172a" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="editLayerLabelHaloWidth">Độ dày viền</label>
+                <input id="editLayerLabelHaloWidth" type="number" min="0" max="10" step="0.5" value="3" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="editLayerLabelVisible">Hiện nhãn</label>
+                <select id="editLayerLabelVisible">
+                  <option value="true">Có</option>
+                  <option value="false">Không</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="editLayerLabelOffsetX">Dịch chuyển X</label>
+                <input id="editLayerLabelOffsetX" type="number" min="-100" max="100" step="1" value="0" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="editLayerLabelOffsetY">Dịch chuyển Y</label>
+                <input id="editLayerLabelOffsetY" type="number" min="-100" max="100" step="1" value="-14" />
+              </div>
+            </div>
+
+            <div class="draw-meta-inline-grid">
+              <div class="draw-meta-field">
+                <label for="editLayerLabelMinZoom"><i class="fas fa-search-plus"></i> Zoom tối thiểu</label>
+                <input id="editLayerLabelMinZoom" type="number" min="0" max="22" step="1" value="0" />
+              </div>
+              <div class="draw-meta-field">
+                <label for="editLayerLabelMaxZoom"><i class="fas fa-search-minus"></i> Zoom tối đa</label>
+                <input id="editLayerLabelMaxZoom" type="number" min="0" max="22" step="1" value="22" />
+              </div>
+            </div>
+          </div>
+
+          <div id="editLayerStatus" style="font-size:12px; color:#94a3b8; margin-top:4px;"></div>
+        </div>
+
+        <div class="draw-meta-actions">
+          <button class="draw-meta-btn secondary" type="button" onclick="MapApp.Tools.DrawLayer.closeEditLayerModal()">Hủy</button>
+          <button class="draw-meta-btn primary" type="button" id="editLayerSubmitBtn" onclick="MapApp.Tools.DrawLayer.submitEditLayer()">Lưu cấu hình</button>
+        </div>
+      </div>
+    </div>
+    <!-- ===== END EDIT LAYER MODAL ===== -->
+
+    <!-- ===== DRAW INFO MODAL ===== -->
+    <div class="draw-meta-modal" id="drawMetaModal" style="display:none;" aria-hidden="true">
+      <div class="draw-meta-backdrop" onclick="MapApp.Tools.Draw.closeMetaModal('skip')"></div>
+      <div class="draw-meta-dialog" role="dialog" aria-modal="true" aria-labelledby="drawMetaTitle">
+        <div class="draw-meta-header">
+          <h3 id="drawMetaTitle"><i class="fas fa-pen"></i> Thông tin đối tượng vừa vẽ</h3>
+          <button class="draw-meta-close" type="button" onclick="MapApp.Tools.Draw.closeMetaModal('skip')"
+            title="Đóng"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="draw-meta-body">
+          <div class="draw-meta-field">
+            <label for="drawMetaNameInput">Tên đối tượng</label>
+            <input id="drawMetaNameInput" type="text" maxlength="255" placeholder="Ví dụ: Thửa đất số 12" />
+          </div>
+
+          <div class="draw-meta-field">
+            <label for="drawMetaDescInput">Mô tả</label>
+            <textarea id="drawMetaDescInput" rows="4" maxlength="2000"
+              placeholder="Nhập mô tả chi tiết cho đối tượng..."></textarea>
+          </div>
+
+          <div class="draw-meta-field">
+            <label><i class="fas fa-image"></i> Hình ảnh (tùy chọn)</label>
+            <div class="draw-image-drop" id="drawMetaImageDrop"
+              onclick="document.getElementById('drawMetaFileInput').click()">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span>Click hoặc kéo thả ảnh vào đây</span>
+              <span style="font-size:10px; color:#94a3b8;">Tối đa 5 ảnh, mỗi ảnh ≤ 5MB (jpg/png/webp)</span>
+            </div>
+            <input id="drawMetaFileInput" type="file" multiple accept="image/jpeg,image/png,image/webp"
+              style="display:none" onchange="MapApp.Tools.Draw._previewImages(this.files)" />
+            <div class="draw-image-preview" id="drawMetaImagePreview"></div>
+            <div id="drawMetaExistingImages" class="draw-image-existing" style="display:none;"></div>
+          </div>
+
+          <div class="draw-meta-symbol-block">
+            <div class="draw-meta-symbol-title">
+              <i class="fas fa-palette"></i>
+              <span>Ký hiệu hiển thị</span>
+            </div>
+
+            <div id="drawMetaSymbolPoint" class="draw-meta-symbol-group" style="display:none;">
+              <div class="draw-meta-inline-grid">
+                <div class="draw-meta-field">
+                  <label for="drawMetaPointShape">Loại ký hiệu điểm</label>
+                  <select id="drawMetaPointShape">
+                    <option value="circle">Circle</option>
+                    <option value="square">Square</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="star">Star</option>
+                    <option value="cross">Cross</option>
+                  </select>
+                </div>
+                <div class="draw-meta-field">
+                  <label for="drawMetaPointSize">Kích thước</label>
+                  <input id="drawMetaPointSize" type="number" min="4" max="30" step="1" value="8" />
+                </div>
+              </div>
+
+              <div class="draw-meta-inline-grid three-col">
+                <div class="draw-meta-field">
+                  <label for="drawMetaPointFill">Màu ký hiệu</label>
+                  <input id="drawMetaPointFill" type="color" value="#00e5ff" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="drawMetaPointStroke">Màu viền</label>
+                  <input id="drawMetaPointStroke" type="color" value="#ffffff" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="drawMetaPointStrokeWidth">Độ dày viền</label>
+                  <input id="drawMetaPointStrokeWidth" type="number" min="0" max="10" step="0.5" value="2" />
+                </div>
+              </div>
+            </div>
+
+            <div id="drawMetaSymbolLine" class="draw-meta-symbol-group" style="display:none;">
+              <div class="draw-meta-inline-grid">
+                <div class="draw-meta-field">
+                  <label for="drawMetaLinePattern">Loại đường</label>
+                  <select id="drawMetaLinePattern">
+                    <option value="solid">Nét liền</option>
+                    <option value="dash">Nét đứt</option>
+                    <option value="dot">Nét chấm</option>
+                    <option value="dashdot">Nét gạch chấm</option>
+                  </select>
+                </div>
+                <div class="draw-meta-field">
+                  <label for="drawMetaLineWidth">Độ dày đường</label>
+                  <input id="drawMetaLineWidth" type="number" min="1" max="16" step="0.5" value="2.5" />
+                </div>
+              </div>
+              <div class="draw-meta-field">
+                <label for="drawMetaLineColor">Màu đường</label>
+                <input id="drawMetaLineColor" type="color" value="#00e5ff" />
+              </div>
+            </div>
+
+            <div id="drawMetaSymbolPolygon" class="draw-meta-symbol-group" style="display:none;">
+              <div class="draw-meta-inline-grid three-col">
+                <div class="draw-meta-field">
+                  <label for="drawMetaPolyFill">Màu nền</label>
+                  <input id="drawMetaPolyFill" type="color" value="#00e5ff" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="drawMetaPolyOpacity">Độ trong suốt nền</label>
+                  <input id="drawMetaPolyOpacity" type="number" min="0" max="1" step="0.05" value="0.18" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="drawMetaPolyStroke">Màu viền</label>
+                  <input id="drawMetaPolyStroke" type="color" value="#00e5ff" />
+                </div>
+              </div>
+              <div class="draw-meta-inline-grid">
+                <div class="draw-meta-field">
+                  <label for="drawMetaPolyStrokeWidth">Độ dày viền</label>
+                  <input id="drawMetaPolyStrokeWidth" type="number" min="1" max="16" step="0.5" value="2.5" />
+                </div>
+                <div class="draw-meta-field">
+                  <label for="drawMetaPolyPattern">Kiểu viền</label>
+                    <select id="drawMetaPolyPattern">
+                      <option value="solid">Nét liền</option>
+                      <option value="dash">Nét đứt</option>
+                      <option value="dot">Nét chấm</option>
+                      <option value="dashdot">Nét gạch chấm</option>
+                    </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="draw-meta-actions">
+          <button class="draw-meta-btn secondary" type="button" onclick="MapApp.Tools.Draw.closeMetaModal('skip')">Bỏ
+            qua</button>
+          <button class="draw-meta-btn primary" id="drawMetaSaveBtn" type="button"
+            onclick="MapApp.Tools.Draw.saveMetaFromModal()">Lưu thông tin</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="drawings-table-panel" id="drawingsTablePanel" style="display:none;">
+      <div class="drawings-table-header">
+        <div class="drawings-table-title">
+          <i class="fas fa-table"></i> Danh sách đối tượng đã vẽ
+        </div>
+        <button class="drawings-table-close" onclick="MapApp.Tools.Draw.toggleDrawingsTablePanel()"><i
+            class="fas fa-times"></i></button>
+      </div>
+      <div class="drawings-table-body">
+        <div class="drawings-table-toolbar">
+          <select id="drawingsTableLayerSelector"
+            style="flex:1; min-width:160px; background:rgba(15,23,42,0.7); border:1px solid rgba(148,163,184,0.35); border-radius:8px; padding:8px 10px; color:#e2e8f0; font-size:12px; cursor:pointer;">
+            <option value="">-- Chọn lớp dữ liệu --</option>
+          </select>
+          <button id="drawingsTableRefreshBtn" class="drawings-table-refresh-btn" type="button"
+            onclick="MapApp.Tools.DrawLayer.refreshDrawingsTablePanel()"><i class="fas fa-rotate-right"></i> Làm mới</button>
+        </div>
+
+        <div id="drawingsTableStatus" style="font-size:12px; color:#94a3b8; margin-bottom:8px;">
+          Chọn một lớp dữ liệu để xem danh sách đối tượng.
+        </div>
+
+        <div class="drawings-table-wrap">
+          <table id="drawingsTable" class="drawings-table-grid">
+            <thead id="drawingsTableHead">
+              <tr>
+                <th>ID</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="drawingsTableBody">
+              <tr>
+                <td colspan="2" class="drawings-table-empty">Chọn một lớp dữ liệu để xem danh sách đối tượng.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== END DRAW PANEL ===== -->
+
+    <!-- ===== SHARE MODAL ===== -->
+    <div class="draw-meta-modal" id="shareModal" style="display:none;" aria-hidden="true">
+      <div class="draw-meta-backdrop" onclick="MapApp.Tools.Share.toggleModal()"></div>
+      <div class="draw-meta-dialog" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+        <div class="draw-meta-header">
+          <h3 id="shareTitle"><i class="fas fa-share-alt"></i> Chia sẻ vị trí của tôi</h3>
+          <button class="draw-meta-close" type="button" onclick="MapApp.Tools.Share.toggleModal()" title="Đóng"><i
+              class="fas fa-times"></i></button>
+        </div>
+
+        <div class="draw-meta-body">
+          <div class="draw-meta-field">
+            <label for="shareLat">Vĩ độ (Latitude)</label>
+            <input id="shareLat" type="text" readonly />
+          </div>
+          <div class="draw-meta-field">
+            <label for="shareLon">Kinh độ (Longitude)</label>
+            <input id="shareLon" type="text" readonly />
+          </div>
+    
+          <div class="draw-meta-field">
+            <label for="shareUrl">Liên kết chia sẻ</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input id="shareUrl" type="text" readonly
+                style="flex:1; font-size:12px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:8px 10px; color:#1e293b;" />
+              <button class="draw-meta-btn primary" type="button" onclick="MapApp.Tools.Share.copyLink()"
+                style="white-space:nowrap; padding:8px 14px;" title="Sao chép liên kết"><i class="fas fa-copy"></i></button>
+            </div>
+          </div>
+          <div id="shareCopyToast"
+            style="display:none; font-size:12px; color:#16a34a; margin-top:-4px; padding:0 2px;">
+            <i class="fas fa-check-circle"></i> Đã sao chép liên kết!
+          </div>
+
+
+
+          <div id="shareQrWrap" style="display:flex; flex-direction:column; align-items:center; margin-top:12px; gap:6px;">
+            <img id="shareQrImg" src="" alt="QR Code" 
+              style="width:200px; height:200px; border-radius:8px; border:1px solid #e2e8f0; display:none;" />
+            <span id="shareQrLabel" style="font-size:11px; color:#64748b; display:none;">Quét mã QR để mở liên kết</span>
+          </div>
+
+          
+        </div>
+
+        <div class="draw-meta-actions">
+          <button class="draw-meta-btn secondary" type="button" onclick="MapApp.Tools.Share.toggleModal()">Đóng</button>
+          <button class="draw-meta-btn primary" type="button" id="shareNativeBtn"
+            onclick="MapApp.Tools.Share.nativeShare()" style="display:none;"><i class="fas fa-share-alt"></i> Chia sẻ</button>
+        </div>
+      </div>
+    </div>
+    <!-- ===== END SHARE MODAL ===== -->
+
+    <!-- ===== WEATHER PANEL ===== -->
+    <div class="weather-panel" id="weatherPanel" style="display:none;">
+      <div class="weather-panel-header">
+        <div class="weather-panel-title"><i class="fas fa-cloud-sun"></i> Thời tiết</div>
+        <button class="weather-panel-close" onclick="MapApp.Tools.Weather.togglePanel()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="weather-panel-body" id="weatherPanelBody">
+        <div class="weather-loading"><i class="fas fa-circle-notch fa-spin"></i> Đang tải dữ liệu thời tiết...</div>
+      </div>
+    </div>
+    <!-- ===== END WEATHER PANEL ===== -->
+
+    <!-- ===== AQI PANEL ===== -->
+    <div class="weather-panel" id="aqiPanel" style="display:none;">
+      <div class="weather-panel-header">
+        <div class="weather-panel-title"><i class="fas fa-wind"></i> Chất lượng không khí</div>
+        <button class="weather-panel-close" onclick="MapApp.Tools.AQI.togglePanel()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="weather-panel-body" id="aqiPanelBody">
+        <div class="weather-loading"><i class="fas fa-circle-notch fa-spin"></i> Đang tải dữ liệu AQI...</div>
+      </div>
+    </div>
+    <!-- ===== END AQI PANEL ===== -->
+
+    <!-- ===== SAP NHAP TREE PANEL ===== -->
+    <div class="sapnhap-panel" id="sapnhapPanel" style="display:none;">
+      <div class="sapnhap-panel-header">
+        <div class="sapnhap-panel-title"><i class="fas fa-sitemap"></i> Tra cứu sáp nhập</div>
+        <button class="sapnhap-panel-close" onclick="MapApp.Tools.SapNhapTree.togglePanel()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="sapnhap-panel-body">
+        <div class="sapnhap-search-row">
+          <input id="sapnhapSearchInput" type="text" placeholder="Tìm theo mã hoặc tên..." autocomplete="off" />
+          <button id="sapnhapSearchClear" type="button" title="Xóa tìm kiếm"><i class="fas fa-eraser"></i></button>
+        </div>
+
+        <div class="sapnhap-tree-meta" id="sapnhapTreeMeta">Đang sẵn sàng tải dữ liệu...</div>
+        <div id="sapnhapTreeContainer" class="sapnhap-tree-container">
+          <div class="sapnhap-tree-empty">Mở panel để tải dữ liệu sáp nhập.</div>
+        </div>
+
+        <div class="sapnhap-detail" id="sapnhapDetail">
+          <div class="sapnhap-detail-empty">Chọn một tỉnh/thành hoặc xã/phường để xem chi tiết.</div>
+        </div>
+      </div>
+    </div>
+    <!-- ===== END SAP NHAP TREE PANEL ===== -->
+
+    
+
+    <div class="convert-panel" id="convertPanel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fas fa-exchange-alt" style="color: aliceblue;"></i> Chuyển đổi tọa độ
+        </div>
+        <button class="panel-close" onclick="MapApp.Tools.Convert.togglePanel()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="tab-buttons">
+        <button class="active" id="wgs84-to-vn2000">WGS84 → VN2000</button>
+        <button id="vn2000-to-wgs84">VN2000 → WGS84</button>
+        <button id="vn2000-to-vn2000">VN2000 → VN2000</button>
+      </div>
+
+      <!-- Tab 1: WGS84 to VN2000 -->
+      <div class="tab-content active" id="tab-wgs84-to-vn2000">
+        <div class="section">
+          <h4><i class="fa-solid fa-earth-asia"></i> Tọa độ WGS84 (Độ thập phân)</h4>
+          <label>Vĩ độ (Latitude):</label>
+          <input type="number" id="wgs84_lat" placeholder="VD: 10.823099" step="any" value="21.028511" />
+          <label>Kinh độ (Longitude):</label>
+          <input type="number" id="wgs84_lon" placeholder="VD: 106.629664" step="any" value="105.804817" />
+        </div>
+
+        <div class="section">
+          <h4><i class="fa-solid fa-map-pin"></i> Múi chiếu VN2000</h4>
+          <label>Chọn múi chiếu:</label>
+          <select id="zone_to_vn2000">
+            <optgroup label="Múi 3° (Địa phương)">
+              <option value="103">KTT 103°</option>
+              <option value="104">KTT 104°</option>
+              <option value="104.5">KTT 104°30'</option>
+              <option value="104.75">KTT 104°45'</option>
+              <option value="105" selected>KTT 105°</option>
+              <option value="105.5">KTT 105°30'</option>
+              <option value="105.75">KTT 105°45'</option>
+              <option value="106">KTT 106°</option>
+              <option value="106.25">KTT 106°15'</option>
+              <option value="106.5">KTT 106°30'</option>
+              <option value="107">KTT 107°</option>
+              <option value="107.25">KTT 107°15'</option>
+              <option value="107.5">KTT 107°30'</option>
+              <option value="107.75">KTT 107°45'</option>
+              <option value="108">KTT 108°</option>
+              <option value="108.25">KTT 108°15'</option>
+              <option value="108.5">KTT 108°30'</option>
+            </optgroup>
+            <optgroup label="Múi 6° (Quốc gia)">
+              <option value="zone48">Múi 48 (KTT 105°)</option>
+              <option value="zone49">Múi 49 (KTT 111°)</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <button id="convertWGS84toVN2000"><i class="fa-solid fa-exchange-alt"></i> Chuyển đổi</button>
+
+        <div class="result-box" id="result_vn2000">
+          <strong>Kết quả VN2000:</strong><br />
+          X (Easting): --<br />
+          Y (Northing): --
+        </div>
+      </div>
+
+      <!-- Tab 2: VN2000 to WGS84 -->
+      <div class="tab-content" id="tab-vn2000-to-wgs84">
+        <div class="section">
+          <h4><i class="fa-solid fa-map-pin"></i> Tọa độ VN2000</h4>
+          <label>X (Easting) - mét:</label>
+          <input type="number" id="vn2000_x" placeholder="VD: 500000" step="any" value="584273.045" />
+          <label>Y (Northing) - mét:</label>
+          <input type="number" id="vn2000_y" placeholder="VD: 1200000" step="any" value="2327346.068" />
+        </div>
+
+        <div class="section">
+          <h4><i class="fa-solid fa-map-pin"></i> Múi chiếu VN2000</h4>
+          <label>Chọn múi chiếu:</label>
+          <select id="zone_to_wgs84">
+            <optgroup label="Múi 3° (Địa phương)">
+              <option value="103">KTT 103°</option>
+              <option value="104">KTT 104°</option>
+              <option value="104.5">KTT 104°30'</option>
+              <option value="104.75">KTT 104°45'</option>
+              <option value="105">KTT 105°</option>
+              <option value="105.5">KTT 105°30'</option>
+              <option value="105.75">KTT 105°45'</option>
+              <option value="106" selected>KTT 106°</option>
+              <option value="106.25">KTT 106°15'</option>
+              <option value="106.5">KTT 106°30'</option>
+              <option value="107">KTT 107°</option>
+              <option value="107.25">KTT 107°15'</option>
+              <option value="107.5">KTT 107°30'</option>
+              <option value="107.75">KTT 107°45'</option>
+              <option value="108">KTT 108°</option>
+              <option value="108.25">KTT 108°15'</option>
+              <option value="108.5">KTT 108°30'</option>
+            </optgroup>
+            <optgroup label="Múi 6° (Quốc gia)">
+              <option value="zone48">Múi 48 (KTT 105°)</option>
+              <option value="zone49">Múi 49 (KTT 111°)</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <button id="convertVN2000toWGS84"><i class="fa-solid fa-exchange-alt"></i> Chuyển đổi</button>
+        <!-- <button class="secondary" id="showOnMap">📍 Hiển thị trên bản đồ</button> -->
+
+        <div class="result-box" id="result_wgs84">
+          <strong>Kết quả WGS84:</strong><br />
+          Vĩ độ (Lat): --<br />
+          Kinh độ (Lon): --
+        </div>
+      </div>
+
+      <!-- Tab 3: VN2000 to VN2000 (Chuyển đổi giữa các múi chiếu) -->
+      <div class="tab-content" id="tab-vn2000-to-vn2000">
+        <div class="section">
+          <h4><i class="fa-solid fa-arrow-down"></i> Tọa độ VN2000 nguồn</h4>
+          <label>X (Easting) - mét:</label>
+          <input type="number" id="vn2000_x_src" placeholder="VD: 500000" step="any" value="584273.045" />
+          <label>Y (Northing) - mét:</label>
+          <input type="number" id="vn2000_y_src" placeholder="VD: 1200000" step="any" value="2327346.068" />
+
+          <label>Múi chiếu nguồn:</label>
+          <select id="zone_src">
+            <optgroup label="Múi 3° (Địa phương)">
+              <option value="103">KTT 103°</option>
+              <option value="104">KTT 104°</option>
+              <option value="104.5">KTT 104°30'</option>
+              <option value="104.75">KTT 104°45'</option>
+              <option value="105">KTT 105°</option>
+              <option value="105.5">KTT 105°30'</option>
+              <option value="105.75">KTT 105°45'</option>
+              <option value="106" selected>KTT 106°</option>
+              <option value="106.25">KTT 106°15'</option>
+              <option value="106.5">KTT 106°30'</option>
+              <option value="107">KTT 107°</option>
+              <option value="107.25">KTT 107°15'</option>
+              <option value="107.5">KTT 107°30'</option>
+              <option value="107.75">KTT 107°45'</option>
+              <option value="108">KTT 108°</option>
+              <option value="108.25">KTT 108°15'</option>
+              <option value="108.5">KTT 108°30'</option>
+            </optgroup>
+            <optgroup label="Múi 6° (Quốc gia)">
+              <option value="zone48">Múi 48 (KTT 105°)</option>
+              <option value="zone49">Múi 49 (KTT 111°)</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="section">
+          <h4><i class="fa-solid fa-arrow-up"></i> Múi chiếu đích</h4>
+          <label>Múi chiếu đích:</label>
+          <select id="zone_dest">
+            <optgroup label="Múi 3° (Địa phương)">
+              <option value="103">KTT 103°</option>
+              <option value="104">KTT 104°</option>
+              <option value="104.5">KTT 104°30'</option>
+              <option value="104.75">KTT 104°45'</option>
+              <option value="105" selected>KTT 105°</option>
+              <option value="105.5">KTT 105°30'</option>
+              <option value="105.75">KTT 105°45'</option>
+              <option value="106">KTT 106°</option>
+              <option value="106.25">KTT 106°15'</option>
+              <option value="106.5">KTT 106°30'</option>
+              <option value="107">KTT 107°</option>
+              <option value="107.25">KTT 107°15'</option>
+              <option value="107.5">KTT 107°30'</option>
+              <option value="107.75">KTT 107°45'</option>
+              <option value="108">KTT 108°</option>
+              <option value="108.25">KTT 108°15'</option>
+              <option value="108.5">KTT 108°30'</option>
+            </optgroup>
+            <optgroup label="Múi 6° (Quốc gia)">
+              <option value="zone48">Múi 48 (KTT 105°)</option>
+              <option value="zone49">Múi 49 (KTT 111°)</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <button id="convertVN2000toVN2000"><i class="fa-solid fa-exchange-alt"></i> Chuyển đổi</button>
+        <button class="secondary" id="swapZones"><i class="fa-solid fa-sync-alt"></i> Hoán đổi múi chiếu</button>
+
+        <div class="result-box" id="result_vn2000_convert">
+          <strong>Kết quả VN2000:</strong><br />
+          X (Easting): --<br />
+          Y (Northing): --
+        </div>
+      </div>
+    </div>
+
+    
+
+    <!-- Layer Panel -->
+    <div class="layer-panel" id="layerPanel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fas fa-layer-group"></i> Lớp bản đồ
+        </div>
+        <button class="panel-toggle" onclick="MapApp.UI.toggleLayerBody(this)"><i
+            class="fas fa-chevron-up"></i></button>
+      </div>
+      <div class="panel-body" id="layerPanelBody">
+        <div
+          style="font-size:11px; color:#94a3b8; margin-bottom:6px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">
+          <i class="fas fa-layer-group" style="margin-right:4px;"></i> Lớp nền bản đồ
+        </div>
+        <div class="layer-item" onclick="MapApp.Map.setBaseLayer('anhdiahinh')">
+          <input type="radio" name="baselayer" id="r-anhdiahinh" checked />
+          <div class="layer-color" style="background:#8d6e63;"></div>
+          <span class="layer-name">Ảnh địa hình (ESRI Terrain)</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; width:100%; padding:0 0 8px 22px;">
+          <i class="fas fa-adjust" style="color:#94a3b8; font-size:10px;"></i>
+          <input type="range" id="opacity-anhdiahinh" min="0" max="100" value="100"
+            oninput="MapApp.Map.setBaseOpacity('anhdiahinh', this.value)"
+            style="flex:1; height:4px; accent-color:#1a73e8; cursor:pointer;" />
+          <span id="opacity-anhdiahinh-val"
+            style="font-size:10px; color:#94a3b8; min-width:28px; text-align:right;">100%</span>
+        </div>
+        <div class="layer-item" onclick="MapApp.Map.setBaseLayer('anhvetinh')">
+          <input type="radio" name="baselayer" id="r-anhvetinh" />
+          <div class="layer-color" style="background:#34a853;"></div>
+          <span class="layer-name">Ảnh vệ tinh (ESRI)</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; width:100%; padding:0 0 0 22px;">
+          <i class="fas fa-adjust" style="color:#94a3b8; font-size:10px;"></i>
+          <input type="range" id="opacity-anhvetinh" min="0" max="100" value="100"
+            oninput="MapApp.Map.setBaseOpacity('anhvetinh', this.value)"
+            style="flex:1; height:4px; accent-color:#1a73e8; cursor:pointer;" />
+          <span id="opacity-anhvetinh-val"
+            style="font-size:10px; color:#94a3b8; min-width:28px; text-align:right;">100%</span>
+        </div>
+
+        <div
+          style="font-size:11px; color:#94a3b8; margin-bottom:6px; margin-top: 6px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">
+          <i class="fas fa-layer-group" style="margin-right:4px;"></i> Lớp phủ bản đồ
+        </div>
+
+        <div class="layer-item" style="flex-direction:column; align-items:flex-start; gap:6px; cursor:default;">
+          <div style="display:flex; align-items:center; gap:8px; width:100%;">
+            <input type="checkbox" id="chk-vn1tr" checked
+              onchange="MapApp.Map.toggleOverlayLayer('vn1tr', this.checked)"
+              style="width:14px; height:14px; cursor:pointer; accent-color:#1a73e8;" />
+            <div class="layer-color" style="background:#00acc1; border-radius:2px;"></div>
+            <span class="layer-name" style="flex:1;">Bản đồ nền Việt Nam</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; width:100%; padding-left:22px;">
+            <i class="fas fa-adjust" style="color:#94a3b8; font-size:10px;"></i>
+            <input type="range" id="opacity-vn1tr" min="0" max="100" value="100"
+              oninput="MapApp.Map.setOverlayOpacity('vn1tr', this.value)"
+              style="flex:1; height:4px; accent-color:#1a73e8; cursor:pointer;" />
+            <span id="opacity-vn1tr-val"
+              style="font-size:10px; color:#94a3b8; min-width:28px; text-align:right;">100%</span>
+          </div>
+        </div>
+
+        <div class="layer-item" style="flex-direction:column; align-items:flex-start; gap:6px; cursor:default;">
+          <div style="display:flex; align-items:center; gap:8px; width:100%;">
+            <input type="checkbox" id="chk-hanoi" onchange="MapApp.Map.toggleOverlayLayer('hanoi', this.checked)"
+              style="width:14px; height:14px; cursor:pointer; accent-color:#1a73e8;" />
+            <div class="layer-color" style="background:#ff9800; border-radius:2px;"></div>
+            <span class="layer-name" style="flex:1;">Bản đồ Hà Nội</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; width:100%; padding-left:22px;">
+            <i class="fas fa-adjust" style="color:#94a3b8; font-size:10px;"></i>
+            <input type="range" id="opacity-hanoi" min="0" max="100" value="100"
+              oninput="MapApp.Map.setOverlayOpacity('hanoi', this.value)"
+              style="flex:1; height:4px; accent-color:#1a73e8; cursor:pointer;" />
+            <span id="opacity-hanoi-val"
+              style="font-size:10px; color:#94a3b8; min-width:28px; text-align:right;">100%</span>
+          </div>
+        </div>
+
+        <div class="layer-item" style="flex-direction:column; align-items:flex-start; gap:6px; cursor:default;">
+          <div style="display:flex; align-items:center; gap:8px; width:100%;">
+            <input type="checkbox" id="chk-openweather-clouds"
+              onchange="MapApp.Map.toggleOverlayLayer('openweather-clouds', this.checked)"
+              style="width:14px; height:14px; cursor:pointer; accent-color:#1a73e8;" />
+            <div class="layer-color" style="background:#7dd3fc; border-radius:2px;"></div>
+            <span class="layer-name" style="flex:1;">Mây thời tiết (OpenWeatherMap)</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; width:100%; padding-left:22px;">
+            <i class="fas fa-adjust" style="color:#94a3b8; font-size:10px;"></i>
+            <input type="range" id="opacity-openweather-clouds" min="0" max="100" value="80"
+              oninput="MapApp.Map.setOverlayOpacity('openweather-clouds', this.value)"
+              style="flex:1; height:4px; accent-color:#1a73e8; cursor:pointer;" />
+            <span id="opacity-openweather-clouds-val"
+              style="font-size:10px; color:#94a3b8; min-width:28px; text-align:right;">80%</span>
+          </div>
+        </div>
+
+        <div class="layer-item" style="flex-direction:column; align-items:flex-start; gap:6px; cursor:default;">
+          <div style="display:flex; align-items:center; gap:8px; width:100%;">
+            <input type="checkbox" id="chk-aqi-stations"
+              onchange="MapApp.Map.toggleOverlayLayer('aqi-stations', this.checked)"
+              style="width:14px; height:14px; cursor:pointer; accent-color:#1a73e8;" />
+            <div class="layer-color" style="background:#22c55e; border-radius:2px;"></div>
+            <span class="layer-name" style="flex:1;">Chất lượng không khí (WAQI)</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; width:100%; padding-left:22px;">
+            <i class="fas fa-adjust" style="color:#94a3b8; font-size:10px;"></i>
+            <input type="range" id="opacity-aqi-stations" min="0" max="100" value="100"
+              oninput="MapApp.Map.setOverlayOpacity('aqi-stations', this.value)"
+              style="flex:1; height:4px; accent-color:#1a73e8; cursor:pointer;" />
+            <span id="opacity-aqi-stations-val"
+              style="font-size:10px; color:#94a3b8; min-width:28px; text-align:right;">100%</span>
+          </div>
+        </div>
+
+
+        
+
+        
+
+
+
+      </div>
+    </div>
+
+    <!-- Measure Panel -->
+<div id="measureQuickPanel"
+  style="display:none; position:absolute; left:74px; top:312px; z-index:2050; background:rgba(15,23,42,0.95); border:1px solid rgba(148,163,184,0.35); border-radius:10px; padding:28px 8px 8px; box-shadow:0 10px 28px rgba(0,0,0,0.35);">
+  <div class="quick-panel-drag-handle"
+    style="position:absolute; left:8px; right:36px; top:6px; height:16px; border-radius:6px; background:rgba(30,41,59,0.55); color:#94a3b8; font-size:10px; display:flex; align-items:center; justify-content:center; user-select:none;">
+    <i class="fa-solid fa-arrows-up-down-left-right" style="margin-right:6px;"></i></div>
+    
+    <button type="button" aria-label="Đóng panel đo đạc"
+      onclick="MapApp.Tools.Measure.toggleQuickMeasureMode()"
+      style="position:absolute; top:6px; right:6px; width:22px; height:22px; border:none; border-radius:6px; background:rgba(30,41,59,0.9); color:#cbd5e1; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px; line-height:1;">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <button type="button" id="quickMeasureDistBtn" onclick="MapApp.Tools.Measure.toggleMeasure2D()"
+        style="display:flex; align-items:center; gap:8px; width:100%; border:1px solid rgba(148,163,184,0.28); border-radius:8px; background:rgba(30,41,59,0.85); color:#e2e8f0; padding:8px 10px; font-size:12px; cursor:pointer;">
+    <span class="quick-measure-icon"><i class="fas fa-ruler-horizontal"></i></span> 
+    <span class="quick-measure-text">Đo
+      chiều dài</span> </button>
+          </button>
+      <button type="button" id="quickMeasureAreaBtn" onclick="MapApp.Tools.Measure.toggleMeasureArea2D()"
+        style="display:flex; align-items:center; gap:8px; width:100%; border:1px solid rgba(148,163,184,0.28); border-radius:8px; background:rgba(30,41,59,0.85); color:#e2e8f0; padding:8px 10px; font-size:12px; cursor:pointer;">
+    <span class="quick-measure-icon"><i class="fas fa-draw-polygon"></i></span>
+    <span class="quick-measure-text">Đo diện tích</span>
+          </button>
+      <button type="button" onclick="MapApp.Tools.Measure.clearAll()"
+        style="display:flex; align-items:center; gap:8px; width:100%; border:1px solid rgba(148,163,184,0.22); border-radius:8px; background:rgba(15,23,42,0.55); color:#cbd5e1; padding:8px 10px; font-size:12px; cursor:pointer;">
+    <span class="quick-measure-icon"><i class="fas fa-trash-alt"></i></span>
+    <span class="quick-measure-text">Xóa kết quả đo</span>
+          </button>
+    </div>
+  </div>
+
+    <!-- ===== LEGEND PANEL ===== -->
+    <div class="legend-panel" id="legendPanel" style="display:none;">
+      <div class="legend-panel-header">
+        <div class="legend-panel-title">
+          <i class="fas fa-map-signs"></i> Chú giải bản đồ
+        </div>
+        <button class="legend-panel-close" onclick="MapApp.UI.toggleLegendPanel()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="legend-panel-body">
+        <div class="legend-panel-content">
+          <div class="legend-panel-img-wrap">
+            <img src="/static/map/images/cg6.jpg" alt="Chú giải" class="legend-img" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ===== END LEGEND PANEL ===== -->
+
+    <!-- Thêm ngay sau khối thông báo dang nhap/khuyen mai trong main -->
+    <div id="introPopup" class="intro-overlay" aria-hidden="true">
+      <div class="intro-modal" role="dialog" aria-modal="true">
+        <button class="intro-close" onclick="MapApp.UI.closeIntroPopup()" aria-label="Đóng popup giới thiệu"><i
+            class="fas fa-times"></i></button>
+
+        <div class="intro-head">
+          <div class="intro-badge">Bản đồ nền Việt Nam</div>
+          <h2 id="introTitle">Chào mừng đến với nền tảng bản đồ nền Việt Nam</h2>
+        </div>
+
+        <div class="intro-body">
+          <p>"Vietnam Base Map" là hệ thống bản đồ nền do NARENCA phát triển. Để bắt đầu, bạn có thể tận dụng các nhóm
+            tiện ích nổi bật sau:</p>
+
+          <ul>
+            <li>
+              <strong>Tra cứu & Tùy biến:</strong>
+              Tìm kiếm nhanh địa danh trên thanh công cụ và chuyển đổi linh hoạt giữa các lớp bản đồ.
+            </li>
+            <li>
+              <strong>Trải nghiệm thực tế:</strong>
+              Kích hoạt chế độ "Street View" và click lên bản đồ để xem ảnh đường phố 360 độ tại điểm.
+            </li>
+            <li>
+              <strong>Công cụ đo đạc & Định tuyến:</strong>
+              Dễ dàng tính toán khoảng cách, diện tích và tìm kiếm đường đi tối ưu cho ô tô, xe đạp hoặc người đi bộ.
+            </li>
+            <li>
+              <strong>Cá nhân hóa:</strong>
+              Tạo và lưu trữ các dữ liệu tùy chỉnh theo nhu cầu riêng của bạn.
+            </li>
+          </ul>
+
+          <p>Với giao diện thân thiện, nền tảng mang đến trải nghiệm khám phá Việt Nam một cách chuyên nghiệp, dễ dàng
+            và toàn diện.</p>
+        </div>
+
+        <div class="intro-actions">
+          
+          <a class="intro-register" href="/users/auth/register/">
+            <i class="fas fa-user-plus"></i>
+            Đăng ký ngay để trải nghiệm nâng cao
+          </a>
+          
+          <button class="intro-start" onclick="MapApp.UI.closeIntroPopup()">Khám phá bản đồ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ROUTE PANEL ===== -->
+    <div class="route-panel" id="routePanel" style="display:none;">
+      <div class="route-panel-header">
+        <div class="route-panel-title">
+          <i class="fas fa-route"></i> Tìm đường
+        </div>
+        <button class="route-panel-close" onclick="MapApp.Tools.Route.togglePanel()"><i
+            class="fas fa-times"></i></button>
+      </div>
+      <div class="route-panel-body">
+        <!-- API Key -->
+        <!--                             <p class="measure-note" style="margin-bottom:8px;">
+            <i class="fas fa-key"></i> API Key từ
+            <a href="https://openrouteservice.org" target="_blank" rel="noopener noreferrer" style="color:#1a73e8;">openrouteservice.org</a>
+            (miễn phí)
+        </p>
+        <input type="password" id="orsApiKey" class="route-api-key-input" placeholder="Dán ORS API Key vào đây...">                             -->
+
+        <!-- Profile -->
+        <select id="routeProfile" class="route-profile-select">
+          <option value="driving-car">🚗 Lái xe (đường bộ)</option>
+          <option value="foot-walking">🚶 Đi bộ</option>
+          <option value="cycling-regular">🚲 Xe đạp thường</option>
+        </select>
+
+        <!-- Điểm đầu -->
+        <div class="route-point-group">
+          <label class="route-point-label">
+            <span class="route-badge start-badge">A</span>
+            Điểm đầu &nbsp;<small style="color:#aaa;">(toạ độ lat,lon hoặc địa chỉ)</small>
+          </label>
+          <div class="route-input-group">
+            <input type="text" id="routeStartInput" class="route-input"
+              placeholder="VD: 21.028511, 105.804817 hoặc 'Hà Nội'" />
+            <button class="route-pick-btn" id="pickStartBtn" onclick="MapApp.Tools.Route.startPick('start')"
+              title="Chọn trên bản đồ"><i class="fas fa-map-marker-alt"></i></button>
+          </div>
+        </div>
+
+        <!-- Swap -->
+        <button class="route-swap-btn" onclick="MapApp.Tools.Route.swapPoints()"><i class="fas fa-exchange-alt"></i> Đổi
+          điểm đầu / điểm cuối</button>
+
+        <!-- Điểm cuối -->
+        <div class="route-point-group">
+          <label class="route-point-label">
+            <span class="route-badge end-badge">B</span>
+            Điểm cuối &nbsp;<small style="color:#aaa;">(toạ độ lat,lon hoặc địa chỉ)</small>
+          </label>
+          <div class="route-input-group">
+            <input type="text" id="routeEndInput" class="route-input"
+              placeholder="VD: 10.823099, 106.629664 hoặc 'TP.HCM'" />
+            <button class="route-pick-btn" id="pickEndBtn" onclick="MapApp.Tools.Route.startPick('end')"
+              title="Chọn trên bản đồ"><i class="fas fa-map-marker-alt"></i></button>
+          </div>
+        </div>
+
+        <div class="route-divider"></div>
+
+        <!-- Buttons -->
+        <button class="route-calc-btn" onclick="MapApp.Tools.Route.calculate()"><i class="fas fa-route"></i> Tính tuyến
+          đường</button>
+        <button class="route-clear-btn" onclick="MapApp.Tools.Route.clearAll()"><i class="fas fa-trash-alt"></i> Xóa
+          tuyến đường</button>
+
+        <!-- Results -->
+        <div id="routeResults" class="route-results"></div>
+      </div>
+    </div>
+
+    <!-- WMS Feature Info Popup -->
+    <div class="wms-popup" id="wmsPopup" style="display:none;">
+      <div class="wms-popup-header">
+        <div class="wms-popup-title">
+          <i class="fas fa-info-circle"></i>
+          <span id="wmsPopupTitle">Thông tin đối tượng</span>
+        </div>
+        <button class="wms-popup-close" onclick="MapApp.Tools.WMSInfo.closePopup()"><i
+            class="fas fa-times"></i></button>
+      </div>
+      <div class="wms-popup-body" id="wmsPopupBody">
+        <div class="wms-popup-loading">
+          <i class="fas fa-circle-notch fa-spin"></i> Đang tải...
+        </div>
+      </div>
+    </div>
+
+    <div class="wms-image-viewer" id="wmsImageViewerModal" style="display:none;" aria-hidden="true">
+      <div class="wms-image-viewer-backdrop" onclick="MapApp.Tools.WMSInfo.closeImageViewer()"></div>
+      <div class="wms-image-viewer-dialog" role="dialog" aria-modal="true" aria-label="Xem ảnh đính kèm">
+        <button type="button" class="wms-image-viewer-close" onclick="MapApp.Tools.WMSInfo.closeImageViewer()" title="Đóng">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <button type="button" id="wmsImageViewerPrevBtn" class="wms-image-viewer-nav prev" onclick="MapApp.Tools.WMSInfo.changeImage(-1)" title="Ảnh trước">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <img id="wmsImageViewerImg" src="" alt="Ảnh đính kèm" class="wms-image-viewer-img" />
+
+        <button type="button" id="wmsImageViewerNextBtn" class="wms-image-viewer-nav next" onclick="MapApp.Tools.WMSInfo.changeImage(1)" title="Ảnh sau">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <div id="wmsImageViewerCounter" class="wms-image-viewer-counter">1 / 1</div>
+      </div>
+    </div>
+
+    <!-- Info Bar -->
+    <div class="map-info-bar">
+      <div class="info-item">
+        <i class="fas fa-map-pin"></i> <span id="mouseCoord">0.000° 0.000°</span>
+      </div>
+
+      <div class="info-item">
+        <i class="fas fa-ruler"></i> <span style="margin-right:4px;">1:</span> <input id="mapScaleInput" type="number"
+          min="1" step="1" value="15000000" title="Nhập mẫu số tỷ lệ, ví dụ 50000"
+          style="max-width:80px; background:transparent; border:1px solid rgba(148,163,184,0.5); color:#e2e8f0; border-radius:4px; padding:2px 4px;" />
+      </div>
+
+    </div>
+
+    
+
+    <div class="draw-meta-modal" id="feedbackModal" style="display:none;" aria-hidden="true">
+      <div class="draw-meta-backdrop" onclick="toggleFeedbackModal(false)"></div>
+      <div class="draw-meta-dialog" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+        <div class="draw-meta-header">
+          <h3 id="feedbackTitle"><i class="fas fa-comments"></i> Gửi phản hồi cho chúng tôi</h3>
+          <button class="draw-meta-close" type="button" onclick="toggleFeedbackModal(false)" title="Đóng"><i
+              class="fas fa-times"></i></button>
+        </div>
+
+        <form id="feedbackForm" class="draw-meta-body">
+          <div class="draw-meta-field">
+            <label for="feedbackSubject">Tiêu đề</label>
+            <input id="feedbackSubject" type="text" maxlength="255" required />
+          </div>
+
+          <div class="draw-meta-field">
+            <label for="feedbackMessage">Nội dung</label>
+            <textarea id="feedbackMessage" rows="4" maxlength="3000" required></textarea>
+          </div>
+
+          <div id="feedbackStatus" style="font-size:12px; color:#334155;"></div>
+
+          <div class="draw-meta-actions">
+            <button class="draw-meta-btn secondary" type="button" onclick="toggleFeedbackModal(false)">Hủy</button>
+            <button class="draw-meta-btn primary" type="submit" id="feedbackSubmitBtn">Gửi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="footer-left">
+      <span>© 2026 NARENCA Platform</span>
+      <span class="footer-sep">|</span>
+      <a href="https://bando.com.vn"><i class="fa-solid fa-house"></i> <strong>Trang chủ</strong></a>
+      <span class="footer-sep">|</span>
+      <a href="https://bando.com.vn/chuc-nang-nhiem-vu"><i class="fa-solid fa-info-circle"></i> <strong>Giới
+          thiệu</strong></a>
+      <span class="footer-sep">|</span>
+      <a href="https://bando.com.vn/lien-he.html" id="contactLink"><i class="fa-solid fa-comments"></i> <strong>Liên
+          hệ</strong></a>
+    </div>
+    <div class="footer-center">
+      Xây dựng bởi <i class="fa-solid fa-earth-europe"></i> NARENCA
+    </div>
+  </footer>
+</body>
+
+
+<script>
+window.USER_IS_AUTHENTICATED = false;
+window.MAPAPP_IS_DEV = true;
+window.WAQI_API_TOKEN = "18bcc32028bb1bd3f14d9a62cb959e932cf7b7aa";
+</script> 
+
+<script src="/static/map/js/1_init.js"></script>
+<script src="/static/map/js/2_config.js"></script>
+<script src="/static/map/js/3_ui.js"></script>
+<script src="/static/map/js/4_map.js"></script>
+<script src="/static/map/js/5_measure.js"></script>
+<script src="/static/map/js/6_search.js"></script>
+<script src="/static/map/js/7_wms_info.js"></script>
+<script src="/static/map/js/8_street_view.js"></script>
+<script src="/static/map/js/9_main.js"></script>
+<script src="/static/map/js/10_route.js"></script>
+<script src="/static/map/js/11_convert_coordinates.js"></script>
+<script src="/static/map/js/12_upload.js"></script>
+<script src="/static/map/js/13_draw.js"></script>
+<script src="/static/map/js/13b_draw_layer.js"></script>
+<script src="/static/map/js/14_share.js"></script>
+<script src="/static/map/js/15_weather.js"></script>
+<script src="/static/map/js/16_print.js"></script>
+<script src="/static/map/js/17_aqi.js"></script>
+<script src="/static/map/js/18_sapnhap_tree.js"></script>
+
+<script src="/static/map/js/feedback.js"></script>
+
+
+</html>

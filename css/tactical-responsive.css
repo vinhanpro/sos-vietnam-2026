@@ -1,0 +1,2666 @@
+/* =====================================================================
+   SOS EMERGENCY VIETNAM 2026 — TACTICAL RESPONSIVE LAYER
+   Military-grade Cyber Liquid Glass · Desktop / Laptop / iPad / iOS / Android
+   ---------------------------------------------------------------------
+   File này được nạp SAU style.css & map.css và chỉ ghi đè lớp trình bày
+   (layout / responsive / safe-area / GPU). KHÔNG thay đổi id/class mà
+   dispatcher.js, app.js, map-controller.js đang tham chiếu.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   0. DESIGN TOKENS — 5 lực lượng + Chỉ huy + Glass
+   --------------------------------------------------------------------- */
+:root {
+  /* Nền vũ trụ */
+  --tac-bg-deep: #030712;
+  --tac-bg-main: #060912;
+  --tac-bg-surface: #0e1424;
+
+  /* Liquid Glass */
+  --tac-glass-bg: rgba(14, 20, 36, 0.85);
+  --tac-glass-bg-soft: rgba(10, 16, 32, 0.72);
+  --tac-glass-border: rgba(255, 255, 255, 0.12);
+  --tac-glass-border-active: rgba(56, 189, 248, 0.35);
+  --tac-glass-blur: 28px;
+  --tac-glass-blur-min: 24px;
+  --tac-glass-blur-max: 32px;
+  --tac-glass-shadow: 0 16px 48px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.18);
+
+  /* Lực lượng — (đậm / neon) */
+  --force-congan: #0088ff;      --force-congan-neon: #38bdf8;
+  --force-csgt: #f59e0b;        --force-csgt-neon: #fbbf24;
+  --force-pccc: #ff2a4b;        --force-pccc-neon: #ef4444;
+  --force-115: #10b981;         --force-115-neon: #34d399;
+  --force-cuuho: #ff9100;       --force-cuuho-neon: #fb923c;
+  --force-chihuy: #8b5cf6;      --force-chihuy-neon: #c084fc;
+
+  /* Safe-area (iOS notch / Home Indicator / Android gesture bar) */
+  --sa-top: env(safe-area-inset-top, 0px);
+  --sa-right: env(safe-area-inset-right, 0px);
+  --sa-bottom: env(safe-area-inset-bottom, 0px);
+  --sa-left: env(safe-area-inset-left, 0px);
+
+  /* Kích thước khung điều hành */
+  --tac-header-h: 56px;
+  --tac-topbar-h: 42px;
+  --tac-tabbar-h: 62px;
+  --tac-gutter: 10px;
+  --tac-radius-xl: 20px;
+
+  /* Cosmic Portal — quỹ đạo elip quanh Trái Đất */
+  --portal-cx: 50%;
+  --portal-cy: 53%;
+  --portal-rx: clamp(230px, 31vw, 620px);
+  --portal-ry: clamp(120px, 22vh, 300px);
+  --portal-sphere: clamp(92px, 7.2vw, 132px);
+  --portal-logo: calc(var(--portal-sphere) * 0.53);
+
+  /* Chiều cao viewport thực (fallback → JS visualViewport) */
+  --tac-vh: 100vh;
+  --tac-kb-offset: 0px;
+}
+
+@supports (height: 100dvh) {
+  :root { --tac-vh: 100dvh; }
+}
+
+/* ---------------------------------------------------------------------
+   1. NỀN TẢNG: dvh · safe-area · touch · overscroll · text-size
+   --------------------------------------------------------------------- */
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: var(--tac-vh) !important;
+  touch-action: manipulation;          /* 0ms tap delay, giữ pinch-zoom cho bản đồ */
+  overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--tac-bg-deep);
+}
+
+/* Chống tràn ngang (nguyên nhân Chrome/Safari mobile tự phóng rộng layout viewport) */
+html, body { overflow-x: hidden !important; max-width: 100%; }
+.dispatcher-layout > *,
+.dispatcher-map-area, .dispatcher-sidebar, .tactical-detail-panel,
+.dispatcher-map-canvas-wrap, .tactical-map-top-bar { min-width: 0 !important; }
+.header-nav { width: 100%; min-width: 0; }
+.header-nav-right-widgets { min-width: 0; flex-shrink: 1; overflow: hidden; }
+.header-nav-left-pill { min-width: 0; }
+.tactical-map-top-bar { max-width: 100% !important; }
+
+/* Vùng cuộn: quán tính iOS + chỉ cuộn nội bộ */
+.incident-queue-list,
+.province-bubbles-grid,
+.ward-results-list,
+.dispatcher-sidebar,
+.tactical-detail-body,
+.chat-hub-direct-messages,
+.chat-hub-list,
+.admin-edit-box,
+.auth-gate-backdrop,
+#panelHistoryView,
+#panelStationsView,
+#panelEnterprisesView,
+#panelHospitalsView {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.35) rgba(255, 255, 255, 0.04);
+}
+
+/* Bản đồ: cho phép pinch-zoom/drag, chặn double-tap zoom trình duyệt */
+#dispatcherMap,
+#dispatcherMap canvas,
+.maplibregl-canvas-container {
+  touch-action: none !important;
+}
+
+/* Video nền / lớp fixed: dùng dvh, tránh nhảy khi thanh địa chỉ iOS ẩn/hiện */
+.bg-video-container,
+#cosmicPortalView > div[style*="position: fixed"] {
+  height: var(--tac-vh) !important;
+  width: 100% !important;
+}
+
+/* ---------------------------------------------------------------------
+   2. GPU HINTS — backdrop-filter, hạt bay, cầu thủy tinh (60–120fps)
+   --------------------------------------------------------------------- */
+.liquid-glass,
+.geofence-bubble-orb,
+.sos-mailbox-bubble-orb,
+.bubble-glass-sphere,
+.header-nav-left-pill,
+.header-widget-pill,
+.header-circle-btn,
+.nav-center-pill,
+.auth-gate-box,
+.admin-edit-box,
+.dispatcher-sidebar,
+.tactical-detail-panel,
+.chat-hub-popover,
+.gear-dropdown-menu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.cosmic-bubble-item,
+.bubble-orbit-ring,
+.ios26-translucent-bubble,
+.floating-particle,
+.cosmic-shield-orbit-ring,
+.crystal-orb-wrapper,
+.btn-crystal-orb {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Cô lập vẽ lại các khối lớn (KHÔNG áp cho map-area: contain sẽ phá position:fixed của popover/dock) */
+.dispatcher-sidebar,
+.tactical-detail-panel {
+  contain: layout paint;
+}
+/* Popover: giữ căn giữa gốc + GPU layer */
+.liquid-glass-popover { transform: translateX(-50%) translateZ(0); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+
+/* Android tầm trung: giảm blur cho hạt nền (giữ 60fps) */
+.os-android .ios26-translucent-bubble {
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  opacity: 0.55;
+}
+
+/* Trực ban tác chiến: Ẩn hoàn toàn bong bóng nền khi đã vào ca trực ban để trả lại 100% tầm nhìn bản đồ C4ISR */
+body.officer-authenticated #ios26BubblesBackdrop,
+body.officer-authenticated .ios26-ambient-bubbles-backdrop {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.os-android.device-mobile .liquid-glass,
+.os-android.device-mobile .dispatcher-sidebar,
+.os-android.device-mobile .tactical-detail-panel {
+  backdrop-filter: blur(var(--tac-glass-blur-min)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--tac-glass-blur-min)) saturate(160%) !important;
+}
+
+/* ---------------------------------------------------------------------
+   3. GIẢM CHUYỂN ĐỘNG (accessibility / tiết kiệm pin)
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .cosmic-bubble-item,
+  .bubble-orbit-ring,
+  .ios26-translucent-bubble,
+  .floating-particle,
+  .geofence-bubble-orb,
+  .sos-mailbox-bubble-orb,
+  .cosmic-shield-orbit-ring,
+  .crystal-orb-wrapper *,
+  .pick-mode-banner {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* ---------------------------------------------------------------------
+   4. INPUT TRÊN THIẾT BỊ CẢM ỨNG — chống iOS auto-zoom (≥16px)
+   --------------------------------------------------------------------- */
+@media (pointer: coarse) and (max-width: 1024px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+    min-height: 44px;             /* Apple HIG touch target */
+  }
+  button,
+  .sidebar-tab-btn,
+  .top-bar-pill,
+  .gear-menu-item,
+  .province-bubble-pill,
+  .ward-result-card,
+  .zoom-btn {
+    min-height: 44px;
+  }
+  .header-circle-btn,
+  .zoom-btn {
+    min-width: 44px;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   5. MODAL CỔNG BẢO VỆ / ĐĂNG NHẬP — an toàn notch, không cắt đầu
+   --------------------------------------------------------------------- */
+.auth-gate-backdrop,
+#cyberGatekeeperModal,
+#authGateModal {
+  height: var(--tac-vh) !important;
+  min-height: var(--tac-vh) !important;
+  align-items: flex-start !important;     /* margin:auto ở box sẽ căn giữa khi đủ chỗ */
+  padding: calc(16px + var(--sa-top)) calc(16px + var(--sa-right)) calc(16px + var(--sa-bottom)) calc(16px + var(--sa-left)) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.auth-gate-box {
+  margin: auto !important;                 /* căn giữa khi đủ chỗ, cuộn khi thiếu */
+  max-height: none !important;
+  flex-shrink: 0;
+}
+
+.admin-edit-modal {
+  height: var(--tac-vh) !important;
+  padding: calc(12px + var(--sa-top)) calc(12px + var(--sa-right)) calc(12px + var(--sa-bottom)) calc(12px + var(--sa-left)) !important;
+  align-items: flex-start !important;
+}
+
+.admin-edit-box {
+  max-height: calc(var(--tac-vh) - 24px - var(--sa-top) - var(--sa-bottom)) !important;
+}
+
+@media (max-width: 520px) {
+  .auth-gate-box {
+    padding: 24px 18px !important;
+    border-radius: 22px !important;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   6. COSMIC PORTAL — 4 quả cầu lực lượng trên cung quỹ đạo đối xứng
+   Vị trí = tâm (--portal-cx, --portal-cy) ± bán trục (--portal-rx/--portal-ry)
+   → đối xứng tuyệt đối quanh Trái Đất trên mọi tỷ lệ khung hình.
+   --------------------------------------------------------------------- */
+#cosmicPortalView {
+  height: var(--tac-vh) !important;
+  overflow: hidden !important;
+  contain: layout paint;
+}
+
+.cosmic-stage-wrapper {
+  height: var(--tac-vh) !important;
+  padding: var(--sa-top) var(--sa-right) var(--sa-bottom) var(--sa-left);
+  box-sizing: border-box;
+}
+
+.cosmic-stage {
+  max-height: var(--tac-vh) !important;
+}
+
+.cosmic-portal-header {
+  top: calc(16px + var(--sa-top)) !important;
+  max-width: min(600px, calc(100vw - 32px - var(--sa-left) - var(--sa-right))) !important;
+  will-change: auto;
+}
+
+/* Quỹ đạo — ghi đè vị trí cố định % cũ (style.css và inline) */
+.cosmic-bubble-item.bubble-police,
+.cosmic-bubble-item.bubble-csgt,
+.cosmic-bubble-item.bubble-fire,
+.cosmic-bubble-item.bubble-admin {
+  right: auto !important;
+  bottom: auto !important;
+}
+
+/* Cung trên (Công An · PCCC) cao hơn, cung dưới (CSGT · Chỉ huy) thấp hơn — tạo hình elip */
+.cosmic-bubble-item.bubble-police {
+  left: calc(var(--portal-cx) - var(--portal-rx) * 0.86) !important;
+  top:  calc(var(--portal-cy) - var(--portal-ry) * 0.72) !important;
+}
+.cosmic-bubble-item.bubble-fire {
+  left: calc(var(--portal-cx) + var(--portal-rx) * 0.86) !important;
+  top:  calc(var(--portal-cy) - var(--portal-ry) * 0.72) !important;
+}
+.cosmic-bubble-item.bubble-csgt {
+  left: calc(var(--portal-cx) - var(--portal-rx) * 1.02) !important;
+  top:  calc(var(--portal-cy) + var(--portal-ry) * 0.62) !important;
+}
+.cosmic-bubble-item.bubble-admin {
+  left: calc(var(--portal-cx) + var(--portal-rx) * 1.02) !important;
+  top:  calc(var(--portal-cy) + var(--portal-ry) * 0.62) !important;
+}
+
+/* Cầu thủy tinh pha lê — kích thước theo clamp, không méo khi resize */
+.bubble-glass-sphere {
+  width: var(--portal-sphere) !important;
+  height: var(--portal-sphere) !important;
+  aspect-ratio: 1 / 1;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.10) 28%, rgba(255, 255, 255, 0.02) 48%, rgba(6, 12, 28, 0.55) 88%),
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0) 40%) !important;
+  backdrop-filter: blur(18px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(190%) !important;
+}
+
+.bubble-highlight {
+  width: calc(var(--portal-sphere) * 0.44) !important;
+  height: calc(var(--portal-sphere) * 0.22) !important;
+  top: calc(var(--portal-sphere) * 0.06) !important;
+  left: calc(var(--portal-sphere) * 0.13) !important;
+}
+
+.bubble-logo-img {
+  width: var(--portal-logo) !important;
+  height: var(--portal-logo) !important;
+}
+
+.bubble-orbit-ring {
+  width: calc(var(--portal-sphere) * 1.34) !important;
+  height: calc(var(--portal-sphere) * 1.34) !important;
+}
+
+/* Neon glow riêng từng lực lượng (token) */
+.bubble-police .bubble-glass-sphere {
+  border-color: color-mix(in srgb, var(--force-congan-neon) 65%, transparent) !important;
+  box-shadow: 0 0 38px color-mix(in srgb, var(--force-congan) 50%, transparent), 0 16px 36px rgba(0,0,0,.8), inset 0 0 22px color-mix(in srgb, var(--force-congan-neon) 28%, transparent) !important;
+}
+.bubble-csgt .bubble-glass-sphere {
+  border-color: color-mix(in srgb, var(--force-csgt-neon) 65%, transparent) !important;
+  box-shadow: 0 0 38px color-mix(in srgb, var(--force-csgt) 50%, transparent), 0 16px 36px rgba(0,0,0,.8), inset 0 0 22px color-mix(in srgb, var(--force-csgt-neon) 28%, transparent) !important;
+}
+.bubble-fire .bubble-glass-sphere {
+  border-color: color-mix(in srgb, var(--force-pccc-neon) 65%, transparent) !important;
+  box-shadow: 0 0 38px color-mix(in srgb, var(--force-pccc) 50%, transparent), 0 16px 36px rgba(0,0,0,.8), inset 0 0 22px color-mix(in srgb, var(--force-pccc-neon) 28%, transparent) !important;
+}
+.bubble-admin .bubble-glass-sphere {
+  border-color: color-mix(in srgb, var(--force-chihuy-neon) 65%, transparent) !important;
+  box-shadow: 0 0 38px color-mix(in srgb, var(--force-chihuy) 50%, transparent), 0 16px 36px rgba(0,0,0,.8), inset 0 0 22px color-mix(in srgb, var(--force-chihuy-neon) 28%, transparent) !important;
+}
+
+.cosmic-portal-bottom-bar {
+  bottom: calc(20px + var(--sa-bottom)) !important;
+  left: calc(24px + var(--sa-left)) !important;
+  right: calc(24px + var(--sa-right)) !important;
+}
+
+/* Ultrawide 21:9 / 32:9 — giới hạn bán trục để cầu không trôi ra rìa */
+@media (min-aspect-ratio: 2/1) {
+  :root {
+    --portal-rx: clamp(300px, 24vw, 640px);
+    --portal-ry: clamp(140px, 24vh, 320px);
+  }
+}
+
+/* 2K / 4K — cầu lớn hơn nhưng có giới hạn, chữ tiêu đề co giãn */
+@media (min-width: 2200px) {
+  :root { --portal-sphere: clamp(120px, 6.4vw, 176px); }
+  .cosmic-portal-title { font-size: clamp(22px, 1.35vw, 34px) !important; }
+  .cosmic-portal-desc { font-size: clamp(13px, 0.72vw, 18px) !important; }
+}
+
+/* Laptop nhỏ / iPad ngang */
+@media (max-width: 1366px) {
+  :root { --portal-rx: clamp(220px, 32vw, 460px); --portal-ry: clamp(120px, 22vh, 240px); }
+}
+
+/* Tablet dọc & điện thoại ngang: elip đứng hơn, cầu nhỏ hơn */
+@media (max-width: 1024px) and (orientation: portrait) {
+  :root {
+    --portal-cy: 54%;
+    --portal-rx: clamp(150px, 30vw, 300px);
+    --portal-ry: clamp(130px, 21vh, 260px);
+    --portal-sphere: clamp(86px, 13vw, 118px);
+  }
+}
+
+/* Điện thoại: 2x2 quanh Trái Đất, an toàn notch, hạ tiêu đề */
+@media (max-width: 600px) {
+  :root {
+    --portal-cy: 55%;
+    --portal-rx: clamp(96px, 27vw, 130px);
+    --portal-ry: clamp(120px, 19vh, 190px);
+    --portal-sphere: clamp(78px, 21vw, 96px);
+  }
+  .cosmic-bubble-item.bubble-police,
+  .cosmic-bubble-item.bubble-fire { top: calc(var(--portal-cy) - var(--portal-ry) * 0.95) !important; }
+  .cosmic-bubble-item.bubble-csgt,
+  .cosmic-bubble-item.bubble-admin { top: calc(var(--portal-cy) + var(--portal-ry) * 0.72) !important; }
+  .cosmic-bubble-item.bubble-police,
+  .cosmic-bubble-item.bubble-csgt { left: calc(var(--portal-cx) - var(--portal-rx)) !important; }
+  .cosmic-bubble-item.bubble-fire,
+  .cosmic-bubble-item.bubble-admin { left: calc(var(--portal-cx) + var(--portal-rx)) !important; }
+
+  .cosmic-portal-header { padding: 10px 14px !important; gap: 4px !important; }
+  .cosmic-portal-title { font-size: 15px !important; line-height: 1.25 !important; }
+  .cosmic-portal-desc { font-size: 11px !important; }
+  .cosmic-portal-badge { font-size: 9.5px !important; }
+  .bubble-label-tag { font-size: 10px !important; padding: 4px 10px !important; }
+}
+
+/* Điện thoại ngang (chiều cao rất thấp) */
+@media (max-height: 460px) and (orientation: landscape) {
+  :root {
+    --portal-cy: 56%;
+    --portal-rx: clamp(190px, 34vw, 330px);
+    --portal-ry: clamp(70px, 18vh, 110px);
+    --portal-sphere: clamp(60px, 14vh, 80px);
+  }
+  .cosmic-portal-header { top: calc(6px + var(--sa-top)) !important; padding: 6px 14px !important; }
+  .cosmic-portal-desc { display: none !important; }
+  .bubble-label-tag { display: none !important; }
+}
+
+/* ---------------------------------------------------------------------
+   7. DISPATCHER CONSOLE — 3 VÙNG CHỈ HUY (≥1280px)
+   [Sự cố realtime] | [Bản đồ tác chiến] | [Chi tiết · Camera · Xuất báo cáo]
+   JS (tactical-layout.js) thêm <section id="tacticalDetailPanel"> và di chuyển
+   #activeIncidentDrawer vào đó trên desktop; trên mobile trả về sidebar.
+   --------------------------------------------------------------------- */
+.header-nav {
+  padding-top: calc(6px + var(--sa-top)) !important;
+  padding-bottom: 6px !important;
+  padding-left: calc(12px + var(--sa-left)) !important;
+  padding-right: calc(12px + var(--sa-right)) !important;
+  height: calc(var(--tac-header-h) + var(--sa-top)) !important;
+  box-sizing: border-box;
+}
+
+.dispatcher-layout {
+  height: calc(var(--tac-vh) - var(--tac-header-h) - var(--sa-top)) !important;
+  max-height: calc(var(--tac-vh) - var(--tac-header-h) - var(--sa-top)) !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 calc(var(--tac-gutter) + var(--sa-right)) calc(var(--tac-gutter) + var(--sa-bottom)) calc(var(--tac-gutter) + var(--sa-left)) !important;
+  gap: var(--tac-gutter) !important;
+}
+
+/* Cột phải: Chi tiết sự cố (được JS tạo, ẩn khi không có sự cố chọn) */
+.tactical-detail-panel {
+  display: none;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: var(--tac-glass-bg-soft) !important;
+  backdrop-filter: blur(var(--tac-glass-blur)) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(var(--tac-glass-blur)) saturate(180%) !important;
+  border: 1px solid var(--tac-glass-border) !important;
+  border-radius: var(--tac-radius-xl) !important;
+  box-shadow: var(--tac-glass-shadow) !important;
+  overflow: hidden;
+  position: relative;
+  z-index: 20;
+  box-sizing: border-box;
+  transition: border-color .3s ease;
+}
+.tactical-detail-panel.has-incident { border-color: var(--tac-glass-border-active) !important; }
+
+.tactical-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+.tactical-detail-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tactical-detail-title .tac-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--force-115-neon);
+  box-shadow: 0 0 10px var(--force-115-neon);
+  animation: tacPulse 1.8s ease-in-out infinite;
+}
+.tactical-detail-panel.has-incident .tactical-detail-title .tac-dot {
+  background: var(--force-pccc-neon);
+  box-shadow: 0 0 12px var(--force-pccc-neon);
+}
+@keyframes tacPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.8); } }
+
+.tactical-detail-close {
+  display: none;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  color: #e2e8f0;
+  border-radius: 999px;
+  width: 34px; height: 34px;
+  font-size: 18px; line-height: 1;
+  cursor: pointer;
+  align-items: center; justify-content: center;
+}
+
+.tactical-detail-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 16px calc(16px + var(--sa-bottom));
+}
+/* Drawer khi nằm trong cột phải: bỏ khung nội bộ để hòa vào panel */
+.tactical-detail-body > #activeIncidentDrawer {
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  max-height: none !important;   /* bỏ giới hạn 55% của sidebar gốc — panel tự cuộn */
+  height: auto !important;
+  overflow: visible !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.tactical-detail-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.tactical-detail-empty .tac-empty-ring {
+  width: 74px; height: 74px; border-radius: 50%;
+  border: 1.5px dashed rgba(56,189,248,.45);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--force-congan-neon);
+  animation: tacSpin 14s linear infinite;
+  will-change: transform;
+}
+.tactical-detail-empty .tac-empty-ring svg { animation: tacSpin 14s linear infinite reverse; width: 30px; height: 30px; }
+@keyframes tacSpin { to { transform: rotate(360deg); } }
+.tactical-detail-empty strong { color: #e2e8f0; font-size: 14px; }
+
+/* Desktop chỉ huy ≥1280px: lưới tối ưu bản đồ */
+@media (min-width: 1280px) {
+  /* Khi CHƯA chọn sự cố: Hàng đợi gọn gàng bên trái (280px), bản đồ chiếm trọn không gian (1fr = ~980px - 1600px+), ẩn panel trống */
+  body.tac-three-zone:not(.tac-incident-selected) .dispatcher-layout {
+    grid-template-columns: 280px minmax(0, 1fr) !important;
+    grid-template-areas: "queue map" !important;
+  }
+  body.tac-three-zone:not(.tac-incident-selected) .tactical-detail-panel {
+    display: none !important;
+  }
+
+  /* Khi ĐÃ chọn sự cố: Mở 3 phân vùng: Hàng đợi (270px) | Bản đồ trung tâm rộng (1fr = 640px - 1300px+) | Chi tiết sự cố (340px) */
+  body.tac-three-zone.tac-incident-selected .dispatcher-layout {
+    grid-template-columns: 270px minmax(0, 1fr) 340px !important;
+    grid-template-areas: "queue map detail" !important;
+  }
+  body.tac-three-zone.tac-incident-selected .tactical-detail-panel {
+    grid-area: detail !important;
+    grid-column: 3 !important;
+    display: flex !important;
+  }
+
+  body.tac-three-zone .dispatcher-sidebar {
+    grid-area: queue !important;
+    grid-column: 1 !important;
+    order: 1 !important;
+  }
+  body.tac-three-zone .dispatcher-map-area {
+    grid-area: map !important;
+    grid-column: 2 !important;
+    order: 2 !important;
+  }
+
+  /* Sidebar hẹp hơn → tab dạng icon+label co giãn, header gọn */
+  body.tac-three-zone .sidebar-header-new { padding: 12px 14px 8px !important; }
+  body.tac-three-zone .sidebar-main-title { font-size: 14.5px !important; }
+  body.tac-three-zone .sidebar-tab-btn { padding: 6px 5px !important; font-size: 10.5px !important; }
+}
+@media (min-width: 1600px) {
+  body.tac-three-zone:not(.tac-incident-selected) .dispatcher-layout {
+    grid-template-columns: 320px minmax(0, 1fr) !important;
+    grid-template-areas: "queue map" !important;
+  }
+  body.tac-three-zone.tac-incident-selected .dispatcher-layout {
+    grid-template-columns: 320px minmax(0, 1fr) 380px !important;
+    grid-template-areas: "queue map detail" !important;
+  }
+}
+@media (min-width: 2200px) {
+  :root { --tac-gutter: 22px; --tac-header-h: 76px; }
+  body.tac-three-zone:not(.tac-incident-selected) .dispatcher-layout {
+    grid-template-columns: 380px minmax(0, 1fr) !important;
+    grid-template-areas: "queue map" !important;
+  }
+  body.tac-three-zone.tac-incident-selected .dispatcher-layout {
+    grid-template-columns: 380px minmax(0, 1fr) 460px !important;
+    grid-template-areas: "queue map detail" !important;
+  }
+  .header-nav { height: calc(var(--tac-header-h) + var(--sa-top)) !important; }
+  .header-main-title { font-size: 19px !important; }
+  .sidebar-main-title { font-size: 17px !important; }
+}
+/* Ultrawide: giới hạn chiều rộng khung để không quá dàn trải */
+@media (min-aspect-ratio: 21/9) and (min-width: 2500px) {
+  body.tac-three-zone:not(.tac-incident-selected) .dispatcher-layout {
+    grid-template-columns: 420px minmax(0, 1fr) !important;
+    grid-template-areas: "queue map" !important;
+  }
+  body.tac-three-zone.tac-incident-selected .dispatcher-layout {
+    grid-template-columns: 420px minmax(0, 1fr) 500px !important;
+    grid-template-areas: "queue map detail" !important;
+  }
+}
+
+/* Laptop 1024–1279px: 2 cột, sidebar 400px, drawer ở sidebar */
+@media (min-width: 993px) and (max-width: 1279px) {
+  .dispatcher-layout { grid-template-columns: minmax(0, 1fr) minmax(360px, 400px) !important; gap: 12px !important; }
+}
+
+/* ---------------------------------------------------------------------
+   8. TABLET / MOBILE CONSOLE — bản đồ toàn màn + tab bar dưới
+   (Bản đồ · Sự cố · Chi tiết). Áp dụng ≤992px (iPad dọc, iPhone, Android).
+   --------------------------------------------------------------------- */
+.tactical-tabbar { display: none; }
+
+@media (max-width: 992px) {
+  :root { --tac-header-h: 60px; --tac-gutter: 10px; }
+
+  body.tac-mobile-console { overflow: hidden !important; height: var(--tac-vh); }
+
+  /* Header co gọn: giữ pill trái + đồng hồ + gear, ẩn tiêu đề phụ */
+  .header-nav {
+    height: calc(var(--tac-header-h) + var(--sa-top)) !important;
+    padding: calc(6px + var(--sa-top)) calc(10px + var(--sa-right)) 6px calc(10px + var(--sa-left)) !important;
+    gap: 8px !important;
+  }
+  .header-nav-left-pill { padding: 6px 12px 6px 8px !important; gap: 8px !important; min-width: 0; }
+  .header-main-title { font-size: 13px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 42vw; }
+  .header-sub-title { display: none !important; }
+  .header-nav-right-widgets { gap: 6px !important; min-width: 0; }
+  #weatherWidget, #locationWidget, #dutyOfficerWidget { display: none !important; }
+  #vnLiveClock .widget-secondary { display: none !important; }
+
+  /* Khung điều hành: 1 vùng hiển thị/lần, tab bar ở dưới */
+  body.tac-mobile-console .dispatcher-layout {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    grid-template-areas: none !important;
+    height: calc(var(--tac-vh) - var(--tac-header-h) - var(--sa-top)) !important;
+    max-height: calc(var(--tac-vh) - var(--tac-header-h) - var(--sa-top)) !important;
+    overflow: hidden !important;
+    padding: 0 calc(var(--tac-gutter) + var(--sa-right)) calc(var(--tac-tabbar-h) + 12px + var(--sa-bottom)) calc(var(--tac-gutter) + var(--sa-left)) !important;
+    gap: 0 !important;
+  }
+  body.tac-mobile-console .dispatcher-map-area,
+  body.tac-mobile-console .dispatcher-sidebar,
+  body.tac-mobile-console .tactical-detail-panel {
+    grid-area: 1 / 1 / 2 / 2 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    border-radius: 20px !important;
+  }
+  /* Bản đồ luôn được mount (MapLibre cần kích thước) — ẩn bằng visibility để giữ WebGL */
+  body.tac-mobile-console .dispatcher-map-area { visibility: hidden; pointer-events: none; }
+  body.tac-mobile-console .dispatcher-sidebar,
+  body.tac-mobile-console .tactical-detail-panel { display: none !important; }
+
+  body.tac-mobile-console[data-tac-view="map"] .dispatcher-map-area { visibility: visible; pointer-events: auto; }
+  body.tac-mobile-console[data-tac-view="queue"] .dispatcher-sidebar { display: flex !important; }
+  body.tac-mobile-console[data-tac-view="queue"] #activeIncidentDrawer { display: none !important; }
+  body.tac-mobile-console[data-tac-view="detail"] .dispatcher-sidebar { display: flex !important; }
+  body.tac-mobile-console[data-tac-view="detail"] #activeIncidentDrawer { display: flex !important; flex: 1 !important; width: 100% !important; }
+  body.tac-mobile-console[data-tac-view="detail"] .sidebar-tab-nav,
+  body.tac-mobile-console[data-tac-view="detail"] #queueFilterBar,
+  body.tac-mobile-console[data-tac-view="detail"] #incidentQueueList,
+  body.tac-mobile-console[data-tac-view="detail"] #incidentHistoryList,
+  body.tac-mobile-console[data-tac-view="detail"] #queueEmptyCosmicState { display: none !important; }
+  body.tac-mobile-console[data-tac-view="detail"] .tactical-detail-panel { display: flex !important; }
+  body.tac-mobile-console[data-tac-view="detail"] .tactical-detail-close { display: inline-flex; }
+
+  .dispatcher-map-area { min-height: 0 !important; }
+
+  /* Tab bar Liquid Glass — neo 16px trên Home Indicator */
+  .tactical-tabbar {
+    position: fixed;
+    left: 50%;
+    bottom: calc(14px + var(--sa-bottom));
+    transform: translate(-50%, 0) translateZ(0);
+    display: flex;
+    align-items: stretch;
+    gap: 4px;
+    width: min(420px, calc(100vw - 24px - var(--sa-left) - var(--sa-right)));
+    height: var(--tac-tabbar-h);
+    padding: 6px;
+    border-radius: 9999px;
+    background: var(--tac-glass-bg);
+    backdrop-filter: blur(var(--tac-glass-blur-max)) saturate(190%);
+    -webkit-backdrop-filter: blur(var(--tac-glass-blur-max)) saturate(190%);
+    border: 1px solid var(--tac-glass-border);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.22), 0 0 26px rgba(56, 189, 248, 0.16);
+    z-index: 20000; /* trên map/dock/popover (≤ 10010), dưới Cổng Portal (99990) & modal */
+    box-sizing: border-box;
+    touch-action: manipulation;
+  }
+  .tactical-tabbar button {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    border: none;
+    border-radius: 9999px;
+    background: transparent;
+    color: #94a3b8;
+    font: inherit;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    cursor: pointer;
+    position: relative;
+    transition: background .25s ease, color .25s ease, transform .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tactical-tabbar button svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .tactical-tabbar button.is-active {
+    color: #f8fafc;
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.30), rgba(0, 136, 255, 0.18));
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.25), 0 0 16px rgba(56,189,248,.35);
+  }
+  .tactical-tabbar button:active { transform: scale(.96); }
+  .tactical-tabbar .tac-tab-badge {
+    position: absolute;
+    top: 4px; right: calc(50% - 22px);
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: 999px;
+    background: var(--force-pccc-neon);
+    color: #fff; font-size: 10px; font-weight: 800;
+    display: none; align-items: center; justify-content: center;
+    box-shadow: 0 0 12px rgba(239,68,68,.75);
+  }
+  .tactical-tabbar .tac-tab-badge.is-visible { display: inline-flex; }
+
+  /* Top bar thống kê: cuộn ngang mượt */
+  .tactical-map-top-bar {
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tactical-map-top-bar::-webkit-scrollbar { display: none; }
+  .tactical-stripe-left, .tactical-stripe-center { flex-shrink: 0; }
+
+  /* Hộp thư & dock địa bàn: tránh tab bar */
+  .floating-chat-dock {
+    bottom: calc(var(--tac-tabbar-h) + 22px + var(--sa-bottom)) !important;
+    right: calc(12px + var(--sa-right)) !important;
+    max-width: calc(100vw - 24px) !important;
+    transition: bottom .25s cubic-bezier(.16,1,.3,1);
+  }
+  /* Dock địa bàn đang mở: nâng Hộp thư lên trên dock, không che nút */
+  body.tac-dock-open .floating-chat-dock {
+    bottom: calc(var(--tac-tabbar-h) + 22px + var(--sa-bottom) + var(--tac-dock-h, 96px) + 14px) !important;
+  }
+  .geofence-bubble-orb,
+  .tactical-bottom-dock, #tacticalGeofenceControlBar {
+    bottom: 16px !important;
+  }
+  .sos-mailbox-bubble-orb,
+  .geofence-bubble-orb { width: 52px !important; height: 52px !important; }
+
+  /* Undo toast trên tab bar */
+  #historyUndoToast { bottom: calc(var(--tac-tabbar-h) + 26px + var(--sa-bottom)) !important; max-width: calc(100vw - 24px); }
+
+  /* Sidebar panel padding gọn */
+  .sidebar-header-new { padding: 12px 14px 10px !important; }
+  .sidebar-tab-btn { font-size: 11px !important; padding: 8px 8px !important; white-space: nowrap; }
+
+  /* Gear dropdown: neo phải, không tràn */
+  .gear-dropdown-menu { right: calc(10px + var(--sa-right)) !important; left: auto !important; max-width: calc(100vw - 20px); }
+}
+
+/* Điện thoại nhỏ (≤ 430px) */
+@media (max-width: 430px) {
+  .tactical-bottom-dock > div[style*="color: #f43f5e"] { display: none !important; }
+  .header-main-title { max-width: 36vw; font-size: 12.5px !important; }
+  .tactical-tabbar { height: 58px; }
+  .tactical-tabbar button { font-size: 10px; }
+}
+
+/* Foldable đóng (Z Flip / Z Fold màn ngoài ~ 340px) */
+@media (max-width: 360px) {
+  :root { --tac-gutter: 8px; }
+  .header-nav-left-pill .header-national-crest { display: none !important; }
+  .tactical-tabbar button span { display: none; }
+  .tactical-tabbar button svg { width: 22px; height: 22px; }
+}
+
+/* Foldable mở (Z Fold ~ 673–884px, tỷ lệ gần vuông): giữ 1 vùng nhưng nới sidebar */
+@media (min-width: 600px) and (max-width: 992px) and (min-aspect-ratio: 3/4) and (max-aspect-ratio: 5/4) {
+  .tactical-tabbar { width: min(520px, calc(100vw - 32px)); }
+}
+
+/* Điện thoại ngang: header rất thấp */
+@media (max-width: 992px) and (max-height: 500px) and (orientation: landscape) {
+  :root { --tac-header-h: 48px; --tac-tabbar-h: 50px; }
+  .header-nav-left-pill { padding: 4px 10px 4px 6px !important; }
+  .header-crest-img { width: 28px !important; height: 28px !important; }
+  .tactical-tabbar { bottom: calc(8px + var(--sa-bottom)); height: 50px; padding: 4px; }
+  .tactical-tabbar button span { display: none; }
+}
+
+/* ---------------------------------------------------------------------
+   9. TACTICAL GEOFENCE BOTTOM DOCK + POPOVER TỈNH / PHƯỜNG XÃ
+   Pill nổi Liquid Glass căn giữa, popover luôn trong viewport, cuộn riêng.
+   --------------------------------------------------------------------- */
+.tactical-bottom-dock, #tacticalGeofenceControlBar {
+  bottom: calc(24px + var(--sa-bottom)) !important;
+  max-width: calc(100% - 24px) !important;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  background: var(--tac-glass-bg) !important;
+  border: 1px solid var(--tac-glass-border-active) !important;
+  transform: translateX(-50%) translateZ(0) !important;
+}
+.geofence-bubble-orb { bottom: calc(24px + var(--sa-bottom)) !important; transform: translateX(-50%) translateZ(0); }
+
+.liquid-glass-popover {
+  width: min(490px, calc(100vw - 32px - var(--sa-left) - var(--sa-right))) !important;
+  max-width: none !important;
+  max-height: min(520px, calc(var(--tac-vh) - var(--tac-header-h) - var(--tac-topbar-h) - 120px - var(--sa-top) - var(--sa-bottom))) !important;
+  background: var(--tac-glass-bg) !important;
+  border: 1px solid var(--tac-glass-border-active) !important;
+  backdrop-filter: blur(var(--tac-glass-blur-max)) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(var(--tac-glass-blur-max)) saturate(190%) !important;
+}
+/* Vùng cuộn riêng của popover — chiều cao theo viewport thật */
+.province-bubbles-grid {
+  max-height: min(300px, calc(var(--tac-vh) - var(--tac-header-h) - 300px - var(--sa-top) - var(--sa-bottom))) !important;
+  min-height: 96px !important;
+}
+.ward-results-list {
+  max-height: min(330px, calc(var(--tac-vh) - var(--tac-header-h) - 290px - var(--sa-top) - var(--sa-bottom))) !important;
+  min-height: 96px !important;
+}
+
+@media (max-width: 992px) {
+  /* Dock: pill co giãn 2 hàng, luôn nằm trong khung bản đồ, không bị cắt */
+  .tactical-bottom-dock, #tacticalGeofenceControlBar {
+    gap: 6px !important;
+    padding: 6px 10px !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-width: none !important;
+    transform: none !important; /* không transform để popover fixed bám viewport */
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    border-radius: 22px !important;
+  }
+  .tactical-bottom-dock .dock-pill-select-wrap { flex: 1 1 140px; min-width: 0; justify-content: space-between; }
+  .tactical-bottom-dock #dockProvinceLabel, .tactical-bottom-dock #dockWardLabel { max-width: none !important; flex: 1; min-width: 0; }
+  .tactical-bottom-dock .dock-emergency-pill { flex: 1 1 100%; justify-content: center; }
+  .tactical-bottom-dock .dock-minimize-btn { position: absolute; top: -10px; right: -6px; width: 26px; height: 26px; }
+  .liquid-glass-popover {
+    position: fixed !important;
+    left: 50% !important;
+    right: auto !important;
+    top: auto !important;
+    transform: translateX(-50%) translateZ(0) !important;
+    bottom: calc(var(--tac-tabbar-h) + 26px + var(--sa-bottom)) !important;
+    max-height: min(70vh, calc(var(--tac-vh) - var(--tac-header-h) - var(--tac-tabbar-h) - 70px - var(--sa-top) - var(--sa-bottom))) !important;
+    width: min(490px, calc(100vw - 20px)) !important;
+    padding: 12px 12px !important;
+    border-radius: 18px !important;
+  }
+  .province-bubbles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+    max-height: calc(70vh - 150px) !important;
+  }
+  .ward-results-list { max-height: calc(70vh - 130px) !important; }
+}
+
+/* Cổng Portal / Auth gate đang hiện: ẩn tab bar & hộp thư (JS để body.tac-portal-open) */
+body.tac-portal-open .tactical-tabbar,
+body.tac-portal-open .floating-chat-dock { display: none !important; }
+
+/* ---------------------------------------------------------------------
+   10. CHAT HUB / MODAL / TOAST — safe-area
+   --------------------------------------------------------------------- */
+.floating-chat-dock { right: calc(20px + var(--sa-right)); padding-bottom: var(--sa-bottom); }
+.chat-hub-popover { max-height: calc(var(--tac-vh) - var(--tac-header-h) - 40px - var(--sa-top) - var(--sa-bottom)) !important; }
+@media (max-width: 600px), (max-height: 500px) and (orientation: landscape) {
+  /*
+   * The mailbox is opened from a small orb at the bottom-right.  Keeping the
+   * panel `absolute` on a narrow, short viewport makes its 520px desktop
+   * height grow upward past the top edge (and can also push its left edge
+   * outside the viewport).  On phones it behaves as a viewport-bound sheet:
+   * the header, ticket tabs and composer are always reachable while only the
+   * messages area scrolls.
+   */
+  .chat-hub-popover {
+    position: fixed !important;
+    top: max(10px, var(--sa-top)) !important;
+    right: calc(10px + var(--sa-right)) !important;
+    bottom: calc(var(--tac-tabbar-h) + 12px + var(--sa-bottom)) !important;
+    left: calc(10px + var(--sa-left)) !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+  }
+}
+
+/* On the smallest phones the document toolbar can wrap to several rows.
+   Keep the dossier itself scrollable so the final confirmation/close controls
+   can never be clipped below an overflow-hidden modal. */
+@media (max-width: 480px) {
+  #incidentReportDocxModal {
+    align-items: flex-start !important;
+    overflow-y: auto !important;
+    padding: 10px !important;
+  }
+
+  #incidentReportDocxModal .modal-container {
+    width: 100% !important;
+    height: calc(var(--tac-vh) - 20px) !important;
+    max-height: calc(var(--tac-vh) - 20px) !important;
+    margin: 0 auto !important;
+    overflow-y: auto !important;
+  }
+
+  #incidentReportDocxModal #reportSheetContainer {
+    flex: 1 1 0 !important;
+  }
+}
+#historyUndoToast { bottom: calc(28px + var(--sa-bottom)) !important; }
+
+/* ---------------------------------------------------------------------
+   11. CỔNG NGƯỜI DÂN (index.html) — dock dưới, hero, safe-area
+   --------------------------------------------------------------------- */
+.header-nav-center { bottom: calc(20px + var(--sa-bottom)) !important; }
+.nav-center-pill { max-width: calc(100vw - 24px - var(--sa-left) - var(--sa-right)); }
+.main-wrapper {
+  padding-left: max(16px, var(--sa-left)) !important;
+  padding-right: max(16px, var(--sa-right)) !important;
+  padding-top: max(20px, var(--sa-top)) !important;
+  padding-bottom: calc(130px + var(--sa-bottom)) !important;
+}
+.location-banner {
+  margin-top: 0 !important;
+  margin-bottom: 14px !important;
+}
+.crystal-orb-wrapper, .btn-crystal-orb { touch-action: manipulation; }
+
+/* =====================================================================
+   11. CITIZEN PORTAL: 3D SPHERE IN CUPPED HANDS & UNIVERSAL DEVICE MATRIX
+   Desktop / Laptop / iPad / Mobile (iOS/Android) / Console TV / Ford SYNC
+   ===================================================================== */
+.bg-video-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: radial-gradient(circle at 50% 50%, #08162d 0%, #030712 90%) !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+/* 1. Desktop, Laptop, Console TV & Ford Landscape (min-aspect-ratio: 1/1) */
+@media (min-aspect-ratio: 1/1) {
+  .bg-video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center 48% !important;
+  }
+  .sos-hero {
+    margin: 10px 0 6px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .hero-badge-pill {
+    margin-bottom: 6px !important;
+  }
+  .sos-hero-title {
+    font-size: clamp(22px, 2.6vw, 34px) !important;
+    margin-bottom: 4px !important;
+    line-height: 1.18 !important;
+  }
+  .sos-hero-sub {
+    font-size: clamp(11.5px, 0.95vw, 13px) !important;
+    margin-bottom: 12px !important;
+    max-width: 520px !important;
+  }
+  .crystal-orb-wrapper {
+    margin: 12px auto 10px !important;
+    width: clamp(190px, 13vw, 220px) !important;
+    height: clamp(190px, 13vw, 220px) !important;
+  }
+  .btn-crystal-orb {
+    width: clamp(150px, 10.5vw, 172px) !important;
+    height: clamp(150px, 10.5vw, 172px) !important;
+  }
+}
+
+/* 2. Short Landscape screens (e.g. Mobile Landscape 844x390, Ford 1024x600) */
+@media (min-aspect-ratio: 1/1) and (max-height: 520px) {
+  .location-banner { display: none !important; }
+  .sos-hero { margin: 2px 0 0 !important; }
+  .hero-badge-pill { display: none !important; }
+  .sos-hero-title { font-size: 18px !important; margin-bottom: 2px !important; }
+  .sos-hero-sub { display: none !important; }
+  .crystal-orb-wrapper { width: 140px !important; height: 140px !important; margin: 4px auto !important; }
+  .btn-crystal-orb { width: 110px !important; height: 110px !important; }
+  .header-nav-center { bottom: 6px !important; }
+  .nav-center-pill { padding: 4px 8px !important; }
+  .nav-pill-item { font-size: 10px !important; padding: 6px 6px !important; }
+}
+
+/* 3. Medium Landscape screens (Ford SYNC 1280x800, Laptop 1440x900) */
+@media (min-aspect-ratio: 1/1) and (min-height: 521px) and (max-height: 850px) {
+  .location-banner { padding: 8px 16px !important; margin-bottom: 8px !important; }
+  .sos-hero { margin: 6px 0 6px !important; }
+  .sos-hero-title { font-size: 24px !important; margin-bottom: 4px !important; }
+  .sos-hero-sub { font-size: 12px !important; margin-bottom: 10px !important; }
+  .crystal-orb-wrapper { width: 185px !important; height: 185px !important; margin: 8px auto 8px !important; }
+  .btn-crystal-orb { width: 146px !important; height: 146px !important; }
+}
+
+/* 4. Portrait devices: Mobile (iOS/Android), iPad Portrait, Ford Mach-E Vertical (aspect-ratio <= 1/1) */
+@media (max-aspect-ratio: 1/1) {
+  .bg-video {
+    width: clamp(680px, 165vw, 1150px) !important;
+    max-width: none !important;
+    height: auto !important;
+    object-fit: contain !important;
+    transform: translateY(2vh) !important;
+    mask-image: radial-gradient(ellipse 75% 65% at 50% 50%, black 50%, transparent 95%) !important;
+    -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 50%, black 50%, transparent 95%) !important;
+  }
+  .location-banner {
+    padding: 8px 12px !important;
+    margin-bottom: 8px !important;
+  }
+  .sos-hero {
+    margin: 6px 0 8px !important;
+  }
+  .hero-badge-pill {
+    margin-bottom: 6px !important;
+    font-size: 9.5px !important;
+    padding: 3px 10px !important;
+  }
+  .sos-hero-title {
+    font-size: clamp(20px, 5.5vw, 28px) !important;
+    margin-bottom: 4px !important;
+  }
+  .sos-hero-sub {
+    font-size: clamp(11px, 3vw, 12.5px) !important;
+    line-height: 1.4 !important;
+    margin: 0 auto 8px !important;
+    max-width: 360px !important;
+  }
+  .crystal-orb-wrapper {
+    width: clamp(165px, 44vw, 195px) !important;
+    height: clamp(165px, 44vw, 195px) !important;
+    margin: 6px auto 10px !important;
+  }
+  .btn-crystal-orb {
+    width: clamp(130px, 35vw, 154px) !important;
+    height: clamp(130px, 35vw, 154px) !important;
+  }
+}
+
+/* 5. iPad Portrait specifics (820x1180 / 768x1024) */
+@media (min-width: 700px) and (max-width: 1024px) and (max-aspect-ratio: 1/1) {
+  .bg-video {
+    width: 145vw !important;
+    transform: translateY(3vh) !important;
+  }
+  .sos-hero { margin-top: 18px !important; }
+  .crystal-orb-wrapper { width: 210px !important; height: 210px !important; margin: 16px auto !important; }
+  .btn-crystal-orb { width: 165px !important; height: 165px !important; }
+}
+
+/* 6. Ford Mustang Mach-E Vertical Touchscreen (1200x1920) */
+@media (min-width: 1100px) and (min-height: 1600px) and (max-aspect-ratio: 1/1) {
+  .bg-video {
+    width: 150vw !important;
+    transform: translateY(4vh) !important;
+  }
+  .sos-hero { margin-top: 36px !important; }
+  .crystal-orb-wrapper { width: 280px !important; height: 280px !important; margin: 28px auto !important; }
+  .btn-crystal-orb { width: 220px !important; height: 220px !important; }
+  .sos-hero-title { font-size: 42px !important; }
+  .sos-hero-sub { font-size: 18px !important; max-width: 600px !important; }
+}
+
+/* 7. Military-grade Collapsible Legal Warning Pill */
+.legal-warning-card {
+  max-width: 640px !important;
+  margin: 10px auto 0 !important;
+  border-radius: 9999px !important;
+  padding: 6px 14px !important;
+  cursor: pointer !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  background: rgba(245, 158, 11, 0.08) !important;
+  border: 1px solid rgba(245, 158, 11, 0.32) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  outline: none;
+}
+.legal-warning-card:hover, .legal-warning-card:focus-visible {
+  background: rgba(245, 158, 11, 0.14) !important;
+  border-color: rgba(245, 158, 11, 0.55) !important;
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.18) !important;
+}
+.legal-warning-card .legal-card-header {
+  padding: 0 !important;
+  gap: 8px !important;
+  align-items: center !important;
+  background: transparent !important;
+  border-bottom: none !important;
+  cursor: pointer;
+}
+.legal-warning-card .legal-shield-badge {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  border-radius: 50% !important;
+  background: rgba(245, 158, 11, 0.2) !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+}
+.legal-warning-card .legal-shield-badge svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+.legal-warning-card .legal-header-text {
+  min-width: 0;
+  flex: 1;
+}
+.legal-warning-card .legal-title {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3px !important;
+  color: #fbbf24 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.legal-summary-inline {
+  font-size: 10.5px !important;
+  font-weight: 500 !important;
+  color: rgba(254, 243, 199, 0.88) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.legal-toggle-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 3px 8px !important;
+  border-radius: 9999px !important;
+  background: rgba(245, 158, 11, 0.18) !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+  color: #fef3c7 !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: background 0.2s ease;
+}
+.legal-toggle-btn:hover {
+  background: rgba(245, 158, 11, 0.32) !important;
+}
+.legal-chevron {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.legal-warning-card .legal-subtitle,
+.legal-warning-card .legal-card-body,
+.legal-warning-card .legal-card-footer {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Expanded state on click */
+.legal-warning-card.expanded {
+  border-radius: 16px !important;
+  padding: 12px 16px !important;
+  background: rgba(14, 20, 36, 0.95) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 158, 11, 0.2) !important;
+}
+.legal-warning-card.expanded .legal-card-header {
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2) !important;
+  padding-bottom: 10px !important;
+}
+.legal-warning-card.expanded .legal-chevron {
+  transform: rotate(180deg);
+}
+.legal-warning-card.expanded .legal-subtitle,
+.legal-warning-card.expanded .legal-card-body,
+.legal-warning-card.expanded .legal-card-footer {
+  display: block !important;
+  opacity: 1 !important;
+}
+.legal-warning-card.expanded .legal-card-body {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding: 12px 0 10px !important;
+}
+.legal-warning-card.expanded .legal-card-footer {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 0 0 !important;
+  border-top: 1px solid rgba(245, 158, 11, 0.15) !important;
+}
+
+/* Điện thoại: dock 4 nút chia đều, không tràn; banner GPS gọn 2 tầng */
+@media (max-width: 600px) {
+  .main-wrapper {
+    padding-top: max(16px, var(--sa-top)) !important;
+    padding-bottom: calc(120px + var(--sa-bottom)) !important;
+  }
+  .header-nav-center { width: calc(100% - 16px) !important; max-width: none !important; left: 50% !important; }
+  .nav-center-pill {
+    display: flex !important;
+    width: 100% !important;
+    max-width: none !important;
+    gap: 4px !important;
+    padding: 5px 6px !important;
+  }
+  .nav-pill-item {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    justify-content: center !important;
+    padding: 8px 4px !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.2px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    gap: 3px !important;
+  }
+  .nav-pill-item.btn-pill-dispatcher-link {
+    font-size: 10.5px !important;
+    letter-spacing: -0.2px !important;
+    padding: 8px 4px !important;
+  }
+  .nav-pill-item .svg-ico {
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0 !important;
+  }
+  .location-banner { flex-wrap: wrap; padding: 10px 12px !important; gap: 8px !important; }
+  .loc-info { flex: 1 1 100%; align-items: flex-start; }
+  .loc-texts { min-width: 0; flex: 1; }
+  .loc-label { font-size: 10px !important; padding: 4px 10px !important; letter-spacing: 0.4px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .loc-address { font-size: 13px; line-height: 1.3; }
+  .btn-refresh-loc { flex: 1 1 100%; justify-content: center; min-height: 44px; }
+}
+
+@media (max-width: 420px) {
+  .legal-summary-inline {
+    display: none !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .nav-center-pill { padding: 4px 4px !important; gap: 2px !important; }
+  .nav-pill-item {
+    font-size: 9.5px !important;
+    padding: 7px 2px !important;
+    gap: 2px !important;
+    letter-spacing: -0.3px !important;
+  }
+  .nav-pill-item.btn-pill-dispatcher-link {
+    font-size: 9.5px !important;
+    letter-spacing: -0.3px !important;
+    padding: 7px 2px !important;
+  }
+  .nav-pill-item .svg-ico { width: 12px !important; height: 12px !important; }
+}
+
+@media (max-width: 380px) {
+  .nav-center-pill {
+    padding: 4px 3px !important;
+    gap: 1px !important;
+  }
+  .nav-pill-item {
+    font-size: 8.8px !important;
+    padding: 6px 1px !important;
+    gap: 2px !important;
+    letter-spacing: -0.4px !important;
+  }
+  .nav-pill-item.btn-pill-dispatcher-link {
+    font-size: 8.8px !important;
+    letter-spacing: -0.4px !important;
+    padding: 6px 1px !important;
+  }
+  .nav-pill-item .svg-ico {
+    width: 11px !important;
+    height: 11px !important;
+  }
+  .legal-warning-card .legal-title {
+    font-size: 10px !important;
+    letter-spacing: 0.1px !important;
+  }
+  .legal-toggle-btn {
+    padding: 3px 6px !important;
+    font-size: 9.5px !important;
+  }
+}
+
+/* Citizen Live Stream Overlay Mobile Controls */
+@media (max-width: 600px) {
+  .citizen-call-bottom-controls {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    padding: 12px 14px calc(18px + env(safe-area-inset-bottom, 0px)) 14px !important;
+  }
+  .citizen-call-bottom-controls button {
+    width: 100% !important;
+    margin: 0 !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    padding: 10px 8px !important;
+    white-space: nowrap !important;
+  }
+}
+
+/* Màn hình lớn: hero to hơn, giữ tỷ lệ */
+@media (min-width: 1600px) {
+  .main-wrapper { max-width: 860px !important; }
+  .crystal-orb-wrapper { width: clamp(210px, 14vw, 280px) !important; height: clamp(210px, 14vw, 280px) !important; }
+}
+
+/* ---------------------------------------------------------------------
+   12. BÀN PHÍM ẢO (visualViewport → --tac-kb-offset do JS cập nhật)
+   --------------------------------------------------------------------- */
+body.tac-keyboard-open .tactical-tabbar,
+body.tac-keyboard-open .header-nav-center,
+body.tac-keyboard-open .geofence-bubble-orb,
+body.tac-keyboard-open .floating-chat-dock { transform: translateY(200%) !important; transition: transform .2s ease; }
+body.tac-keyboard-open .tactical-tabbar { transform: translate(-50%, 200%) !important; }
+
+/* ---------------------------------------------------------------------
+   13. IN ẤN — báo cáo/PDF: ẩn lớp trang trí
+   --------------------------------------------------------------------- */
+@media print {
+  .bg-video-container, .tactical-tabbar, .floating-chat-dock, .geofence-bubble-orb,
+  .tactical-bottom-dock, #ios26BubblesBackdrop, .header-nav-center { display: none !important; }
+}
+
+
+  /* Bố cục Mobile Console: Mỗi tab chỉ hiển thị ĐÚNG 1 VÙNG, tuyệt đối không đè nhau */
+  body.tac-mobile-console .dispatcher-map-area {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  body.tac-mobile-console .dispatcher-sidebar,
+  body.tac-mobile-console .tactical-detail-panel {
+    display: none !important;
+  }
+
+  /* TAB BẢN ĐỒ: Chỉ hiển thị vùng bản đồ */
+  body.tac-mobile-console[data-tac-view="map"] .dispatcher-map-area,
+  body.tac-mobile-console:not([data-tac-view]) .dispatcher-map-area {
+    display: flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* TAB SỰ CỐ: Chỉ hiển thị danh sách sự cố toàn màn hình */
+  body.tac-mobile-console[data-tac-view="queue"] .dispatcher-sidebar {
+    display: flex !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+  }
+  body.tac-mobile-console[data-tac-view="queue"] .dispatcher-map-area {
+    display: none !important;
+  }
+
+  /* TAB CHI TIẾT: Chỉ hiển thị panel hồ sơ chi tiết */
+  body.tac-mobile-console[data-tac-view="detail"] .tactical-detail-panel {
+    display: flex !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+  }
+  body.tac-mobile-console[data-tac-view="detail"] .tactical-detail-close {
+    display: inline-flex !important;
+  }
+  body.tac-mobile-console[data-tac-view="detail"] .dispatcher-map-area {
+    display: none !important;
+  }
+
+  
+/* ==========================================================================
+   DESKTOP & LAPTOP (>= 769px) PERFECT POLISH
+   ========================================================================== */
+
+/* 1. Concentric alignment for Cosmic Portal Orbs */
+.bubble-sphere-wrapper {
+  position: relative !important;
+  width: var(--portal-sphere, 110px) !important;
+  height: var(--portal-sphere, 110px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.bubble-sphere-wrapper .bubble-orbit-ring {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: calc(var(--portal-sphere, 110px) * 1.34) !important;
+  height: calc(var(--portal-sphere, 110px) * 1.34) !important;
+  margin-top: calc(var(--portal-sphere, 110px) * -0.67) !important;
+  margin-left: calc(var(--portal-sphere, 110px) * -0.67) !important;
+  border-radius: 50% !important;
+  border: 1px dashed rgba(255, 255, 255, 0.35) !important;
+  pointer-events: none !important;
+  animation: rotateRing 24s linear infinite !important;
+}
+
+.bubble-sphere-wrapper .bubble-glass-sphere {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.bubble-sphere-wrapper .bubble-highlight {
+  position: absolute !important;
+  top: 8% !important;
+  left: 18% !important;
+  width: 42% !important;
+  height: 22% !important;
+  border-radius: 50% !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  transform: rotate(-24deg) !important;
+  pointer-events: none !important;
+}
+
+/* 2. Desktop HUD Popup Styling: Compact, Non-Intrusive, Scrollable & Minimizable */
+#tacticalWardGeofenceHud {
+  position: absolute !important;
+  top: 54px !important;
+  left: 14px !important;
+  right: auto !important;
+  width: 360px !important;
+  max-width: calc(100% - 28px) !important;
+  max-height: calc(100% - 75px) !important;
+  overflow-y: auto !important;
+  padding: 10px 14px !important;
+  border-radius: 14px !important;
+  box-sizing: border-box !important;
+  z-index: 400 !important;
+  background: rgba(8, 14, 28, 0.78) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.75) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#tacticalWardGeofenceHud.is-minimized {
+  max-height: 48px !important;
+  overflow: hidden !important;
+  padding: 8px 12px !important;
+}
+
+#tacticalWardGeofenceHud.is-minimized > div:not(:first-child) {
+  display: none !important;
+}
+
+/* 3. Floating Orb 'Địa bàn' centered at bottom on Desktop/Laptop */
+.geofence-bubble-orb,
+#tacticalGeofenceBubbleTrigger {
+  position: absolute !important;
+  bottom: 22px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 58px !important;
+  height: 58px !important;
+  z-index: 100 !important;
+}
+
+/* 4. National HQ Pulse Pin on Map */
+@keyframes pulseHqPin {
+  0% { transform: scale(1); box-shadow: 0 0 15px #eab308, 0 6px 16px rgba(0,0,0,0.8); }
+  50% { transform: scale(1.12); box-shadow: 0 0 30px #f59e0b, 0 10px 24px rgba(0,0,0,0.9); }
+  100% { transform: scale(1); box-shadow: 0 0 15px #eab308, 0 6px 16px rgba(0,0,0,0.8); }
+}
+
+/* ==========================================================================
+   MOBILE SCOPED ONLY (<= 768px)
+   ========================================================================== */
+@media (max-width: 992px) {
+  /* Tactical Ward Geofence HUD: Position cleanly below header & national summary bar */
+  #tacticalWardGeofenceHud {
+    position: fixed !important;
+    top: calc(var(--tac-header-h, 60px) + 52px + var(--sa-top, 0px)) !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-width: calc(100% - 20px) !important;
+    max-height: calc(100vh - 220px) !important;
+    overflow-y: auto !important;
+    padding: 10px 14px !important;
+    z-index: 9990 !important;
+  }
+
+  /* Bottom Geofence Dock: Float cleanly above mobile tab bar */
+  #tacticalGeofenceControlBar,
+  .tactical-bottom-dock {
+    bottom: calc(76px + var(--sa-bottom, 0px)) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    max-width: calc(100vw - 16px) !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding: 0 6px 0 10px !important;
+    gap: 4px !important;
+    scrollbar-width: none;
+    z-index: 10000 !important;
+  }
+  #tacticalGeofenceControlBar::-webkit-scrollbar {
+    display: none;
+  }
+  #tacticalGeofenceControlBar .dock-title-text {
+    display: none !important;
+  }
+  #tacticalGeofenceControlBar #dockProvinceLabel {
+    max-width: 80px !important;
+    font-size: 11px !important;
+  }
+  #tacticalGeofenceControlBar #dockWardLabel {
+    max-width: 90px !important;
+    font-size: 11px !important;
+  }
+  #tacticalGeofenceControlBar .dock-pill-select-wrap {
+    height: 26px !important;
+    padding: 0 6px !important;
+  }
+  #tacticalGeofenceControlBar .dock-pill-button {
+    height: 26px !important;
+    padding: 0 6px !important;
+    font-size: 11px !important;
+  }
+
+  /* Floating trigger orb when dock is minimized - centered at bottom */
+  #tacticalGeofenceBubbleTrigger {
+    bottom: calc(76px + var(--sa-bottom, 0px)) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10000 !important;
+  }
+
+  /* Floating Mailbox & Chat buttons above tab bar */
+  #dispatcherMailboxBubble,
+  #chatFloatingTrigger {
+    bottom: calc(76px + var(--sa-bottom, 0px)) !important;
+    right: 12px !important;
+    z-index: 10000 !important;
+  }
+
+  /* Popovers above dock on mobile */
+  #provinceBubblePopover,
+  #wardBubblePopover {
+    bottom: calc(122px + var(--sa-bottom, 0px)) !important;
+    max-height: calc(100vh - 210px) !important;
+    width: min(390px, calc(100vw - 20px)) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10020 !important;
+  }
+
+  /* Mobile Console View Switching */
+  body[data-tac-view="queue"] .dispatcher-map-area,
+  body[data-tac-view="detail"] .dispatcher-map-area {
+    display: none !important;
+  }
+  body[data-tac-view="queue"] .dispatcher-sidebar {
+    display: flex !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+  }
+  body[data-tac-view="queue"] .sidebar-tabs-nav,
+  body[data-tac-view="queue"] #sidebarTabsNav,
+  body[data-tac-view="queue"] .sidebar-header-new {
+    display: flex !important;
+  }
+  body[data-tac-view="queue"] #activeIncidentDrawer {
+    display: none !important;
+  }
+  body[data-tac-view="queue"] #dispatcherMailboxBubble,
+  body[data-tac-view="queue"] #btnMasterChatHub,
+  body[data-tac-view="queue"] .sos-mailbox-bubble-orb,
+  body[data-tac-view="queue"] #chatFloatingTrigger,
+  body[data-tac-view="queue"] #tacticalGeofenceControlBar,
+  body[data-tac-view="queue"] #tacticalGeofenceBubbleTrigger {
+    display: none !important;
+  }
+
+  /* Detail (Chi tiết) Tab View */
+  body[data-tac-view="detail"] .dispatcher-sidebar {
+    display: flex !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    padding-top: 8px !important;
+  }
+  body[data-tac-view="detail"] .sidebar-tabs-nav,
+  body[data-tac-view="detail"] #sidebarTabsNav,
+  body[data-tac-view="detail"] .sidebar-header-new,
+  body[data-tac-view="detail"] #agencyFilterGroup,
+  body[data-tac-view="detail"] #queueFilterBar,
+  body[data-tac-view="detail"] #incidentQueueList,
+  body[data-tac-view="detail"] #incidentHistoryList,
+  body[data-tac-view="detail"] #queueEmptyCosmicState,
+  body[data-tac-view="detail"] #panelHistoryView,
+  body[data-tac-view="detail"] #panelStationsView,
+  body[data-tac-view="detail"] #panelEnterprisesView,
+  body[data-tac-view="detail"] #panelHospitalsView,
+  body[data-tac-view="detail"] #dispatcherMailboxBubble,
+  body[data-tac-view="detail"] #btnMasterChatHub,
+  body[data-tac-view="detail"] .sos-mailbox-bubble-orb,
+  body[data-tac-view="detail"] #chatFloatingTrigger,
+  body[data-tac-view="detail"] #tacticalGeofenceControlBar,
+  body[data-tac-view="detail"] #tacticalGeofenceBubbleTrigger {
+    display: none !important;
+  }
+  body[data-tac-view="detail"] #panelIncidentsView {
+    display: flex !important;
+    flex: 1 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+  body[data-tac-view="detail"] #activeIncidentDrawer {
+    display: flex !important;
+    flex: 1 !important;
+    height: 100% !important;
+    width: 100% !important;
+  }
+  body[data-tac-view="detail"] .tactical-detail-panel {
+    display: flex !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+  }
+
+  body[data-tac-view="map"] .dispatcher-sidebar,
+  body[data-tac-view="map"] .tactical-detail-panel {
+    display: none !important;
+  }
+  body[data-tac-view="map"] .dispatcher-map-area {
+    display: flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* Safe padding bottom for sidebar lists & drawer so tab bar does not cut off content */
+  body.tac-mobile-console .dispatcher-sidebar {
+    padding-bottom: calc(85px + var(--sa-bottom, 0px)) !important;
+    box-sizing: border-box !important;
+  }
+  body.tac-mobile-console #activeIncidentDrawer {
+    padding-bottom: calc(90px + var(--sa-bottom, 0px)) !important;
+    box-sizing: border-box !important;
+  }
+  .dispatcher-layout {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    overflow: hidden !important;
+  }
+}
+
+/* ==========================================================================
+   PERFECT TACTICAL GEOFENCE DOCK & DRAWER POLISH
+   ========================================================================== */
+#tacticalGeofenceControlBar[style*="display: none"] {
+  display: none !important;
+}
+
+#tacticalGeofenceBubbleTrigger[style*="display: none"] {
+  display: none !important;
+}
+
+@media (min-width: 993px) {
+  #tacticalGeofenceControlBar,
+  .tactical-bottom-dock {
+    bottom: 20px !important;
+  }
+}
+
+#tacticalGeofenceControlBar,
+.tactical-bottom-dock {
+  position: absolute !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  align-items: center !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  gap: 5px !important;
+  padding: 0 8px 0 12px !important;
+  border-radius: 9999px !important;
+  background: rgba(8, 14, 28, 0.94) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.25) !important;
+  width: auto !important;
+  max-width: calc(100% - 16px) !important;
+  white-space: nowrap !important;
+  z-index: 400 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+#tacticalGeofenceControlBar:not([style*="display: none"]) {
+  display: inline-flex !important;
+}
+
+#tacticalGeofenceControlBar .dock-title-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-weight: 800 !important;
+  font-size: 11px !important;
+  color: #f43f5e !important;
+  padding: 0 2px !important;
+  white-space: nowrap !important;
+  text-shadow: 0 0 10px rgba(244, 63, 94, 0.4) !important;
+  user-select: none !important;
+  flex-shrink: 0 !important;
+}
+
+#tacticalGeofenceControlBar .dock-pill-select-wrap {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 28px !important;
+  gap: 4px !important;
+  padding: 0 8px !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: none !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+#tacticalGeofenceControlBar .dock-pill-select-wrap::before,
+#tacticalGeofenceControlBar .dock-pill-button::before {
+  display: none !important;
+}
+
+#tacticalGeofenceControlBar #dockProvinceLabel {
+  max-width: 120px !important;
+  min-width: 30px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
+
+#tacticalGeofenceControlBar #dockWardLabel {
+  max-width: 130px !important;
+  min-width: 30px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
+
+#tacticalGeofenceControlBar .dock-pill-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 28px !important;
+  gap: 4px !important;
+  padding: 0 8px !important;
+  border-radius: 9999px !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+  font-size: 11px !important;
+  box-sizing: border-box !important;
+}
+
+/* Hide long text 'Đang Hiện Lưới Khu Vực' inside dock so only eye icon is shown cleanly */
+#tacticalGeofenceControlBar #labelToggleAreaGrid {
+  display: none !important;
+}
+
+#tacticalGeofenceControlBar .dock-minimize-btn {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  margin-left: 1px !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 24px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+#tacticalGeofenceControlBar .dock-minimize-btn:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  border-color: #ef4444 !important;
+}
+
+/* Prevent map canvas wrap from horizontal scrolling */
+.dispatcher-map-canvas-wrap {
+  overflow: hidden !important;
+}
+
+/* Popover centering & containment (positioned directly on map canvas) */
+.liquid-glass-popover {
+  position: absolute !important;
+  bottom: 68px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: min(480px, calc(100vw - 32px)) !important;
+  max-width: 92vw !important;
+  z-index: 10010 !important;
+}
+
+@media (max-width: 768px) {
+  #tacticalGeofenceControlBar .dock-title-text {
+    display: none !important;
+  }
+  #tacticalGeofenceControlBar #dockProvinceLabel {
+    max-width: 85px !important;
+  }
+  #tacticalGeofenceControlBar #dockWardLabel {
+    max-width: 90px !important;
+  }
+}
+
+/* The citizen body is not a bounded panel: wheel/touch must reach the document. */
+body:has(#sosTrackingView) { overscroll-behavior-y: auto; }
+
+/* Tracking cards: allow long addresses and contact details to wrap naturally. */
+#sosTrackingView, #sosTrackingView .tracking-card,
+#assignedUnitBox, #assignedUnitBox .unit-info,
+#assignedUnitBox .unit-info > div, #multiChannelStatusBox > div {
+  min-width: 0;
+  box-sizing: border-box;
+}
+#unitStationDetailsBox, #unitName, #unitSub, #multiChannelStatusBox {
+  overflow-wrap: anywhere;
+}
+#multiChannelStatusBox { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+@media (max-width: 600px) {
+  #assignedUnitBox > div:first-child {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 12px;
+  }
+  #assignedUnitBox .unit-info { width: 100%; align-items: flex-start; gap: 10px; }
+  #assignedUnitBox .unit-avatar { flex: 0 0 40px; width: 40px; height: 40px; }
+  #assignedUnitBox .unit-info > div:last-child > div:first-child { flex-wrap: wrap; }
+  #btnCallUnit { align-self: stretch; justify-content: center; min-height: 44px; white-space: normal; }
+  #multiChannelStatusBox { grid-template-columns: minmax(0, 1fr) !important; }
+  #multiChannelStatusBox > div { text-align: left !important; padding: 12px !important; }
+  #multiChannelStatusBox > div > div:first-child { float: left; margin-right: 12px; }
+  #sosTrackingView .tracking-card { padding: 16px !important; }
+}
+
+/* The drawer owns vertical scrolling; updates must not reset its reading position. */
+#activeIncidentDrawer.is-hidden,
+#activeIncidentDrawer[style*="display: none"],
+#activeIncidentDrawer[style*="display:none"] {
+  display: none !important;
+}
+
+#activeIncidentDrawer {
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow-y: auto !important;
+  padding: 10px 14px 24px !important;
+  box-sizing: border-box !important;
+  scrollbar-width: thin;
+}
+
+#btnCloseDrawer:hover {
+  background: rgba(239, 68, 68, 0.4) !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+  transform: scale(1.05);
+}
+
+#btnBackToQueueList:hover {
+  background: rgba(59, 130, 246, 0.2) !important;
+  border-color: #60a5fa !important;
+  color: #ffffff !important;
+}
+
+#activeIncidentDrawer > * { flex-shrink: 0; }
+#drawerActionButtons { padding: 8px 0 calc(var(--tac-tabbar-h) + var(--sa-bottom) + 12px); }
+#btnAcceptSOS {
+  min-height: 64px;
+  flex-direction: column;
+  gap: 2px !important;
+  border: 2px solid rgba(191, 219, 254, 0.92) !important;
+  box-shadow: 0 10px 26px rgba(0, 102, 204, 0.48), inset 0 1px rgba(255,255,255,0.26) !important;
+}
+#btnAcceptSOS::after {
+  content: 'NHẤN ĐỂ XÁC NHẬN & PHÁT LỆNH ĐIỀU ĐỘNG';
+  color: rgba(239, 246, 255, 0.92);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.25px;
+  line-height: 1.2;
+}
+#btnAcceptSOS:focus-visible { outline: 3px solid #fef08a; outline-offset: 3px; }
+#btnAcceptSOS:disabled { cursor: wait; filter: saturate(0.65); }
+#btnAcceptSOS:disabled::after { content: 'ĐANG GỬI LỆNH ĐIỀU ĐỘNG…'; }
+#dispatcherSidebar { min-height: 0; }
+#panelIncidentsView, #panelHistoryView { min-height: 0; min-width: 0; }
+#panelHistoryView { overflow-y: auto; overscroll-behavior-y: contain; }
+#panelHistoryView > * { flex-shrink: 0; }
+#panelHistoryView #incidentHistoryList { flex: 0 0 auto !important; overflow: visible !important; }
+#historyPullHandle { position: sticky; top: 0; z-index: 2; min-height: 44px; box-sizing: border-box; }
+
+/* A hidden incident panel must not reserve an empty flex row above history. */
+#dispatcherSidebar:has(#tabBtnHistory.is-active) #panelIncidentsView { display: none !important; }
+body.has-expanded-history #dispatcherSidebar {
+  position: fixed !important;
+  inset: calc(var(--tac-header-h) + var(--sa-top) + 8px) 12px 12px auto !important;
+  width: min(620px, calc(100vw - 24px)) !important;
+  height: auto !important;
+  max-height: none !important;
+  z-index: 10020 !important;
+}
+
+@media (max-width: 992px) {
+  body.tac-mobile-console .dispatcher-layout {
+    padding-bottom: calc(var(--tac-tabbar-h) + 24px + var(--sa-bottom)) !important;
+  }
+  body.tac-mobile-console .dispatcher-sidebar {
+    overflow: hidden !important;
+    padding-bottom: 0 !important;
+  }
+  body.tac-mobile-console #activeIncidentDrawer {
+    padding-bottom: 24px !important;
+    min-height: 0 !important;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+  }
+  body.tac-mobile-console #drawerActionButtons {
+    padding-bottom: calc(var(--tac-tabbar-h) + var(--sa-bottom) + 20px);
+  }
+  body.tac-mobile-console #panelIncidentsView,
+  body.tac-mobile-console #panelHistoryView { flex: 1 1 0 !important; }
+  body.tac-mobile-console.has-expanded-history #dispatcherSidebar {
+    inset: calc(var(--tac-header-h) + var(--sa-top) + 4px) 8px calc(var(--tac-tabbar-h) + var(--sa-bottom) + 24px) 8px !important;
+    width: auto !important;
+  }
+  #drawerHeaderTitle { overflow-wrap: anywhere; min-width: 0; }
+  .drawer-header-bar > div { min-width: 0; }
+  #btnBackToQueueList, #btnCloseDrawer { flex-shrink: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #historyPullHandle, #historyPullHandle * { transition: none !important; }
+  #btnAcceptSOS { transition: none !important; }
+}
+
+/* ==========================================================================
+   FULLSCREEN MAP & RESILIENT RESIZING ENGINE (USER REQUEST FIX)
+   ========================================================================== */
+
+/* 1. Fullscreen Map Active Mode */
+body.map-fullscreen-active .dispatcher-layout {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: 1fr !important;
+  grid-template-areas: "map" !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+body.map-fullscreen-active .dispatcher-sidebar,
+body.map-fullscreen-active .tactical-detail-panel {
+  display: none !important;
+}
+
+body.map-fullscreen-active .dispatcher-map-area {
+  grid-area: map !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+}
+
+
+
+/* 3. Top Command Strip: Resilient Horizontal Flex & Scroll */
+.tactical-map-top-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+  padding: 4px 8px !important;
+  min-width: 0 !important;
+}
+.tactical-map-top-bar::-webkit-scrollbar {
+  display: none !important;
+}
+
+.tactical-stripe-left,
+.tactical-stripe-center {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex-shrink: 0 !important;
+}
+
+.top-bar-pill {
+  flex-shrink: 0 !important;
+  padding: 3px 6px !important;
+  font-size: 10.5px !important;
+  white-space: nowrap !important;
+}
+
+
+/* 5. 2-Column Default on Tablet/Intermediate screens (993px - 1279px) */
+@media (min-width: 993px) and (max-width: 1279px) {
+  body:not(.tac-three-zone) .dispatcher-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 380px) !important;
+    gap: 12px !important;
+  }
+  body:not(.tac-three-zone) .dispatcher-sidebar {
+    grid-column: 2 !important;
+  }
+  body:not(.tac-three-zone) .dispatcher-map-area {
+    grid-column: 1 !important;
+  }
+  body:not(.tac-three-zone) .tactical-detail-panel {
+    display: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   14. PORTAL + CITIZEN COMPACT VIEWPORT CONTAINMENT
+   Final-cascade rules: legacy portal CSS used a 340px max width below
+   768px, which made the title panel tall enough to cover agency controls.
+   --------------------------------------------------------------------- */
+#cosmicPortalView,
+.cosmic-stage-wrapper,
+.cosmic-stage {
+  inline-size: 100%;
+  max-inline-size: 100%;
+}
+
+.cosmic-portal-header {
+  box-sizing: border-box;
+  inline-size: min(600px, calc(100vw - 32px - var(--sa-left) - var(--sa-right))) !important;
+  max-inline-size: min(600px, calc(100vw - 32px - var(--sa-left) - var(--sa-right))) !important;
+}
+
+.cosmic-portal-badge,
+.cosmic-portal-title,
+.cosmic-portal-desc {
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+.cosmic-portal-title {
+  text-wrap: balance;
+}
+
+.cosmic-portal-desc {
+  text-wrap: pretty;
+}
+
+.cosmic-bubble-item {
+  max-inline-size: calc(50vw - 12px);
+}
+
+.bubble-label-tag {
+  box-sizing: border-box;
+  max-inline-size: min(210px, calc(50vw - 16px));
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+@media (max-width: 992px) and (orientation: portrait) {
+  .cosmic-portal-header {
+    top: calc(12px + var(--sa-top)) !important;
+    inline-size: min(620px, calc(100vw - 24px - var(--sa-left) - var(--sa-right))) !important;
+    max-inline-size: min(620px, calc(100vw - 24px - var(--sa-left) - var(--sa-right))) !important;
+    padding: 10px 16px !important;
+  }
+
+  .cosmic-portal-title {
+    font-size: clamp(16px, 2.8vw, 21px) !important;
+    line-height: 1.18 !important;
+  }
+
+  .cosmic-portal-desc {
+    font-size: clamp(11px, 1.8vw, 12px) !important;
+    line-height: 1.4 !important;
+  }
+
+  .cosmic-portal-bottom-bar {
+    left: calc(12px + var(--sa-left)) !important;
+    right: calc(12px + var(--sa-right)) !important;
+    bottom: calc(12px + var(--sa-bottom)) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .cosmic-portal-header {
+    inline-size: calc(100vw - 24px - var(--sa-left) - var(--sa-right)) !important;
+    max-inline-size: calc(100vw - 24px - var(--sa-left) - var(--sa-right)) !important;
+  }
+
+  .cosmic-portal-badge {
+    max-inline-size: 100%;
+    justify-content: center;
+  }
+
+  .bubble-label-tag {
+    max-inline-size: calc(50vw - 14px);
+    line-height: 1.2;
+  }
+
+  .nav-center-pill,
+  .location-banner,
+  .legal-warning-card {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+  }
+
+  .btn-refresh-loc {
+    min-block-size: 44px !important;
+  }
+
+  .nav-pill-item {
+    min-block-size: 44px !important;
+  }
+}
+
+@media (max-width: 600px) and (max-height: 720px) {
+  .crystal-orb-wrapper {
+    width: 170px !important;
+    height: 170px !important;
+  }
+
+  .btn-crystal-orb {
+    width: 134px !important;
+    height: 134px !important;
+  }
+}
+
+/* ==========================================================================
+   Tactical Voice Call & Video Call Modals Responsive Design (Decree 13 Compliant)
+   ========================================================================== */
+#dispatcherVoiceCallModal .modal-container,
+#dispatcherVideoCallModal .modal-container {
+  box-sizing: border-box;
+  transition: all 0.25s ease-in-out;
+}
+
+@media (max-width: 640px) {
+  #dispatcherVoiceCallModal .modal-container {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    max-height: 92vh !important;
+    padding: 0 !important;
+    border-radius: 16px !important;
+    overflow-y: auto !important;
+  }
+
+  #dispatcherVoiceCallModal canvas {
+    width: 100% !important;
+    height: 60px !important;
+  }
+
+  #dispatcherVoiceCallModal .voice-call-modal-footer {
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 10px 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  #dispatcherVoiceCallModal .voice-call-modal-footer > div {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  #btnToggleVoiceMic {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 38px !important;
+  }
+
+  #btnActionRecordVoiceCall {
+    flex: 2 1 auto !important;
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    white-space: nowrap !important;
+    font-size: 11px !important;
+    padding: 8px 10px !important;
+  }
+
+  #btnEndVoiceCall {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    white-space: nowrap !important;
+    font-size: 11px !important;
+    padding: 8px 10px !important;
+  }
+
+  #dispatcherVideoCallModal .modal-container {
+    width: 96vw !important;
+    max-width: 96vw !important;
+    max-height: 94vh !important;
+    padding: 12px !important;
+  }
+
+  #btnRecordDispatcherVideoCall,
+  #btnRecordCitizenCall {
+    min-height: 44px !important;
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   15. MOBILE DETAIL + MAP INVARIANTS
+   The drawer is physically moved into #tacticalDetailPanel by the layout
+   engine. These final rules intentionally win over older mobile cascades.
+   --------------------------------------------------------------------- */
+@media (max-width: 992px) {
+  body.tac-mobile-console[data-tac-view="detail"] .dispatcher-sidebar {
+    display: none !important;
+  }
+
+  body.tac-mobile-console[data-tac-view="detail"] .tactical-detail-panel {
+    display: flex !important;
+    grid-area: 1 / 1 / 2 / 2 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  body.tac-mobile-console[data-tac-view="detail"] .tactical-detail-panel #activeIncidentDrawer {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    height: 100% !important;
+  }
+
+  body.tac-mobile-console[data-tac-view="queue"] .tactical-detail-panel,
+  body.tac-mobile-console[data-tac-view="map"] .tactical-detail-panel {
+    display: none !important;
+  }
+
+  body.tac-mobile-console[data-tac-view="map"] .dispatcher-map-area {
+    display: flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    grid-area: 1 / 1 / 2 / 2 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+  }
+
+  body.tac-mobile-console[data-tac-view="map"] .dispatcher-map-canvas-wrap,
+  body.tac-mobile-console[data-tac-view="map"] #dispatcherMap,
+  body.tac-mobile-console[data-tac-view="map"] #dispatcherMap .maplibregl-canvas-container,
+  body.tac-mobile-console[data-tac-view="map"] #dispatcherMap canvas {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+}
+
+/* =====================================================================
+   16. NÚT "TÔI ĐÃ AN TOÀN" (kết thúc ca cứu hộ từ phía người dân)
+   ===================================================================== */
+.btn-citizen-safe {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(16, 185, 129, 0.55);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(5, 150, 105, 0.14));
+  color: #6ee7b7;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: filter .18s ease, transform .18s ease;
+}
+.btn-citizen-safe:hover { filter: brightness(1.15); }
+.btn-citizen-safe:active { transform: scale(0.985); }
+.btn-citizen-safe:disabled { opacity: 0.65; cursor: progress; }
+.btn-citizen-safe .svg-ico { width: 16px; height: 16px; }
+@media (max-width: 400px) {
+  .btn-citizen-safe { font-size: 11px; padding: 11px 10px; }
+}
+
+/* =====================================================================
+   17. THANH SỐ LIỆU TRÊN BẢN ĐỒ — GỌN GÀNG, ĐỒNG BỘ 1 DÒNG TRÊN DESKTOP/LAPTOP
+   - Desktop & Laptop: Thanh 42px gọn gàng, 1 dòng duy nhất, không rớt dòng.
+   - Khoảng cách, padding, font-size tinh chỉnh vừa vặn, không bị giãn quá đà.
+   ===================================================================== */
+.tactical-map-top-bar,
+.tactical-command-stripe {
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  padding: 0 10px !important;
+  gap: 8px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  flex-wrap: nowrap !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+.tactical-map-top-bar::-webkit-scrollbar,
+.tactical-command-stripe::-webkit-scrollbar { display: none !important; }
+
+.tactical-stripe-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+  flex-wrap: nowrap !important;
+}
+
+.tactical-stripe-left::after {
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.18);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.tactical-stripe-center {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex-shrink: 0 !important;
+  flex-wrap: nowrap !important;
+  overflow-x: visible !important;
+  scrollbar-width: none !important;
+  padding: 0 !important;
+}
+.tactical-stripe-center::-webkit-scrollbar { display: none !important; }
+
+.top-bar-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 4px 8px !important;
+  border-radius: 9999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  min-height: 28px !important;
+  height: 28px !important;
+  line-height: 1.15 !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+}
+
+.top-bar-pill .top-bar-icon,
+.top-bar-pill .top-bar-label { font-size: 11px !important; }
+.top-bar-pill b { font-size: 11.5px !important; font-weight: 800 !important; }
+#btnOpenFakeArchivePill .top-bar-label,
+#btnOpenFakeArchivePill span { font-size: 11px !important; }
+
+.top-bar-pill.is-active {
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.55), 0 4px 12px rgba(0, 0, 0, 0.55) !important;
+}
+
+/* Riêng Mobile hẹp (≤ 768px): cho phép cuộn ngang hoặc xếp dòng khi cần */
+@media (max-width: 768px) {
+  .tactical-map-top-bar,
+  .tactical-command-stripe {
+    height: auto !important;
+    min-height: 48px !important;
+    max-height: none !important;
+    padding: 6px 8px !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    row-gap: 5px !important;
+    justify-content: flex-start !important;
+  }
+  .tactical-stripe-left {
+    flex: 0 1 auto !important;
+  }
+  .tactical-stripe-left::after {
+    display: none !important;
+  }
+  .tactical-stripe-center {
+    flex: 1 1 auto !important;
+    flex-wrap: wrap !important;
+    gap: 5px !important;
+    row-gap: 5px !important;
+  }
+  .top-bar-pill {
+    padding: 5px 9px !important;
+    font-size: 11.5px !important;
+    min-height: 32px !important;
+    height: auto !important;
+  }
+}
+
+/* Thiết bị cảm ứng trên điện thoại/màn hình nhỏ (≤ 768px): chuẩn 44px của Apple/Android */
+@media (pointer: coarse) and (max-width: 768px) {
+  .top-bar-pill { min-height: 44px !important; padding: 9px 13px !important; font-size: 13px !important; }
+  .tactical-map-top-bar, .tactical-command-stripe { min-height: 60px !important; }
+}
+
+/* Máy gập / màn siêu hẹp: giữ nguyên khả năng cuộn, thu gọn nhẹ */
+@media (max-width: 380px) {
+  .top-bar-pill { padding: 8px 10px !important; font-size: 12px !important; }
+  .top-bar-pill b { font-size: 13px !important; }
+}
+
+/* =====================================================================
+   17. TRỰC BAN ĐẦY ĐỦ TRÊN ĐIỆN THOẠI (16/09) — không mất chữ
+   - Pill cán bộ trực ban: thu gọn còn biểu tượng (chữ dài làm vỡ header)
+   - Số liệu "Xử lý": không xuống dòng giữa chừng
+   - Nút nổi Địa bàn / Hộp thư: nâng lên trên thanh tab, không bị che
+   ===================================================================== */
+@media (max-width: 768px) {
+  /* Pill cán bộ: chỉ giữ icon, ẩn khối chữ dài */
+  #headerDutyShiftPill {
+    padding: 6px 9px !important;
+    gap: 0 !important;
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: 44px !important;
+    height: 40px !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+  #headerDutyShiftPill .widget-text { display: none !important; }
+  #headerDutyShiftPill .widget-icon { font-size: 15px !important; }
+
+  /* Các pill tiêu đề không co méo chữ */
+  .header-widget-pill { white-space: nowrap !important; }
+  .header-widget-pill .widget-primary,
+  .header-widget-pill .widget-secondary {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* Ô "Xử lý: 100% (0/0)" giữ trên một dòng */
+  .resolved-pill .top-bar-label,
+  .resolved-pill .top-bar-label b { white-space: nowrap !important; }
+
+  /* Pill thống kê: không bị nén dọc, chữ không chồng nhau */
+  .top-bar-pill { flex: 0 0 auto !important; }
+  .top-bar-pill .top-bar-label { white-space: nowrap !important; }
+
+  /* Nút nổi Địa bàn & Hộp thư: luôn nằm trên thanh tab, không bị che/cắt */
+  .geofence-bubble-orb,
+  .sos-mailbox-bubble-orb {
+    bottom: calc(var(--tac-tabbar-h) + 26px + var(--sa-bottom)) !important;
+    z-index: 15000 !important;
+  }
+  /* Dock địa bàn khi mở cũng nằm trên tab bar */
+  .tactical-bottom-dock, #tacticalGeofenceControlBar {
+    bottom: calc(var(--tac-tabbar-h) + 22px + var(--sa-bottom)) !important;
+  }
+}
+
+/* Điện thoại rất hẹp (≤ 380px, máy gập đóng): thu nhỏ hơn nữa nhưng vẫn đủ chữ */
+@media (max-width: 380px) {
+  #headerDutyShiftPill { max-width: 38px !important; height: 36px !important; }
+  .top-bar-pill { padding: 6px 9px !important; font-size: 11.5px !important; }
+  .top-bar-pill b { font-size: 12.5px !important; }
+}
+
+/* 17b. Điện thoại hẹp (≤ 480px): đồng hồ & ô Xử lý không bị cắt mép */
+@media (max-width: 480px) {
+  /* Đồng hồ: chỉ hiện giờ:phút, gọn một dòng */
+  #vnLiveClock { max-width: 92px !important; padding: 6px 8px !important; overflow: hidden !important; }
+  #vnLiveClock .widget-primary { font-size: 11px !important; letter-spacing: 0 !important; }
+
+  /* Nhóm trái của thanh số liệu: cho xuống dòng, không đẩy ô Xử lý ra ngoài */
+  .tactical-stripe-left { flex-wrap: wrap !important; row-gap: 6px !important; }
+  .national-banner-pill { padding: 6px 10px !important; }
+  .resolved-pill { flex: 0 0 auto !important; }
+
+  /* Thanh số liệu cuộn ngang gọn trong màn hình */
+  .tactical-map-top-bar { max-width: 100vw !important; box-sizing: border-box !important; }
+}
+
+/* =====================================================================
+   18. BẢNG CHỌN NỀN BẢN ĐỒ & THANH SỐ LIỆU TRÊN ĐIỆN THOẠI
+   - BẢNG "CHỌN DẠNG NỀN BẢN ĐỒ" trước bị bóp còn một dòng tiêu đề vì
+     chiều cao tính theo ô nút; nay là bảng nổi đủ rộng, cuộn được.
+   - Thanh số liệu trên bản đồ thu gọn để phần bản đồ sáng rộng hơn.
+   ===================================================================== */
+@media (max-width: 768px) {
+  #mapStyleCustomDropdown.map-style-dropdown-pop {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: auto !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: min(calc(100vw - 26px), 340px) !important;
+    max-width: none !important;
+    max-height: min(58vh, 460px) !important;
+    padding: 12px 10px 16px !important;
+    border-radius: 16px !important;
+    /* Cao hơn các nút nổi Địa bàn / Hộp thư / thu phóng để không bị che */
+    z-index: 17500 !important;
+  }
+
+  /* Khi bảng chọn nền đang mở thì tạm ẩn các nút nổi cho dễ đọc */
+  body:has(#mapStyleCustomDropdown[style*="flex"]) .geofence-bubble-orb,
+  body:has(#mapStyleCustomDropdown[style*="flex"]) .sos-mailbox-bubble-orb,
+  body:has(#mapStyleCustomDropdown[style*="flex"]) #dispatcherMap .maplibregl-control-container,
+  body:has(#mapStyleCustomDropdown[style*="flex"]) .maplibregl-ctrl-group {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .map-style-opt {
+    min-height: 46px !important;
+    align-items: center !important;
+  }
+
+  .map-layer-toggle-row {
+    min-height: 46px !important;
+  }
+
+  /* Thanh số liệu: bớt khoảng trống để bản đồ hiện nhiều hơn */
+  .tactical-map-top-bar {
+    padding: 6px 8px !important;
+    gap: 5px !important;
+  }
+  .tactical-stripe-left,
+  .tactical-stripe-right {
+    gap: 5px !important;
+  }
+  .top-bar-pill {
+    min-height: 38px !important;
+    padding: 5px 9px !important;
+  }
+  .dispatcher-map-canvas-wrap {
+    min-height: 58vh !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #mapStyleCustomDropdown.map-style-dropdown-pop {
+    max-height: min(54vh, 400px) !important;
+  }
+}
+

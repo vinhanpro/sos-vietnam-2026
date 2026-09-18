@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" style="background:#070d18; font-family:'Segoe UI',Roboto,Helvetica,sans-serif;">
+  <defs>
+    <linearGradient id="p-bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070d18"/>
+      <stop offset="50%" stop-color="#0b172a"/>
+      <stop offset="100%" stop-color="#060913"/>
+    </linearGradient>
+    <linearGradient id="p-blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="p-cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(30, 58, 102, 0.55)"/>
+      <stop offset="100%" stop-color="rgba(15, 23, 42, 0.75)"/>
+    </linearGradient>
+    <filter id="p-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="900" fill="url(#p-bgGrad)"/>
+  <circle cx="200" cy="150" r="280" fill="#1d4ed8" opacity="0.12" filter="url(#p-glow)"/>
+  <circle cx="1400" cy="750" r="320" fill="#0284c7" opacity="0.1" filter="url(#p-glow)"/>
+
+  <!-- Header Banner -->
+  <g transform="translate(80, 50)">
+    <rect width="1440" height="85" rx="16" fill="rgba(15, 23, 42, 0.8)" stroke="#3b82f6" stroke-width="1.5"/>
+    <rect x="25" y="18" width="50" height="50" rx="10" fill="#1d4ed8"/>
+    <text x="50" y="52" fill="#ffffff" font-size="28" font-weight="900" text-anchor="middle">113</text>
+    <text x="95" y="44" fill="#ffffff" font-size="22" font-weight="800" letter-spacing="1">CỔNG TRỰC BAN CÔNG AN NHÂN DÂN — QUY TRÌNH 5 BƯỚC TÁC CHIẾN CHUYÊN BIỆT</text>
+    <text x="95" y="68" fill="#93c5fd" font-size="14" font-weight="500">Chuẩn hóa tác chiến An ninh trật tự cơ sở • Đề án 06 Dân cư • Nghị định 144/2021/NĐ-CP • Ký số Nghị định 30/2020/NĐ-CP</text>
+    <rect x="1270" y="26" width="145" height="34" rx="17" fill="rgba(59, 130, 246, 0.2)" stroke="#60a5fa" stroke-width="1"/>
+    <text x="1342" y="49" fill="#93c5fd" font-size="13" font-weight="700" text-anchor="middle">CHUẨN TÁC CHIẾN 2026</text>
+  </g>
+
+  <!-- 5 Sequential Step Cards -->
+  <!-- STEP 1 -->
+  <g transform="translate(80, 180)">
+    <rect width="265" height="480" rx="18" fill="url(#p-cardGrad)" stroke="#3b82f6" stroke-width="1.5"/>
+    <rect x="18" y="20" width="44" height="44" rx="10" fill="#2563eb"/>
+    <text x="40" y="50" fill="#ffffff" font-size="20" font-weight="900" text-anchor="middle">B1</text>
+    <text x="74" y="38" fill="#60a5fa" font-size="12" font-weight="700">GIAI ĐOẠN 1</text>
+    <text x="74" y="56" fill="#ffffff" font-size="15" font-weight="800">TIẾP NHẬN &amp; CA TRỰC</text>
+    <line x1="20" y1="80" x2="245" y2="80" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+    <text x="20" y="112" fill="#bfdbfe" font-size="13" font-weight="700">• Hàng Đợi 113 Chuyên Biệt:</text>
+    <text x="20" y="134" fill="#94a3b8" font-size="12">Sự vụ định tuyến thẳng vào</text>
+    <text x="20" y="152" fill="#94a3b8" font-size="12">Hàng đợi Công An màu xanh lam.</text>
+
+    <text x="20" y="186" fill="#bfdbfe" font-size="13" font-weight="700">• Thiết Lập Phiên Trực Ban:</text>
+    <text x="20" y="208" fill="#94a3b8" font-size="12">Xác nhận cán bộ trực chính,</text>
+    <text x="20" y="226" fill="#94a3b8" font-size="12">trực thay, hotline 113 qua</text>
+    <text x="20" y="244" fill="#38bdf8" font-size="12" font-weight="600">Duty Shift Modal an ninh.</text>
+
+    <text x="20" y="278" fill="#bfdbfe" font-size="13" font-weight="700">• Báo Động &amp; Phân Loại:</text>
+    <text x="20" y="300" fill="#94a3b8" font-size="12">Kích hoạt còi báo động điện tử,</text>
+    <text x="20" y="318" fill="#94a3b8" font-size="12">phân loại cướp giật, trộm cắp,</text>
+    <text x="20" y="336" fill="#94a3b8" font-size="12">gây rối ANTT, tìm kiếm đi lạc.</text>
+
+    <rect x="20" y="380" width="225" height="75" rx="10" fill="rgba(37, 99, 235, 0.15)" stroke="#3b82f6" stroke-width="1"/>
+    <text x="32" y="405" fill="#60a5fa" font-size="11" font-weight="700">DỮ LIỆU ĐẦU RA BƯỚC 1:</text>
+    <text x="32" y="425" fill="#ffffff" font-size="12" font-weight="600">IncidentID: SOS-DN-113-xxx</text>
+    <text x="32" y="443" fill="#cbd5e1" font-size="11">Phiên trực ban số hóa ghi nhận</text>
+  </g>
+
+  <!-- STEP 2 -->
+  <g transform="translate(375, 180)">
+    <rect width="265" height="480" rx="18" fill="url(#p-cardGrad)" stroke="#0284c7" stroke-width="1.5"/>
+    <rect x="18" y="20" width="44" height="44" rx="10" fill="#0284c7"/>
+    <text x="40" y="50" fill="#ffffff" font-size="20" font-weight="900" text-anchor="middle">B2</text>
+    <text x="74" y="38" fill="#38bdf8" font-size="12" font-weight="700">GIAI ĐOẠN 2</text>
+    <text x="74" y="56" fill="#ffffff" font-size="15" font-weight="800">GIS 3D &amp; ĐỀ ÁN 06</text>
+    <line x1="20" y1="80" x2="245" y2="80" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+    <text x="20" y="112" fill="#bae6fd" font-size="13" font-weight="700">• Khóa Tọa Độ GPS Vệ Tinh:</text>
+    <text x="20" y="134" fill="#94a3b8" font-size="12">MapLibre GL JS ghim vị trí</text>
+    <text x="20" y="152" fill="#94a3b8" font-size="12">chuẩn xác bán kính &lt; 5m.</text>
+
+    <text x="20" y="186" fill="#bae6fd" font-size="13" font-weight="700">• Ranh Giới Công An Xã/Phường:</text>
+    <text x="20" y="208" fill="#94a3b8" font-size="12">Đối soát ranh giới quản lý của</text>
+    <text x="20" y="226" fill="#94a3b8" font-size="12">Công An sở tại (P. An Cư, Cần Thơ).</text>
+
+    <text x="20" y="260" fill="#bae6fd" font-size="13" font-weight="700">• Dữ Liệu Nhân Thân Đề Án 06:</text>
+    <text x="20" y="282" fill="#94a3b8" font-size="12">Tra cứu định danh cư trú,</text>
+    <text x="20" y="300" fill="#94a3b8" font-size="12">điểm nóng phức tạp hình sự,</text>
+    <text x="20" y="318" fill="#94a3b8" font-size="12">hướng đón lõng đối tượng.</text>
+
+    <rect x="20" y="380" width="225" height="75" rx="10" fill="rgba(2, 132, 199, 0.15)" stroke="#0284c7" stroke-width="1"/>
+    <text x="32" y="405" fill="#38bdf8" font-size="11" font-weight="700">DỮ LIỆU ĐẦU RA BƯỚC 2:</text>
+    <text x="32" y="425" fill="#ffffff" font-size="12" font-weight="600">GeoPoint: 10.0345, 105.7825</text>
+    <text x="32" y="443" fill="#cbd5e1" font-size="11">Ranh giới CAP An Cư xác lập</text>
+  </g>
+
+  <!-- STEP 3 -->
+  <g transform="translate(670, 180)">
+    <rect width="265" height="480" rx="18" fill="url(#p-cardGrad)" stroke="#f59e0b" stroke-width="1.5"/>
+    <rect x="18" y="20" width="44" height="44" rx="10" fill="#d97706"/>
+    <text x="40" y="50" fill="#ffffff" font-size="20" font-weight="900" text-anchor="middle">B3</text>
+    <text x="74" y="38" fill="#fbbf24" font-size="12" font-weight="700">GIAI ĐOẠN 3</text>
+    <text x="74" y="56" fill="#ffffff" font-size="15" font-weight="800">ĐIỀU ĐỘNG 113 / CSKV</text>
+    <line x1="20" y1="80" x2="245" y2="80" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+    <text x="20" y="112" fill="#fef08a" font-size="13" font-weight="700">• Bàn Điều Động Xuất Kích:</text>
+    <text x="20" y="134" fill="#94a3b8" font-size="12">Lựa chọn tổ tuần tra gần nhất:</text>
+    <text x="20" y="152" fill="#94a3b8" font-size="12">Tổ 113, CSGT-TT hoặc CSKV.</text>
+
+    <text x="20" y="186" fill="#fef08a" font-size="13" font-weight="700">• Phương Tiện &amp; Cán Bộ:</text>
+    <text x="20" y="208" fill="#94a3b8" font-size="12">Mô tô đặc chủng: 65B1-999.88,</text>
+    <text x="20" y="226" fill="#94a3b8" font-size="12">Chỉ huy: Trung tá Lê Hoàng Quân.</text>
+
+    <text x="20" y="260" fill="#fef08a" font-size="13" font-weight="700">• Công Cụ Hỗ Trợ CAND:</text>
+    <text x="20" y="282" fill="#94a3b8" font-size="12">Súng bắn cao su, còng số 8,</text>
+    <text x="20" y="300" fill="#94a3b8" font-size="12">áo giáp, gậy cao su chỉ huy.</text>
+
+    <rect x="20" y="380" width="225" height="75" rx="10" fill="rgba(217, 119, 6, 0.15)" stroke="#f59e0b" stroke-width="1"/>
+    <text x="32" y="405" fill="#fbbf24" font-size="11" font-weight="700">DỮ LIỆU ĐẦU RA BƯỚC 3:</text>
+    <text x="32" y="425" fill="#ffffff" font-size="12" font-weight="600">Unit: Đội CS 113 Ninh Kiều</text>
+    <text x="32" y="443" fill="#cbd5e1" font-size="11">Trạng thái: Đang di chuyển</text>
+  </g>
+
+  <!-- STEP 4 -->
+  <g transform="translate(965, 180)">
+    <rect width="265" height="480" rx="18" fill="url(#p-cardGrad)" stroke="#ef4444" stroke-width="1.5"/>
+    <rect x="18" y="20" width="44" height="44" rx="10" fill="#dc2626"/>
+    <text x="40" y="50" fill="#ffffff" font-size="20" font-weight="900" text-anchor="middle">B4</text>
+    <text x="74" y="38" fill="#f87171" font-size="12" font-weight="700">GIAI ĐOẠN 4</text>
+    <text x="74" y="56" fill="#ffffff" font-size="15" font-weight="800">GIÁM SÁT &amp; NĐ 144</text>
+    <line x1="20" y1="80" x2="245" y2="80" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+    <text x="20" y="112" fill="#fecaca" font-size="13" font-weight="700">• Kênh Đàm Thoại 2 Chiều:</text>
+    <text x="20" y="134" fill="#94a3b8" font-size="12">Giao tiếp trực tiếp với nạn nhân,</text>
+    <text x="20" y="152" fill="#94a3b8" font-size="12">hướng dẫn ẩn nấp và tự vệ.</text>
+
+    <text x="20" y="186" fill="#fecaca" font-size="13" font-weight="700">• Luồng Video Hiện Trường:</text>
+    <text x="20" y="208" fill="#94a3b8" font-size="12">Ghi nhận nhân dạng đối tượng,</text>
+    <text x="20" y="226" fill="#94a3b8" font-size="12">biển số xe tẩu thoát và hung khí.</text>
+
+    <text x="20" y="260" fill="#fecaca" font-size="13" font-weight="700">• Chế Tài Tin Giả NĐ 144:</text>
+    <text x="20" y="282" fill="#94a3b8" font-size="12">Lập biên bản vi phạm báo khống,</text>
+    <text x="20" y="300" fill="#94a3b8" font-size="12">lưu vết GPS/IP, chuyển xử phạt</text>
+    <text x="20" y="318" fill="#f87171" font-size="12" font-weight="700">3 - 5 triệu đồng hoặc xử lý hình sự.</text>
+
+    <rect x="20" y="380" width="225" height="75" rx="10" fill="rgba(220, 38, 38, 0.15)" stroke="#ef4444" stroke-width="1"/>
+    <text x="32" y="405" fill="#f87171" font-size="11" font-weight="700">DỮ LIỆU ĐẦU RA BƯỚC 4:</text>
+    <text x="32" y="425" fill="#ffffff" font-size="12" font-weight="600">Forensic: SHA-256 IP &amp; GPS</text>
+    <text x="32" y="443" fill="#cbd5e1" font-size="11">Khống chế an toàn hiện trường</text>
+  </g>
+
+  <!-- STEP 5 -->
+  <g transform="translate(1255, 180)">
+    <rect width="265" height="480" rx="18" fill="url(#p-cardGrad)" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="18" y="20" width="44" height="44" rx="10" fill="#059669"/>
+    <text x="40" y="50" fill="#ffffff" font-size="20" font-weight="900" text-anchor="middle">B5</text>
+    <text x="74" y="38" fill="#34d399" font-size="12" font-weight="700">GIAI ĐOẠN 5</text>
+    <text x="74" y="56" fill="#ffffff" font-size="15" font-weight="800">BIÊN BẢN NĐ 30 &amp; KÝ SỐ</text>
+    <line x1="20" y1="80" x2="245" y2="80" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+    <text x="20" y="112" fill="#a7f3d0" font-size="13" font-weight="700">• Phiếu Tiếp Nhận Chuẩn NĐ 30:</text>
+    <text x="20" y="134" fill="#94a3b8" font-size="12">Tổng hợp thông tin sự vụ,</text>
+    <text x="20" y="152" fill="#94a3b8" font-size="12">thời gian tiếp nhận và kết quả.</text>
+
+    <text x="20" y="186" fill="#a7f3d0" font-size="13" font-weight="700">• Chữ Ký Số Cán Bộ 113:</text>
+    <text x="20" y="208" fill="#94a3b8" font-size="12">Thượng tá Trần Văn Hùng ký số</text>
+    <text x="20" y="226" fill="#94a3b8" font-size="12">kết hợp dấu số cơ quan Công An.</text>
+
+    <text x="20" y="260" fill="#a7f3d0" font-size="13" font-weight="700">• Mã Hóa &amp; Lưu Trữ Vĩnh Viễn:</text>
+    <text x="20" y="282" fill="#94a3b8" font-size="12">Mã băm SHA-256 kèm mã QR,</text>
+    <text x="20" y="300" fill="#94a3b8" font-size="12">lưu vết bất biến vào Sổ trực ban</text>
+    <text x="20" y="318" fill="#34d399" font-size="12" font-weight="700">phục vụ điều tra, truy tố.</text>
+
+    <rect x="20" y="380" width="225" height="75" rx="10" fill="rgba(5, 150, 105, 0.15)" stroke="#10b981" stroke-width="1"/>
+    <text x="32" y="405" fill="#34d399" font-size="11" font-weight="700">DỮ LIỆU ĐẦU RA BƯỚC 5:</text>
+    <text x="32" y="425" fill="#ffffff" font-size="12" font-weight="600">Dossier: 2 Chữ Ký Số Hợp Lệ</text>
+    <text x="32" y="443" fill="#cbd5e1" font-size="11">Pháp lý hoàn tất lưu trữ vĩnh cửu</text>
+  </g>
+
+  <!-- Connective Arrows -->
+  <g stroke="#60a5fa" stroke-width="2.5" fill="none" opacity="0.8">
+    <path d="M 345 420 L 370 420" marker-end="url(#arrow)"/>
+    <path d="M 640 420 L 665 420"/>
+    <path d="M 935 420 L 960 420"/>
+    <path d="M 1230 420 L 1250 420"/>
+  </g>
+
+  <!-- Footer Info Bar -->
+  <g transform="translate(80, 700)">
+    <rect width="1440" height="150" rx="14" fill="rgba(15, 23, 42, 0.75)" stroke="rgba(255,255,255,0.1)"/>
+    <text x="30" y="40" fill="#60a5fa" font-size="16" font-weight="800">CÁC NGUYÊN TẮC PHÁP LÝ &amp; NGHIỆP VỤ BẮT BUỘC TRONG TÁC CHIẾN CÔNG AN NHÂN DÂN:</text>
+    
+    <text x="30" y="75" fill="#ffffff" font-size="13" font-weight="600">1. Tính khẩn trương &amp; không đứt gãy:</text>
+    <text x="275" y="75" fill="#94a3b8" font-size="13">Mọi tin báo an ninh trật tự phải được tiếp nhận và xử lý trong vòng &lt; 30 giây kể từ khi kích hoạt.</text>
+
+    <text x="30" y="105" fill="#ffffff" font-size="13" font-weight="600">2. Pháp lý kép Nghị định 30 &amp; 144:</text>
+    <text x="275" y="105" fill="#94a3b8" font-size="13">Biên bản xử lý tuân thủ chặt chẽ thể thức NĐ 30/2020/NĐ-CP; mọi hành vi báo khống xử phạt nghiêm theo NĐ 144/2021/NĐ-CP.</text>
+
+    <text x="30" y="132" fill="#ffffff" font-size="13" font-weight="600">3. Bất biến dữ liệu &amp; Lưu vết số:</text>
+    <text x="275" y="132" fill="#94a3b8" font-size="13">Hồ sơ nghiệp vụ được ký số SHA-256 không thể tẩy xóa hay sửa đổi, phục vụ tố tụng tư pháp minh bạch.</text>
+  </g>
+</svg>

@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#030712">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SOS Việt Nam">
+  <meta name="format-detection" content="telephone=no">
+  <title>SOS Khẩn Cấp Việt Nam — Báo Cáo & Cứu Hộ Tức Thời</title>
+  <meta name="description" content="Hệ thống cảnh báo và điều phối cứu hộ khẩn cấp kết nối Công an, Y tế, Cứu nạn cứu hộ theo định vị GPS thời gian thực.">
+  <!-- CYBER DEFENSE ANTI-TAMPER SHIELD & DEVICE PROFILE ADAPTER -->
+  <script src="/js/cyber-shield.js"></script>
+  <script src="/js/device-adaptive-layout.js"></script>
+  <script>
+    document.addEventListener('contextmenu', function(e){ e.preventDefault(); e.stopPropagation(); return false; }, true);
+    window.addEventListener('contextmenu', function(e){ e.preventDefault(); e.stopPropagation(); return false; }, true);
+  </script>
+  <link rel="manifest" href="/manifest.json?v=20260904_2">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/logo-police-round-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/logo-police-round-192.png">
+  <link rel="shortcut icon" href="/assets/icons/favicon.png">
+  <link rel="stylesheet" href="/vendor/maplibre-gl.css">
+  <link rel="stylesheet" href="/css/style.css?v=20260915_responsive_audit_v1">
+  <link rel="stylesheet" href="/css/map.css?v=20260904_4">
+  <link rel="stylesheet" href="/css/tactical-responsive.css?v=20260915_responsive_audit_v2">
+</head>
+<body>
+
+  <!-- Atmospheric Looping Background Video (MotionSites Liquid Glass & Hands Cupping SOS Sphere) -->
+  <div class="bg-video-container">
+    <video class="bg-video" id="citizenBgVideo" autoplay muted loop playsinline preload="none" poster="/assets/videos/sos-citizen-bg-poster.jpg" data-lite-src="/assets/videos/sos-citizen-bg-lite.mp4" data-4g-src="/assets/videos/sos-citizen-bg-hq.mp4" data-full-src="/assets/videos/sos-citizen-bg-hq.mp4"></video>
+    <div class="bg-video-overlay"></div>
+    <div class="bg-glow-orb orb-1"></div>
+    <div class="bg-glow-orb orb-2"></div>
+    <div class="bg-glow-orb orb-3"></div>
+  </div>
+
+  <!-- Bottom Floating Center Pill Navigation (Liquid Glass Dock) -->
+  <header class="header-nav-center" id="mainHeaderNav">
+    <nav class="nav-center-pill liquid-glass">
+      <button type="button" class="nav-pill-item" id="btnNavInstallApp" title="Tạo lối tắt ra Màn hình chính">
+        <svg class="svg-ico ico-md ico-emerald" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"></rect><line x1="12" y1="18" x2="12.01" y2="18" stroke="currentColor" stroke-width="2"></line><path d="M12 7v6m-3-3l3 3 3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg> Cài Lối Tắt
+      </button>
+      <button type="button" class="nav-pill-item" id="btnOpenFamilySOS">
+        <svg class="svg-ico ico-md ico-blue" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> SOS Người Thân
+      </button>
+      <button type="button" class="nav-pill-item" id="btnOpenSurvivalGuide">
+        <svg class="svg-ico ico-md ico-amber" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Cẩm Nang
+      </button>
+      <a href="/dispatcher.html" class="nav-pill-item btn-pill-dispatcher-link" target="_blank">
+        <svg class="svg-ico ico-md ico-blue" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg> Cổng Trực Ban
+      </a>
+    </nav>
+  </header>
+
+  <!-- Main Wrapper Container -->
+  <main class="main-wrapper">
+
+    <!-- View 1: Main SOS Trigger Screen -->
+    <div id="sosTriggerView" class="view-section">
+      <!-- Live GPS Banner (Liquid Glass) -->
+      <div class="location-banner liquid-glass">
+        <div class="loc-info">
+          <div class="loc-icon-pulse"><svg class="svg-ico ico-lg ico-red" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
+          <div class="loc-texts">
+            <div class="loc-label">VỊ TRÍ GPS VỆ TINH CỦA BẠN</div>
+            <div class="loc-address" id="locAddress">Đang định vị GPS chính xác...</div>
+            <div class="loc-coords" id="locCoords">Độ chính xác: Đang dò tìm vệ tinh</div>
+            <div class="loc-network" id="networkStatus" role="status" aria-live="polite" title="Đang nhận diện kết nối">
+              <svg class="svg-ico ico-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20v-3M10 20v-6M15 20v-10M20 20V2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Mạng hiện tại: Đang nhận diện…</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn-refresh-loc liquid-glass" id="btnRefreshLoc" title="Làm mới vị trí GPS">
+          <svg class="svg-ico ico-sm" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          Làm mới
+        </button>
+      </div>
+
+      <!-- Master Hero SOS Section (MotionSites Aesthetic) -->
+      <section class="sos-hero">
+        <div class="hero-badge-pill liquid-glass">
+          <span class="live-dot"></span> HỆ THỐNG ĐIỀU PHỐI KHẨN CẤP QUỐC GIA 24/7
+        </div>
+        <h1 class="sos-hero-title">Sống An Toàn, Được Bảo Vệ Từng Giây</h1>
+        <p class="sos-hero-sub">Chạm vào nút bên dưới để gửi tọa độ GPS và thông báo sự cố ngay lập tức tới lực lượng Công an, Y tế, Cứu hộ gần nhất.</p>
+
+        <!-- Master 3D Crystal Water Sphere SOS Button (Quả cầu pha lê nước sống động) -->
+        <div class="crystal-orb-wrapper" id="crystalOrbWrapper">
+          <div class="radar-ring ring-1"></div>
+          <div class="radar-ring ring-2"></div>
+          <div class="radar-ring ring-3"></div>
+          <div class="shockwave-blast-ring" id="shockwaveBlast"></div>
+          
+          <!-- Outer Particle Splash Canvas -->
+          <canvas class="orb-particles-canvas" id="orbParticlesCanvas" width="340" height="340"></canvas>
+
+          <button class="btn-crystal-orb" id="btnMasterSOS" aria-label="Bấm phát tín hiệu SOS">
+            <!-- 1. Crystal Glass Base & Caustic Glow -->
+            <div class="orb-glass-base"></div>
+
+            <!-- 2. The Liquid Chamber with Swirling Waves & Golden Glitter -->
+            <div class="orb-liquid-chamber">
+              <div class="orb-fluid-deep"></div>
+              <!-- Swirling Liquid Glitter Canvas -->
+              <canvas class="orb-liquid-canvas" id="orbLiquidCanvas" width="165" height="165"></canvas>
+              <!-- Multi-layer undulating fluid waves -->
+              <div class="liquid-wave-layer wave-back"></div>
+              <div class="liquid-wave-layer wave-mid"></div>
+              <div class="liquid-wave-layer wave-front"></div>
+              <div class="orb-vortex-swirl"></div>
+            </div>
+
+            <!-- 3. Front Specular Crystal Glass Highlights & 3D Curvature -->
+            <div class="orb-glass-highlight-top"></div>
+            <div class="orb-glass-rim-sheen"></div>
+            <div class="orb-glass-caustic-bottom"></div>
+
+            <!-- 5. Central Hologram SOS Label -->
+            <div class="orb-content">
+              <span class="orb-sos-text">SOS</span>
+              <span class="orb-sos-sub">BÁO CỨU HỘ</span>
+            </div>
+
+            <!-- 6. Shockwave click ripple -->
+            <div class="orb-click-ripple" id="orbClickRipple"></div>
+          </button>
+        </div>
+
+
+        <!-- Khung Cảnh Báo Chế Tài Pháp Lý Chuẩn Hành Chính Sang Trọng (Liquid Glass Viền Vàng Amber) -->
+        <div class="legal-warning-card liquid-glass-amber" id="legalWarningHero" role="button" tabindex="0" aria-expanded="false" title="Nhấn để xem đầy đủ điều khoản Nghị định 144/2021/NĐ-CP">
+          <div class="legal-card-header" id="legalCardHeader">
+            <div class="legal-shield-badge">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(245, 158, 11, 0.25)" stroke="#f59e0b" stroke-width="2"/>
+                <path d="M12 8v5M12 16h.01" stroke="#fef3c7" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="legal-header-text">
+              <div class="legal-title">
+                <span>CẢNH BÁO CHẾ TÀI PHÁP LÝ KHẨN CẤP</span>
+                <span class="legal-summary-inline">• Phạt 4-6 triệu VNĐ &amp; xử lý hình sự (NĐ 144)</span>
+              </div>
+              <div class="legal-subtitle">Căn cứ Nghị định số 144/2021/NĐ-CP của Chính phủ &amp; Bộ luật Hình sự</div>
+            </div>
+            <button type="button" class="legal-toggle-btn" id="btnToggleLegal" aria-label="Xem chi tiết điều khoản">
+              <span class="legal-toggle-label">Chi tiết</span>
+              <svg class="legal-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+          </div>
+          
+          <div class="legal-card-body">
+            <div class="legal-item">
+              <span class="legal-bullet">⚖️</span>
+              <div class="legal-item-content">
+                <strong>Xử phạt hành chính từ 4.000.000đ — 6.000.000đ:</strong> Áp dụng đối với mọi hành vi cố ý báo tin giả, gọi khẩn cấp sai sự thật, trêu đùa hoặc quấy rối đường dây cứu hộ theo <em>Khoản 3, Điều 7, Nghị định 144/2021/NĐ-CP</em>.
+              </div>
+            </div>
+            <div class="legal-item">
+              <span class="legal-bullet">🚨</span>
+              <div class="legal-item-content">
+                <strong>Truy cứu trách nhiệm hình sự:</strong> Các hành vi giả mạo gây hậu quả nghiêm trọng, cản trở phương tiện thi hành công vụ hoặc làm thiệt hại tài sản, tính mạng sẽ bị truy cứu theo Bộ luật Hình sự.
+              </div>
+            </div>
+            <div class="legal-item">
+              <span class="legal-bullet">📡</span>
+              <div class="legal-item-content">
+                <strong>Định danh số tự động:</strong> Hệ thống tự động ghi nhận địa chỉ IP mạng, số định danh thiết bị, tọa độ GPS vệ tinh thời gian thực và lưu trữ dữ liệu truyền tin phục vụ công tác xác minh của Cơ quan Công an.
+              </div>
+            </div>
+          </div>
+
+          <div class="legal-card-footer">
+            <span class="legal-footer-icon">💡</span>
+            <span>Vui lòng <strong>chỉ kích hoạt SOS</strong> trong tình huống thực sự nguy cấp đe dọa trực tiếp đến tính mạng, sức khỏe và an toàn trật tự.</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- View 2: Live Tracking Screen (Shown after SOS submitted) -->
+    <div id="sosTrackingView" class="view-section tracking-wrapper">
+      <div class="tracking-card">
+        <div class="tracking-header">
+          <div>
+            <div style="font-size: 12px; color: var(--text-dim); margin-bottom: 2px;">MÃ SỐ TIẾP NHẬN</div>
+            <div id="trackSosId" style="font-size: 18px; font-weight: 800; color: #60a5fa;">#SOS-XXXX</div>
+          </div>
+          <div id="trackStatusBadge" class="tracking-badge-status pending">
+            <svg class="svg-ico ico-sm ico-amber" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg> Đang gửi trực ban Xã/Phường
+          </div>
+        </div>
+
+        <!-- 5-Step Visual Stepper -->
+        <div class="stepper-timeline">
+          <div class="stepper-progress-fill" id="stepperFill" style="width: 15%;"></div>
+          
+          <div class="step-node completed" id="stepNode1">
+            <div class="step-circle">1</div>
+            <div class="step-text">Đã phát SOS</div>
+          </div>
+          <div class="step-node" id="stepNode2">
+            <div class="step-circle">2</div>
+            <div class="step-text">Đã tiếp nhận</div>
+          </div>
+          <div class="step-node" id="stepNode3">
+            <div class="step-circle">3</div>
+            <div class="step-text">Điều động xe</div>
+          </div>
+          <div class="step-node" id="stepNode4">
+            <div class="step-circle">4</div>
+            <div class="step-text">Đến hiện trường</div>
+          </div>
+          <div class="step-node" id="stepNode5">
+            <div class="step-circle">5</div>
+            <div class="step-text">Hoàn tất</div>
+          </div>
+        </div>
+
+        <!-- Assigned Unit & Jurisdiction Card -->
+        <div class="unit-card" id="assignedUnitBox" style="flex-direction: column; align-items: stretch; gap: 10px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div class="unit-info">
+              <div class="unit-avatar" id="unitAvatar"><svg class="svg-ico ico-2xl ico-blue" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                  <span class="queue-agency-tag police" id="unitLevelBadge" style="font-size: 10px;">CẤP XÃ / PHƯỜNG</span>
+                  <span style="font-size: 11px; color: #34d399; font-weight: 700;">● Đơn vị địa bàn gần nhất</span>
+                </div>
+                <div class="unit-name" id="unitName">Đang phân tích địa bàn Xã / Phường...</div>
+                <div class="unit-sub" id="unitSub">Cán bộ tiếp nhận: Đang kết nối...</div>
+              </div>
+            </div>
+            <a href="#" class="btn-call-unit" id="btnCallUnit" style="display: none;">
+              <svg class="svg-ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> Gọi Trực Ban
+            </a>
+          </div>
+
+          <!-- Real Station Address & Official Phone Card -->
+          <div style="background: rgba(0, 0, 0, 0.35); border: 1px dashed rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 10px 12px; font-size: 11px; line-height: 1.6; color: #cbd5e1;" id="unitStationDetailsBox">
+            <div><svg class="svg-ico ico-sm ico-red" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> <b>Trụ sở cơ sở:</b> <span id="unitStationAddress" style="color: #60a5fa; font-weight: 700;">Đang xác định...</span></div>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 2px;">
+              <div><svg class="svg-ico ico-sm ico-emerald" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> <b>SĐT Trực ban:</b> <span id="unitStationPhone" style="color: #34d399; font-weight: 700;">--</span></div>
+              <div><svg class="svg-ico ico-sm ico-amber" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg> <b>SMS Khẩn cấp:</b> <span id="unitStationSms" style="color: #fbbf24; font-weight: 700;">--</span></div>
+              <div><svg class="svg-ico ico-sm ico-blue" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> <b>Email:</b> <span id="unitStationEmail">--</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multi-Channel Notification Badges Bar -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;" id="multiChannelStatusBox">
+          <div style="background: rgba(0, 136, 255, 0.1); border: 1px solid rgba(0, 136, 255, 0.25); border-radius: 8px; padding: 8px; text-align: center;">
+            <div style="margin-bottom: 4px;"><svg class="svg-ico ico-xl ico-blue" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg></div>
+            <div style="font-size: 11px; font-weight: 700; color: #60a5fa;">SMS Khẩn Cấp</div>
+            <div style="font-size: 10px; color: #94a3b8;" id="statusSmsBadge">Đã gửi trực ban</div>
+          </div>
+          <button type="button" id="btnCitizenVoiceCallDispatcher" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.45); border-radius: 8px; padding: 8px; text-align: center; cursor: pointer; width: 100%; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15); outline: none; font-family: inherit;" title="Bấm để chọn Gọi Video Hiện Trường hoặc Gọi Thoại với Trực Ban">
+            <div style="margin-bottom: 4px; display: flex; align-items: center; justify-content: center;"><svg class="svg-ico ico-xl ico-emerald" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></div>
+            <div style="font-size: 11px; font-weight: 800; color: #34d399;">Gọi Trực Ban Khẩn</div>
+            <div style="font-size: 10px; color: #a7f3d0; font-weight: 600;" id="statusVoiceBadge">Video / Thoại 📞</div>
+          </button>
+          <div style="background: rgba(255, 145, 0, 0.1); border: 1px solid rgba(255, 145, 0, 0.25); border-radius: 8px; padding: 8px; text-align: center;">
+            <div style="margin-bottom: 4px;"><svg class="svg-ico ico-xl ico-amber" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></div>
+            <div style="font-size: 11px; font-weight: 700; color: #fbbf24;">Email Báo Cáo</div>
+            <div style="font-size: 10px; color: #94a3b8;" id="statusEmailBadge">Đã chuyển giao</div>
+          </div>
+        </div>
+
+        <!-- Live Map Header with Google Maps Navigation Buttons (Car & Motorbike) -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="font-size: 13px; font-weight: 700; color: #f8fafc; display: flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-md ico-blue" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg> Bản đồ Vị trí & Lộ trình Di chuyển
+          </div>
+          <div style="display: flex; gap: 4px;">
+            <a href="#" target="_blank" rel="noopener" class="btn-refresh-loc" id="btnOpenGoogleMapsCar" style="background: rgba(66, 133, 244, 0.2); border-color: #4285f4; color: #60a5fa; font-weight: 700; padding: 4px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;" title="Dẫn đường ô tô nhanh nhất">
+              <svg class="svg-ico ico-xs" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg> Ô tô ↗
+            </a>
+            <a href="#" target="_blank" rel="noopener" class="btn-refresh-loc" id="btnOpenGoogleMapsMoto" style="background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #34d399; font-weight: 700; padding: 4px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;" title="Dẫn đường xe máy nhanh nhất">
+              <svg class="svg-ico ico-xs" viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 6.5H5m7 11l3.5-7h4.5m-8 7l4.5-7"></path></svg> Xe máy ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Embedded Tactical Map Container -->
+        <div class="tracking-map-container">
+          <div id="trackingMap"></div>
+        </div>
+
+        <!-- Export Official Document Button for Citizen -->
+        <div style="margin-top: 10px; margin-bottom: 12px;">
+          <button type="button" id="btnCitizenViewReportDocx" class="btn-refresh-loc" style="width: 100%; justify-content: center; background: rgba(56, 189, 248, 0.15); border-color: #38bdf8; color: #38bdf8; font-weight: 700; font-size: 12px; padding: 9px; display: inline-flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-md ico-blue" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> XEM & TẢI PHIẾU TIẾP NHẬN SỰ CỐ (FILE WORD / ẢNH)
+          </button>
+        </div>
+
+        <!-- Live Direct Chat Box with Dispatcher -->
+        <div class="chat-wrapper">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-md ico-blue" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Trao đổi trực tiếp với Trực ban điều phối
+          </div>
+          <div class="chat-messages-box" id="chatMessages">
+            <div class="chat-msg system">
+              Hệ thống đã tự động kích hoạt đường truyền kết nối ưu tiên đến Trung tâm Chỉ huy. Cán bộ trực ban sẽ trao đổi với bạn tại đây.
+            </div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" id="inputChatText" class="chat-input" placeholder="Nhắn tin cho trực ban..." autocomplete="off">
+            <button id="btnSendChat" class="btn-chat-send" aria-label="Gửi tin nhắn">Gửi</button>
+          </div>
+          <button type="button" id="btnCitizenSafe" class="btn-citizen-safe">
+            <svg class="svg-ico ico-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
+            TÔI ĐÃ AN TOÀN — KẾT THÚC CA CỨU HỘ
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SOS Detail Modal (Step 2: Pick Agency & Incident Details) -->
+  <div class="modal-backdrop" id="sosDetailModal">
+    <div class="modal-container liquid-glass">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg class="svg-ico ico-lg ico-red" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> BẠN CẦN TRỢ GIÚP GÌ?
+        </div>
+        <button class="btn-close-modal" id="btnCloseModal" aria-label="Đóng">&times;</button>
+      </div>
+
+      <!-- Step A: 5 Target Agencies with Official Logos -->
+      <div style="font-size: 13px; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+        1. Chọn Lực Lượng Cần Hỗ Trợ Gấp
+      </div>
+      <div class="agency-cards-grid" style="grid-template-columns: repeat(3, 1fr); gap: 10px;">
+        <!-- 1. Công an -->
+        <div class="agency-card police is-selected" data-agency="police">
+          <img src="/assets/icons/logo-bocongan.png" class="agency-real-logo" alt="Công an">
+          <div class="agency-title">Công an</div>
+          <div class="agency-desc">An ninh trật tự địa bàn</div>
+        </div>
+
+        <!-- 2. CSGT -->
+        <div class="agency-card csgt" data-agency="csgt">
+          <img src="/assets/icons/logo-csgt.png" class="agency-real-logo" alt="CSGT">
+          <div class="agency-title">CSGT</div>
+          <div class="agency-desc">Tai nạn / Va chạm xe</div>
+        </div>
+
+        <!-- 3. PCCC & CNCH -->
+        <div class="agency-card fire" data-agency="fire">
+          <img src="/assets/icons/logo-pccc.png" class="agency-real-logo" alt="PCCC & CNCH">
+          <div class="agency-title">PCCC & CNCH</div>
+          <div class="agency-desc">Cháy nổ / Sập đổ / Đuối nước</div>
+        </div>
+
+        <!-- 4. Dịch vụ Cứu hộ -->
+        <div class="agency-card traffic-rescue" data-agency="traffic-rescue">
+          <img src="/assets/icons/logo-traffic-rescue.png" class="agency-real-logo" alt="Dịch vụ Cứu hộ">
+          <div class="agency-title">Dịch vụ Cứu hộ</div>
+          <div class="agency-desc">Cứu hộ xe / Kéo xe / Sửa chữa</div>
+        </div>
+
+        <!-- 5. Cấp cứu -->
+        <div class="agency-card hospital" data-agency="hospital">
+          <img src="/assets/icons/logo-medical.png" class="agency-real-logo" alt="Cấp cứu">
+          <div class="agency-title">Cấp cứu</div>
+          <div class="agency-desc">Cấp cứu y tế người bệnh</div>
+        </div>
+      </div>
+
+      <!-- Special Section for Traffic Rescue: Registered Enterprises Directory -->
+      <div id="rescueEnterpriseSection" style="display: none; margin-top: 14px; margin-bottom: 12px; background: rgba(249, 115, 22, 0.08); border: 1px solid rgba(249, 115, 22, 0.35); border-radius: 12px; padding: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <div style="font-size: 13px; font-weight: 800; color: #fb923c; display: flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-md ico-amber" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg> DOANH NGHIỆP CỨU HỘ XE ĐÃ ĐĂNG KÝ (TOP 5★ & GẦN NHẤT)
+          </div>
+          <span style="font-size: 10px; background: #f97316; color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700;">DỊCH VỤ CÔNG</span>
+        </div>
+        <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 10px;">
+          Bấm vào doanh nghiệp để gọi trực tiếp, xem chi tiết hoặc gửi đánh giá chất lượng dịch vụ:
+        </div>
+
+        <div id="rescueEnterprisesGrid" style="display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; padding-right: 4px;">
+          <!-- Dynamically populated enterprise cards -->
+        </div>
+      </div>
+
+      <!-- Special Section for Hospital / Ambulance 115: Nearest Medical Stations -->
+      <div id="hospitalStationsSection" style="display: none; margin-top: 14px; margin-bottom: 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 12px; padding: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <div style="font-size: 13px; font-weight: 800; color: #34d399; display: flex; align-items: center; gap: 6px;">
+            <img src="/assets/icons/logo-medical.png" style="width: 20px; height: 20px; object-fit: contain; vertical-align: middle;" alt="Cấp Cứu">
+            TRẠM CẤP CỨU 115 & BỆNH VIỆN (GẦN NHẤT)
+          </div>
+          <span style="font-size: 10px; background: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700;">DỊCH VỤ CÔNG</span>
+        </div>
+        <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 10px;">
+          Bấm vào để gọi trực tiếp trạm 115 hoặc bệnh viện gần nhất với vị trí hiện tại của bạn:
+        </div>
+
+        <div id="hospitalStationsGrid" style="display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; padding-right: 4px;">
+          <!-- Dynamically populated hospital/medical station cards -->
+        </div>
+      </div>
+
+      <!-- Step B: Dynamic Incident Suggestion Chips -->
+      <div class="incident-section">
+        <div class="incident-section-title" style="display: flex; align-items: center; gap: 6px;">
+          <svg class="svg-ico ico-md ico-amber" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path></svg> Gợi ý sự cố (Chọn nhanh)
+        </div>
+        <div class="incident-chips-container" id="incidentChipsBox">
+          <!-- Dynamic Chips injected by JS -->
+        </div>
+      </div>
+
+      <!-- Step C: Custom Details & Additional Notes -->
+      <div class="custom-incident-box">
+        <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 6px;">
+          Mô tả thêm tình trạng / Vị trí cụ thể (Không bắt buộc)
+        </label>
+        <textarea id="inputCustomNotes" class="textarea-field" placeholder="Ví dụ: Gần ngã tư cột đèn, có 2 người bị thương, xe màu đen chết máy..."></textarea>
+      </div>
+
+      <!-- Step D: Incident Media Upload (Live Camera or Gallery) -->
+      <div class="custom-incident-box" style="margin-top: 12px; background: rgba(0, 210, 255, 0.05); border: 1px dashed rgba(0, 210, 255, 0.3); border-radius: 12px; padding: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label style="font-size: 13px; font-weight: 800; color: #60a5fa; display: flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-md ico-blue" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Ảnh / Video Hiện Trường Sự Cố
+          </label>
+          <span style="font-size: 11px; color: #94a3b8;">(Tùy chọn)</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <button type="button" id="btnCaptureCamera" class="btn-refresh-loc" style="justify-content: center; background: rgba(0, 136, 255, 0.15); border-color: #0088ff; color: #60a5fa; font-weight: 700; font-size: 12px; padding: 8px; display: inline-flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-sm" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Chụp Camera
+          </button>
+          <button type="button" id="btnPickGallery" class="btn-refresh-loc" style="justify-content: center; background: rgba(168, 85, 247, 0.15); border-color: #a855f7; color: #c084fc; font-weight: 700; font-size: 12px; padding: 8px; display: inline-flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-sm" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Chọn Từ Thư Viện
+          </button>
+        </div>
+
+        <!-- Hidden file inputs -->
+        <input type="file" id="inputCameraMedia" accept="image/*,video/*" capture="environment" style="display: none;">
+        <input type="file" id="inputGalleryMedia" accept="image/*,video/*" multiple style="display: none;">
+
+        <!-- Media Preview Container -->
+        <div id="mediaPreviewGrid" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;"></div>
+      </div>
+
+      <!-- Step E: Reporter Contact Info -->
+      <div class="contact-row" style="margin-top: 12px;">
+        <div>
+          <label style="font-size: 12px; font-weight: 600; color: var(--text-dim); display: block; margin-bottom: 4px;">Tên của bạn</label>
+          <input type="text" id="inputReporterName" class="input-field" placeholder="Họ và tên" value="Người dân cần hỗ trợ">
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600; color: var(--text-dim); display: block; margin-bottom: 4px;">Số điện thoại</label>
+          <input type="tel" id="inputReporterPhone" class="input-field" placeholder="09xxxxxxxx" value="0988113115">
+        </div>
+      </div>
+
+      <!-- Step F: Legal Reminder & Submit SOS Action -->
+      <div class="modal-legal-banner-amber">
+        <div class="legal-banner-head">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(245, 158, 11, 0.25)" stroke="#f59e0b" stroke-width="2"/>
+            <path d="M12 8v5M12 16h.01" stroke="#fef3c7" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+          <span>CẢNH BÁO PHÁP LÝ (NGHỊ ĐỊNH 144/2021/NĐ-CP)</span>
+        </div>
+        <div class="legal-banner-body">
+          Hệ thống tự động lưu trữ tọa độ GPS, IP và số máy. Mọi hành vi báo tin giả sẽ bị phạt <strong>4.000.000đ - 6.000.000đ</strong> hoặc truy cứu trách nhiệm hình sự.
+        </div>
+      </div>
+
+      <button class="btn-submit-sos" id="btnConfirmSOS">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        XÁC NHẬN PHÁT TÍN HIỆU CỨU HỘ
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal SOS Người Thân (MotionSites Liquid Glass) -->
+  <div class="modal-backdrop" id="familySosModal">
+    <div class="modal-container liquid-glass" style="max-width: 500px;">
+      <div class="modal-header">
+        <div class="modal-title" style="color: #f472b6;">
+          <svg class="svg-ico ico-lg ico-purple" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> SOS NGƯỜI THÂN (FAMILY ALERT)
+        </div>
+        <button class="btn-close-modal" id="btnCloseFamilyModal" aria-label="Đóng">&times;</button>
+      </div>
+
+      <div style="font-size: 13px; color: rgba(255, 255, 255, 0.7); line-height: 1.5; margin-bottom: 16px; position: relative; z-index: 2;">
+        Thiết lập số điện thoại người thân trong gia đình. Khi gặp nguy hiểm, 1-chạm sẽ tự động soạn tin nhắn SMS khẩn cấp kèm tọa độ GPS và link Google Maps gửi ngay cho người thân!
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px; position: relative; z-index: 2;">
+        <div>
+          <label style="font-size: 11.5px; font-weight: 700; color: #f472b6; display: block; margin-bottom: 5px; letter-spacing: 0.3px;">Số điện thoại người thân 1 (Bố/Mẹ/Vợ/Chồng)</label>
+          <input type="tel" id="inputFamilyPhone1" class="input-field" placeholder="09xxxxxxxx" value="0912345678">
+        </div>
+        <div>
+          <label style="font-size: 11.5px; font-weight: 700; color: #f472b6; display: block; margin-bottom: 5px; letter-spacing: 0.3px;">Số điện thoại người thân 2 (Anh/Chị/Em)</label>
+          <input type="tel" id="inputFamilyPhone2" class="input-field" placeholder="09xxxxxxxx">
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 2;">
+        <button type="button" id="btnSendFamilySms" class="btn-submit-sos" style="background: linear-gradient(135deg, #ec4899, #be185d); justify-content: center; text-decoration: none; box-shadow: 0 8px 30px rgba(236, 72, 153, 0.5); font-weight: 800; font-size: 13.5px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+          <svg class="svg-ico ico-lg ico-white" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> GỬI TIN NHẮN ĐỊNH VỊ CHO NGƯỜI THÂN NGAY
+        </button>
+        <button type="button" id="btnSaveFamilyPhones" class="btn-refresh-loc" style="justify-content: center; font-size: 12.5px; padding: 10px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 6px;">
+          <svg class="svg-ico ico-sm ico-blue" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Lưu số điện thoại người thân
+        </button>
+
+        <!-- Live Status / Message Preview Box -->
+        <div id="familySosFeedbackBox" style="display: none; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(244, 114, 182, 0.4); border-radius: 14px; padding: 12px; margin-top: 4px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <span style="font-weight: 800; font-size: 11.5px; color: #f472b6; display: inline-flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-sm ico-purple" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> NỘI DUNG TIN NHẮN KHẨN CẤP:</span>
+            <button type="button" id="btnCopyFamilyMsg" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; color: #fff; font-size: 10.5px; padding: 2px 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-xs" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg> Sao chép</button>
+          </div>
+          <div id="familyMsgPreviewText" style="font-size: 11.5px; color: #e2e8f0; line-height: 1.4; word-break: break-word; background: rgba(0, 0, 0, 0.3); padding: 8px; border-radius: 8px;"></div>
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <a id="btnFamilyOpenSmsLink" href="#" style="flex: 1; text-align: center; background: #ec4899; color: #fff; text-decoration: none; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 11.5px; display: inline-flex; align-items: center; justify-content: center; gap: 4px;"><svg class="svg-ico ico-sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Mở Ứng Dụng SMS</a>
+            <a id="btnFamilyOpenMapLink" href="#" target="_blank" style="flex: 1; text-align: center; background: rgba(56, 189, 248, 0.2); border: 1px solid rgba(56, 189, 248, 0.5); color: #38bdf8; text-decoration: none; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 11.5px; display: inline-flex; align-items: center; justify-content: center; gap: 4px;"><svg class="svg-ico ico-sm ico-blue" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Xem Trên Google Maps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal Cẩm Nang Thoát Hiểm & Ứng Phó Thiên Tai 2026 (MotionSites Liquid Glass) -->
+  <div class="modal-backdrop" id="survivalGuideModal">
+    <div class="modal-container liquid-glass" style="max-width: 620px; max-height: 88vh;">
+      <div class="modal-header">
+        <div class="modal-title" style="color: #fbbf24; display: flex; align-items: center; gap: 8px;">
+          <svg class="svg-ico ico-lg ico-amber" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> CẨM NANG THOÁT HIỂM & ỨNG PHÓ THIÊN TAI 2026
+        </div>
+        <button class="btn-close-modal" id="btnCloseSurvivalModal" aria-label="Đóng">&times;</button>
+      </div>
+
+      <div class="guide-cards-list">
+        <!-- 1. Mưa Bão Lũ Lụt -->
+        <div class="guide-glass-card liquid-glass-blue guide-card-blue">
+          <div class="guide-card-header">
+            <div class="guide-card-title" style="display: flex; align-items: center; gap: 6px;">
+              <svg class="svg-ico ico-md ico-blue" viewBox="0 0 24 24"><path d="M2 12c.6 0 1.2.2 1.7.6l.6.6a2.4 2.4 0 0 0 3.4 0l.6-.6a2.4 2.4 0 0 1 3.4 0l.6.6a2.4 2.4 0 0 0 3.4 0l.6-.6a2.4 2.4 0 0 1 3.4 0l.6.6c.5.4 1.1.6 1.7.6"></path><path d="M2 18c.6 0 1.2.2 1.7.6l.6.6a2.4 2.4 0 0 0 3.4 0l.6-.6a2.4 2.4 0 0 1 3.4 0l.6.6a2.4 2.4 0 0 0 3.4 0l.6-.6a2.4 2.4 0 0 1 3.4 0l.6.6c.5.4 1.1.6 1.7.6"></path><path d="M2 6c.6 0 1.2.2 1.7.6l.6.6a2.4 2.4 0 0 0 3.4 0l.6-.6a2.4 2.4 0 0 1 3.4 0l.6.6a2.4 2.4 0 0 0 3.4 0l.6-.6a2.4 2.4 0 0 1 3.4 0l.6.6c.5.4 1.1.6 1.7.6"></path></svg> 1. Ứng Phó Mưa Bão & Lũ Lụt
+            </div>
+            <span class="guide-pill-badge">THIÊN TAI</span>
+          </div>
+          <ul class="guide-checklist">
+            <li><b>Chiếu sáng & Nguồn điện:</b> Sạc đầy pin điện thoại, sạc dự phòng, đèn pin, nến.</li>
+            <li><b>Lương thực & Nước sạch:</b> Dự trữ nước uống, mì tôm, lương khô đủ cho 3-5 ngày.</li>
+            <li><b>An toàn điện:</b> Ngắt cầu dao khu vực trũng, kê cao các thiết bị điện tử.</li>
+            <li><b>Di chuyển & Sơ tán:</b> Không lội qua dòng nước xiết, di chuyển lên tầng cao hoặc nơi trú bão kiên cố.</li>
+          </ul>
+        </div>
+
+        <!-- 2. Cháy Nổ & Thoát Hiểm (PCCC 114) -->
+        <div class="guide-glass-card liquid-glass-red guide-card-red">
+          <div class="guide-card-header">
+            <div class="guide-card-title" style="display: flex; align-items: center; gap: 6px;">
+              <svg class="svg-ico ico-md ico-red" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg> 2. Thoát Hiểm Cháy Nổ & Ngạt Khói
+            </div>
+            <span class="guide-pill-badge">PCCC 114</span>
+          </div>
+          <ul class="guide-checklist">
+            <li><b>Bảo vệ đường thở:</b> Dùng khăn/vải ướt bịt kín mũi và miệng để lọc khói độc CO.</li>
+            <li><b>Di chuyển thấp:</b> Bò sát sàn nhà (không khí sạch ở tầm dưới 0.5m).</li>
+            <li><b>Tuyệt đối KHÔNG dùng thang máy:</b> Chỉ sử dụng thang bộ thoát hiểm có cửa chống cháy.</li>
+            <li><b>Báo động:</b> Hô hoán và bấm ngay 114 trên ứng dụng để định vị lực lượng PCCC.</li>
+          </ul>
+        </div>
+
+        <!-- 3. Sơ Cứu CPR & Tai Nạn (Y tế 115) -->
+        <div class="guide-glass-card liquid-glass-green guide-card-green">
+          <div class="guide-card-header">
+            <div class="guide-card-title" style="display: flex; align-items: center; gap: 6px;">
+              <svg class="svg-ico ico-md ico-emerald" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle><line x1="9" y1="10" x2="13" y2="10"></line><line x1="11" y1="8" x2="11" y2="12"></line></svg> 3. Sơ Cứu Hồi Sinh Tim Phổi (CPR)
+            </div>
+            <span class="guide-pill-badge">CẤP CỨU 115</span>
+          </div>
+          <ul class="guide-checklist">
+            <li><b>Kiểm tra:</b> Lay gọi nạn nhân, kiểm tra nhịp thở trong 10 giây.</li>
+            <li><b>Ép tim lồng ngực:</b> Đặt 2 tay giữa ngực, ép sâu 5cm với nhịp 100-120 lần/phút liên tục.</li>
+            <li><b>Tai nạn giao thông:</b> Hạn chế di chuyển nạn nhân nếu nghi ngờ chấn thương cột sống cổ.</li>
+          </ul>
+        </div>
+
+        <!-- 4. Sự Cố Xe & An Toàn Giao Thông -->
+        <div class="guide-glass-card liquid-glass-orange guide-card-amber">
+          <div class="guide-card-header">
+            <div class="guide-card-title" style="display: flex; align-items: center; gap: 6px;">
+              <svg class="svg-ico ico-md ico-amber" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg> 4. Cứu Hộ Giao Thông & Va Chạm Xe
+            </div>
+            <span class="guide-pill-badge">CỨU HỘ XE</span>
+          </div>
+          <ul class="guide-checklist">
+            <li><b>Đặt biển cảnh báo:</b> Bật đèn khẩn cấp hazard, đặt tam giác phản quang cách xe tối thiểu 50-100m.</li>
+            <li><b>Đứng vị trí an toàn:</b> Di chuyển ra ngoài dải phân cách hoặc vỉa hè, không đứng trước/sau đầu xe.</li>
+            <li><b>Gọi cứu hộ chuyên dụng:</b> Sử dụng ứng dụng để điều phối xe cẩu/kéo chuyên dùng gần nhất.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Yêu Cầu Bật Video Call / Live Stream / Gọi Thoại Từ Cán Bộ Trực Ban (MotionSites Liquid Glass) -->
+  <div class="modal-backdrop" id="videoCallCitizenRequestModal">
+    <div class="modal-container liquid-glass liquid-glass-red" id="callModalContainer" style="max-width: 480px;">
+      <div class="modal-header" id="callModalHeader" style="border-bottom: 1px solid rgba(239, 68, 68, 0.3);">
+        <div class="modal-title" id="callModalTitleWrap" style="color: #f87171; display: flex; align-items: center; gap: 8px;">
+          <span id="callModalIcon"><svg class="svg-ico ico-xl ico-red" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg></span>
+          <span id="callModalHeadingText">YÊU CẦU MỞ LIVE STREAM CAMERA</span>
+        </div>
+      </div>
+
+      <div style="padding: 10px 0; position: relative; z-index: 2;">
+        <div id="callModalInfoBox" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 14px; padding: 12px; margin-bottom: 14px; font-size: 13px; color: #fecaca; line-height: 1.5;">
+          <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 3px;"><svg class="svg-ico ico-sm ico-red" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> <b>Mã tiếp nhận:</b> <span id="callModalSosId" style="font-weight: 800; color: #60a5fa;">#SOS-XXXX</span></div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 4px;"><svg class="svg-ico ico-sm ico-blue" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> <b>Cán bộ trực ban:</b> <span id="callModalOfficerName" style="font-weight: 700; color: #fff;">Đang yêu cầu kết nối</span></div>
+          <span id="callModalDescText">Đơn vị trực ban yêu cầu mở Camera trực tiếp để quan sát hiện trường thực tế và hướng dẫn chỉ đạo cứu nạn khẩn cấp từ xa.</span>
+        </div>
+
+        <div id="callModalNoticeText" style="font-size: 12px; color: rgba(255, 255, 255, 0.6); margin-bottom: 16px;">
+          * Hệ thống chỉ mở kết nối riêng cho đúng phiếu cứu hộ của bạn. Bạn có thể chủ động ngắt kết nối bất cứ lúc nào.
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 10px;">
+          <button type="button" id="btnAcceptCitizenCall" class="btn-submit-sos" style="background: linear-gradient(135deg, #10b981, #059669); margin: 0; justify-content: center; font-size: 13px; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45); display: inline-flex; align-items: center; gap: 6px;">
+            <span id="callModalAcceptIcon"><svg class="svg-ico ico-md ico-white" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg></span> <span id="callModalAcceptBtnText">BẬT CAMERA & KẾT NỐI</span>
+          </button>
+          <button type="button" id="btnRejectCitizenCall" class="btn-refresh-loc" style="justify-content: center; background: rgba(255, 42, 75, 0.15); border-color: #ff2a4b; color: #ff6b81; font-weight: 700; border-radius: 9999px; display: inline-flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-sm ico-red" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Từ chối
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Lựa Chọn Hình Thức Gọi Trực Ban: Video Hiện Trường vs Thoại Thường -->
+  <div class="modal-backdrop" id="citizenCallSelectionModal" style="display: none; z-index: 99999; align-items: center; justify-content: center;">
+    <div class="modal-container liquid-glass" style="max-width: 480px; width: 95vw; background: #0b0f19; border: 2px solid #38bdf8; box-shadow: 0 0 50px rgba(56, 189, 248, 0.25); padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+      <!-- Header -->
+      <div style="padding: 14px 20px; background: rgba(0, 0, 0, 0.65); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(56, 189, 248, 0.3);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 14px; font-weight: 800; color: #fff;">LIÊN LẠC CÁN BỘ TRỰC BAN</span>
+        </div>
+        <button type="button" class="btn-close-modal" id="btnCloseCitizenCallSelection" style="position: static; font-size: 22px; color: #94a3b8; background: none; border: none; cursor: pointer;">&times;</button>
+      </div>
+
+      <!-- Options Body -->
+      <div style="padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+        <p style="margin: 0; font-size: 13px; color: #94a3b8; line-height: 1.5;">Vui lòng chọn hình thức kết nối trực tiếp tới Cán bộ Trực ban tác chiến:</p>
+
+        <!-- Option 1: Gọi Thoại Thường (Voice Call) -->
+        <button type="button" id="btnChooseCitizenVoiceCall" style="background: rgba(16, 185, 129, 0.12); border: 2px solid #10b981; border-radius: 12px; padding: 14px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 14px; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15); font-family: inherit;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+            📞
+          </div>
+          <div style="flex: 1;">
+            <div style="font-size: 14px; font-weight: 800; color: #34d399; margin-bottom: 3px;">GỌI THOẠI ĐÀM THOẠI (Voice Call)</div>
+            <div style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">Kết nối giọng nói 2 chiều qua micro, phản hồi tức thì, bảo mật theo NĐ 13/2023/NĐ-CP.</div>
+          </div>
+          <div style="font-size: 18px; color: #34d399;">➔</div>
+        </button>
+
+        <!-- Option 2: Gọi Video Hiện Trường (Video Call) -->
+        <button type="button" id="btnChooseCitizenVideoCall" style="background: rgba(239, 68, 68, 0.12); border: 2px solid #ef4444; border-radius: 12px; padding: 14px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 14px; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15); font-family: inherit;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+            📹
+          </div>
+          <div style="flex: 1;">
+            <div style="font-size: 14px; font-weight: 800; color: #f87171; margin-bottom: 3px;">GỌI VIDEO HIỆN TRƯỜNG (Video Call)</div>
+            <div style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">Bật camera truyền trực tiếp hiện trường sự cố để Trực ban quan sát và chỉ đạo cứu nạn.</div>
+          </div>
+          <div style="font-size: 18px; color: #f87171;">➔</div>
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding: 12px 20px; background: rgba(0, 0, 0, 0.4); border-top: 1px solid rgba(255,255,255,0.06); text-align: right;">
+        <button type="button" id="btnCancelCitizenCallSelection" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #94a3b8; padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer;">Hủy bỏ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Đàm Thoại Thoại Khẩn Cấp 2 Bên (Citizen Voice Call HUD) -->
+  <div class="modal-backdrop" id="citizenVoiceCallModal" style="display: none; z-index: 99999; align-items: center; justify-content: center;">
+    <div class="modal-container liquid-glass" style="max-width: 500px; width: 95vw; background: #0b0f19; border: 2px solid #10b981; box-shadow: 0 0 50px rgba(16, 185, 129, 0.35); padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+      <!-- Call Header -->
+      <div style="padding: 14px 20px; background: rgba(0, 0, 0, 0.65); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(16, 185, 129, 0.3);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulse 1.2s infinite;"></span>
+          <span style="font-size: 14px; font-weight: 800; color: #fff;">ĐÀM THOẠI TRỰC BAN KHẨN CẤP</span>
+          <span id="citizenVoiceSosId" style="font-size: 13px; font-weight: 700; color: #34d399;">#SOS-XXXX</span>
+        </div>
+        <div id="citizenVoiceCallTimer" style="font-family: monospace; font-size: 14px; font-weight: 800; color: #34d399; background: rgba(0,0,0,0.5); padding: 2px 10px; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3);">⏱️ 00:00</div>
+      </div>
+
+      <!-- Officer & Call State Display -->
+      <div style="padding: 24px 20px; background: radial-gradient(circle at center, rgba(16, 185, 129, 0.1) 0%, rgba(11, 15, 25, 0.95) 100%); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;">
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 0 25px rgba(16, 185, 129, 0.3);">
+          📞
+        </div>
+        <div>
+          <div id="citizenVoiceOfficerName" style="font-size: 17px; font-weight: 800; color: #f8fafc;">Cán bộ trực ban tác chiến</div>
+          <div id="citizenVoiceUnitName" style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-top: 2px;">Công an / Cứu hộ cứu nạn</div>
+          <div id="citizenVoiceCallStatusText" style="font-size: 12px; color: #34d399; margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #34d399; animation: pulse 1s infinite;"></span>
+            Đang đàm thoại thoại 2 bên & truyền âm thanh chất lượng cao
+          </div>
+        </div>
+
+        <!-- Live Waveform Canvas Visualizer for Citizen -->
+        <div style="width: 100%; max-width: 420px; height: 50px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden; position: relative;">
+          <canvas id="citizenVoiceVisualizerCanvas" width="420" height="50" style="width: 100%; height: 100%; display: block;"></canvas>
+          <div id="citizenVoiceVisualizerHint" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #64748b;">
+            Âm thanh đàm thoại 2 bên đang kết nối
+          </div>
+        </div>
+
+        <!-- Privacy & Zero-Retention Notice (Decree 13/2023/ND-CP) -->
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 8px 12px; font-size: 11px; color: #a7f3d0; line-height: 1.4; text-align: left; max-width: 420px;">
+          🛡️ <b>Bảo vệ dữ liệu cá nhân (NĐ 13/2023/NĐ-CP):</b> Bạn có thể ghi âm đàm thoại để làm căn cứ cứu hộ. File MP3 tải thẳng về máy của bạn và tự hủy khỏi bộ nhớ web.
+        </div>
+      </div>
+
+      <!-- Tactical Call Control Footer -->
+      <div style="padding: 14px 20px; background: rgba(0, 0, 0, 0.85); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-glass); gap: 8px; flex-wrap: wrap;">
+        <button type="button" id="btnToggleCitizenVoiceMic" class="btn-refresh-loc" style="font-size: 12px; padding: 8px 14px; display: inline-flex; align-items: center; gap: 6px;">
+          <svg class="svg-ico ico-sm" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg> <span>Bật/Tắt Mic</span>
+        </button>
+
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button type="button" id="btnRecordCitizenVoiceCall" class="btn-refresh-loc" style="font-size: 12px; padding: 8px 14px; display: inline-flex; align-items: center; gap: 6px; background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #fca5a5; font-weight: 700;">
+            <span id="recDotCitizenVoice" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444;"></span>
+            <span id="recTextCitizenVoice">Ghi Âm 2 Bên</span>
+          </button>
+
+          <button type="button" id="btnEndCitizenVoiceCall" class="btn-submit-sos" style="background: #ef4444; font-size: 12px; padding: 8px 16px; margin: 0; width: auto; display: inline-flex; align-items: center; gap: 5px;">
+            <svg class="svg-ico ico-xs ico-white" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Kết thúc
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Stream Camera Active HUD Overlay for Citizen -->
+  <div id="videoCallCitizenOverlay" style="display: none; position: fixed; inset: 0; background: #0b0f19; z-index: 99999; flex-direction: column;">
+    <!-- Top Stream Bar -->
+    <div style="padding: 12px 16px; background: rgba(0, 0, 0, 0.85); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass);">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: pulse 1.2s infinite;"></span>
+        <span style="font-size: 14px; font-weight: 800; color: #fff;">LIVE STREAM HIỆN TRƯỜNG</span>
+        <span id="citizenOverlaySosId" style="font-size: 13px; font-weight: 700; color: #60a5fa;">#SOS-XXXX</span>
+      </div>
+      <div id="citizenCallTimer" style="font-family: monospace; font-size: 14px; font-weight: 700; color: #34d399;">00:00</div>
+    </div>
+
+    <!-- Video Feed Center Viewport -->
+    <div style="flex: 1; position: relative; display: flex; align-items: center; justify-content: center; background: #000; overflow: hidden;">
+      <video id="citizenLiveVideoElement" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+      <canvas id="citizenStreamCanvas" style="display: none;"></canvas>
+
+      <div style="position: absolute; bottom: 20px; left: 20px; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); border-radius: 8px; padding: 6px 12px; font-size: 12px; color: #cbd5e1; display: flex; align-items: center; gap: 6px;">
+        <svg class="svg-ico ico-sm ico-blue" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> <span id="citizenLiveStreamStatusHint">Trực ban đang quan sát trực tiếp</span>
+      </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="citizen-call-bottom-controls" style="padding: 16px; background: rgba(0, 0, 0, 0.9); display: flex; justify-content: center; gap: 12px; align-items: center; flex-wrap: wrap;">
+      <button type="button" id="btnToggleCitizenMic" class="btn-refresh-loc" style="padding: 10px 16px; font-size: 13px; border-radius: 30px; display: inline-flex; align-items: center; gap: 6px;">
+        <svg class="svg-ico ico-sm" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg> Bật/Tắt Mic
+      </button>
+      <button type="button" id="btnFlipCitizenCamera" class="btn-refresh-loc" style="padding: 10px 16px; font-size: 13px; border-radius: 30px; display: inline-flex; align-items: center; gap: 6px;">
+        <svg class="svg-ico ico-sm" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg> Đổi Camera
+      </button>
+      <button type="button" id="btnRecordCitizenCall" class="btn-refresh-loc" style="padding: 10px 18px; font-size: 13px; border-radius: 30px; display: inline-flex; align-items: center; gap: 6px; background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #fca5a5; font-weight: 700;">
+        <span id="recDotCitizen" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444;"></span>
+        <span id="recTextCitizen">Ghi Âm 2 Bên</span>
+      </button>
+      <button type="button" id="btnEndCitizenCall" class="btn-submit-sos" style="background: #ef4444; padding: 10px 22px; font-size: 13px; border-radius: 30px; margin: 0; width: auto; display: inline-flex; align-items: center; gap: 6px;">
+        <svg class="svg-ico ico-sm ico-white" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> TẮT LIVE STREAM
+      </button>
+    </div>
+  </div>
+
+
+  <!-- MODAL: PHIẾU TIẾP NHẬN & XỬ LÝ SỰ CỐ KHẨN CẤP (XEM, CHỈNH SỬA & XUẤT DOCX/ẢNH) -->
+  <div class="modal-backdrop" id="incidentReportDocxModal" style="display: none; z-index: 100000; align-items: center; justify-content: center;">
+    <div class="modal-container" style="max-width: 820px; max-height: 92vh; background: #0f172a; border: 1px solid rgba(0, 210, 255, 0.35); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; box-shadow: 0 20px 80px rgba(0,0,0,0.9);">
+      
+      <!-- Modal Header Toolbar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 12px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <svg class="svg-ico ico-xl ico-blue" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <div>
+            <div style="font-size: 15px; font-weight: 800; color: #38bdf8;">PHIẾU TIẾP NHẬN & ỨNG PHÓ SỰ CỐ KHẨN CẤP</div>
+            <div style="font-size: 11px; color: #94a3b8;">Mẫu chuẩn quy định Nghị định 30/2020/NĐ-CP · Tự động điền dữ liệu · Có thể click vào để chỉnh sửa trực tiếp trước khi xuất</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+          <button type="button" id="btnReportModalGoHome" class="btn-refresh-loc" style="background: rgba(16, 185, 129, 0.25); border-color: #10b981; color: #34d399; font-weight: 700; font-size: 11px; padding: 6px 12px; display: none; align-items: center; gap: 4px;">
+            <svg class="svg-ico ico-xs" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> Hoàn Tất & Về Trang Chủ
+          </button>
+          <button type="button" id="btnDownloadReportDocx" class="btn-refresh-loc" style="background: rgba(37, 99, 235, 0.25); border-color: #3b82f6; color: #60a5fa; font-weight: 700; font-size: 11px; padding: 6px 12px; display: inline-flex; align-items: center; gap: 4px;">
+            <svg class="svg-ico ico-xs" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Tải File Word (.docx)
+          </button>
+          <button type="button" id="btnDownloadReportImage" class="btn-refresh-loc" style="background: rgba(16, 185, 129, 0.25); border-color: #10b981; color: #34d399; font-weight: 700; font-size: 11px; padding: 6px 12px; display: inline-flex; align-items: center; gap: 4px;">
+            <svg class="svg-ico ico-xs" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Lưu Dạng Ảnh (PNG)
+          </button>
+          <button type="button" id="btnPrintReportPdf" class="btn-refresh-loc" style="background: rgba(139, 92, 246, 0.25); border-color: #8b5cf6; color: #c084fc; font-weight: 700; font-size: 11px; padding: 6px 10px; display: inline-flex; align-items: center; gap: 4px;">
+            <svg class="svg-ico ico-xs" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> In / PDF
+          </button>
+          <button type="button" id="btnCloseReportDocxModal" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;"><svg class="svg-ico ico-xs ico-white" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
+      </div>
+
+      <!-- Printable & Editable Sheet Paper -->
+      <div id="reportSheetContainer" style="flex: 1; overflow-y: auto; background: #ffffff; color: #000000; padding: 30px 25px; border-radius: 12px; font-family: 'Times New Roman', Times, serif; line-height: 1.5; font-size: 13.5px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+        
+        <!-- Legal Status Alert Banner at Top of Document -->
+        <div id="docLegalNoticeBanner" style="background: rgba(239, 68, 68, 0.08); border: 1px solid #f87171; border-radius: 8px; padding: 8px 12px; margin-bottom: 15px; font-size: 12px; color: #b91c1c; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <svg class="svg-ico ico-md ico-red" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <span id="docLegalNoticeText"><b>VĂN BẢN CHƯA ĐỦ CHỮ KÝ 2 BÊN:</b> Quý dân vui lòng hoàn tất ký tên bên dưới để văn bản có đầy đủ hiệu lực pháp lý và mở khóa tính năng tải file / trở về trang chủ.</span>
+          </div>
+          <span id="docLegalBadge" style="font-weight: 800; padding: 2px 8px; border-radius: 12px; background: #fee2e2; color: #dc2626; font-size: 11px;">CHƯA CÓ HIỆU LỰC</span>
+        </div>
+
+        <!-- Official National Header (Decree 30/2020/ND-CP Standard) -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 1px solid #cbd5e1; padding-bottom: 12px;">
+          <!-- Left Column: Agency Hierarchy -->
+          <div style="width: 42%; text-align: center;">
+            <div id="docHeaderAgencyUpper" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; color: #334155;">CÔNG AN TP. CẦN THƠ</div>
+            <div id="docHeaderAgencyLower" style="font-size: 11.5px; font-weight: bold; text-transform: uppercase; color: #000; margin-top: 1px;">CÔNG AN PHƯỜNG TÂN AN</div>
+            <div style="width: 70px; height: 1.5px; background: #000; margin: 3px auto 4px;"></div>
+            <div id="docHeaderDocNumber" style="font-size: 11px; color: #334155;">Số: #SOS-XXXX/PTN-SC</div>
+          </div>
+          <!-- Right Column: National Motto -->
+          <div style="width: 56%; text-align: center;">
+            <div style="font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; color: #000;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
+            <div style="font-size: 12.5px; font-weight: bold; color: #000; margin-top: 2px;">Độc lập - Tự do - Hạnh phúc</div>
+            <div style="width: 140px; height: 1.5px; background: #000; margin: 4px auto 0;"></div>
+            <div id="docHeaderDateLocation" style="font-size: 12px; font-style: italic; color: #1e293b; margin-top: 5px;">Cần Thơ, ngày 07 tháng 09 năm 2026</div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 18px;">
+          <div style="font-size: 15px; font-weight: bold; text-transform: uppercase;">PHIẾU THÔNG BÁO VÀ TIẾP NHẬN THÔNG TIN</div>
+          <div style="font-size: 14px; font-weight: bold; text-transform: uppercase;">ỨNG PHÓ SỰ CỐ KHẨN CẤP</div>
+          <div style="font-size: 12px; font-style: italic; margin-top: 4px; color: #333;">
+            Mã tiếp nhận: <b id="docSosId">#SOS-XXXX</b> | Thời gian: <span id="docIncidentTime">24/08/2026 11:20</span>
+          </div>
+          <div style="width: 100px; height: 1px; background: #000; margin: 6px auto 0;"></div>
+        </div>
+
+        <!-- Section A: Thông Tin Chung -->
+        <div style="margin-bottom: 16px;">
+          <div style="font-weight: bold; font-size: 14px; margin-bottom: 6px; text-transform: uppercase;">A. THÔNG TIN CHUNG (ĐƠN VỊ TIẾP NHẬN)</div>
+          
+          <div style="margin-bottom: 6px;">
+            <b>- Họ tên cán bộ tiếp nhận:</b> 
+            <input type="text" id="docOfficerName" class="doc-inline-input" value="Đại úy Lê Văn Hòa (Trưởng Công An Xã)" style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; font-weight: bold; width: 65%; padding: 2px 4px; background: transparent;">
+          </div>
+
+          <div style="margin-bottom: 6px;">
+            <b>- Địa chỉ công tác / Trụ sở:</b> 
+            <input type="text" id="docUnitAddress" class="doc-inline-input" value="Trụ sở Công An Xã Thuận Hòa, TP. Cần Thơ" style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; width: 68%; padding: 2px 4px; background: transparent;">
+          </div>
+
+          <!-- Agency Checkbox Toggles -->
+          <div style="margin-left: 15px; margin-bottom: 6px; font-size: 13px; display: flex; flex-wrap: wrap; gap: 12px;">
+            <label><input type="checkbox" id="docCheck113"> <b>Công an khu vực:</b> <span id="docUnitPoliceLabel">Xã Thuận Hòa, TP. Cần Thơ</span></label>
+            <label><input type="checkbox" id="docCheckCsgt"> <b>CSGT:</b> <span id="docUnitCsgtLabel">Đội CSGT - Trật Tự</span></label>
+            <label><input type="checkbox" id="docCheck114"> <b>PCCC và CNCH:</b> <span id="docUnitFireLabel">Đội Cảnh Sát PCCC & CNCH</span></label>
+          </div>
+
+          <div style="margin-bottom: 6px;">
+            <b>- Số điện thoại liên hệ trực ban:</b> 
+            <input type="text" id="docUnitPhone" class="doc-inline-input" value="0292 3899 113" style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; width: 30%; padding: 2px 4px; background: transparent;">
+            <b> | Đường dây khẩn cấp / SMS:</b> 
+            <input type="text" id="docUnitSms" class="doc-inline-input" value="0988 113 113" style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; width: 25%; padding: 2px 4px; background: transparent;">
+          </div>
+        </div>
+
+        <!-- Section B: Thông Tin Đến -->
+        <div style="margin-bottom: 16px;">
+          <div style="font-weight: bold; font-size: 14px; margin-bottom: 6px; text-transform: uppercase;">B. THÔNG TIN ĐẾN (NGƯỜI BÁO & HIỆN TRƯỜNG SỰ CỐ)</div>
+
+          <div style="margin-bottom: 6px;">
+            <b>- Tên người gọi / người báo:</b> 
+            <input type="text" id="docReporterName" class="doc-inline-input" value="Người dân cần hỗ trợ" style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; font-weight: bold; width: 40%; padding: 2px 4px; background: transparent;">
+            <b>- Đối tượng:</b>
+            <label style="margin-left: 6px;"><input type="radio" name="docTargetType" value="Người dân" checked> Người dân</label>
+            <label style="margin-left: 6px;"><input type="radio" name="docTargetType" value="Nhân viên cơ sở"> Nhân viên</label>
+            <label style="margin-left: 6px;"><input type="radio" name="docTargetType" value="Lực lượng ứng phó"> Lực lượng</label>
+          </div>
+
+          <div style="margin-bottom: 6px;">
+            <b>- Số điện thoại người gọi:</b> 
+            <input type="text" id="docReporterPhone" class="doc-inline-input" value="0988113115" style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; width: 30%; padding: 2px 4px; background: transparent;">
+            <b>- Giờ tiếp nhận tin:</b> 
+            <input type="text" id="docIncidentCallTime" class="doc-inline-input" value="11:20:00 - 24/08/2026" style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; width: 30%; padding: 2px 4px; background: transparent;">
+          </div>
+
+          <div style="margin-bottom: 6px;">
+            <b>- Vị trí xảy ra sự cố (Địa chỉ cơ sở/khu vực):</b><br>
+            <input type="text" id="docIncidentAddress" class="doc-inline-input" placeholder="Nhấn vào đây để tự điền vị trí/khu vực xảy ra sự việc..." value="" style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; font-weight: bold; width: 98%; padding: 2px 4px; background: transparent;">
+          </div>
+
+          <div style="margin-bottom: 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <div>
+              <b>- Tọa độ GPS:</b> 
+              <input type="text" id="docIncidentCoords" class="doc-inline-input" value="9.60120, 105.85230" style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; width: 170px; padding: 2px 4px; background: transparent;">
+            </div>
+            <div>
+              <b>- Đường dẫn Google Maps:</b> 
+              <a href="#" target="_blank" id="docGmapsLink" style="color: #2563eb; text-decoration: underline; font-weight: bold;">Xem vị trí trên Google Maps ↗</a>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 6px;">
+            <b>- Loại sự cố & Mô tả chi tiết hiện trường:</b><br>
+            <textarea id="docIncidentDescription" rows="2" style="width: 98%; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: inherit; padding: 6px; resize: vertical;">Cần hỗ trợ khẩn cấp tại hiện trường. Đã kết nối định vị GPS và kênh trực ban cứu hộ.</textarea>
+          </div>
+
+          <div style="margin-bottom: 6px;">
+            <b>- Có ảnh hưởng tới người dân:</b> 
+            <label style="margin-left: 8px;"><input type="radio" name="docAffectCitizen" value="Có" checked> Có</label>
+            <label style="margin-left: 15px;"><input type="radio" name="docAffectCitizen" value="Không"> Không</label>
+            <span style="margin-left: 30px;"><b>- Yêu cầu trợ giúp:</b></span>
+            <label style="margin-left: 8px;"><input type="radio" name="docNeedHelp" value="Có" checked> Có</label>
+            <label style="margin-left: 15px;"><input type="radio" name="docNeedHelp" value="Không"> Không</label>
+          </div>
+
+          <div style="margin-bottom: 6px;">
+            <b>- Yêu cầu trợ giúp cụ thể:</b><br>
+            <input type="text" id="docHelpRequest" class="doc-inline-input" value="Điều động lực lượng công an / phương tiện phản ứng nhanh tiếp cận hiện trường để ứng cứu và đảm bảo an toàn." style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; width: 98%; padding: 2px 4px; background: transparent;">
+          </div>
+
+          <div style="margin-bottom: 6px;">
+            <b>- Lời khuyên / Khuyến cáo đã hướng dẫn người dân qua điện thoại / Live Stream:</b><br>
+            <textarea id="docAdviceGiven" rows="2" style="width: 98%; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: inherit; padding: 6px; resize: vertical;">Giữ bình tĩnh, di chuyển đến vị trí an toàn, duy trì liên lạc điện thoại và mở camera để lực lượng cứu hộ tiếp cận nhanh nhất.</textarea>
+          </div>
+
+          <div style="margin-bottom: 6px;">
+            <b>- Xác minh cuộc gọi / Tín hiệu:</b> Có | 
+            <b>- Kết quả xử lý:</b> 
+            <input type="text" id="docResolutionResult" class="doc-inline-input" value="Lực lượng chức năng đã có mặt, tiếp cận hiện trường và xử lý hoàn tất an toàn." style="border: none; border-bottom: 1px dotted #000; font-family: inherit; font-size: inherit; font-weight: bold; width: 60%; padding: 2px 4px; background: transparent;">
+          </div>
+        </div>
+
+        <!-- Section C: Hình ảnh đính kèm hiện trường nếu có -->
+        <div id="docMediaSection" style="margin-bottom: 20px; display: none;">
+          <div style="font-weight: bold; font-size: 14px; margin-bottom: 8px; text-transform: uppercase;">C. HÌNH ẢNH / TÀI LIỆU HIỆN TRƯỜNG ĐÍNH KÈM</div>
+          <div id="docMediaGrid" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+        </div>
+
+        <!-- Signatures Table with Interactive Dual Signature Trigger -->
+        <div id="docSignaturesBlock" class="doc-signatures-block" style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-top: 20px; padding-top: 12px; border-top: 1px dashed #cbd5e1;">
+          
+          <!-- Citizen Signature Box -->
+          <div style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px dashed #cbd5e1; border-radius: 8px; margin-right: 8px; background: #f8fafc;">
+            <div style="font-weight: bold; text-transform: uppercase; font-size: 13px;">NGƯỜI BÁO TIN / NGƯỜI DÂN</div>
+            <div style="font-style: italic; font-size: 11px; color: #64748b; margin-bottom: 8px;">(Ký bằng vẽ tay hoặc gõ chữ)</div>
+            
+            <!-- Signature Canvas / Preview container -->
+            <div id="citizenSigPreviewContainer" style="min-height: 70px; display: flex; align-items: center; justify-content: center; width: 100%; margin-bottom: 6px;">
+              <div id="citizenSigPlaceholder" style="color: #94a3b8; font-size: 12px; font-style: italic;">Chưa có chữ ký</div>
+              <img id="citizenSigImg" style="max-height: 60px; max-width: 160px; display: none;" alt="Chữ ký người dân">
+              <div id="citizenSigText" style="display: none; font-size: 22px; font-family: 'Brush Script MT', cursive, serif; font-weight: bold; color: #1e3a8a;"></div>
+            </div>
+
+            <button type="button" id="btnOpenCitizenSignPad" class="btn-refresh-loc" style="font-size: 11px; padding: 4px 12px; background: rgba(59, 130, 246, 0.15); border-color: #3b82f6; color: #2563eb; font-weight: 700; border-radius: 20px; margin-bottom: 6px; display: inline-flex; align-items: center; gap: 4px;">
+              <svg class="svg-ico ico-xs" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Ký Điện Tử (Người Dân)
+            </button>
+
+            <!-- Interactive editable name input -->
+            <div style="width: 100%; text-align: center; margin-top: 4px;">
+              <input type="text" id="docSignReporterInput" class="doc-inline-input" placeholder="Nhấn vào đây để gõ họ và tên..." style="width: 90%; text-align: center; font-weight: bold; font-size: 13px; border: none; border-bottom: 1px dashed #2563eb; background: transparent; padding: 3px; color: #0f172a;" title="Nhấn vào đây để gõ họ và tên">
+              <div style="font-size: 10px; color: #64748b; font-style: italic; margin-top: 2px;">(Nhấn vào dòng trên để gõ họ và tên)</div>
+            </div>
+            <div id="docCitizenSignTime" style="font-size: 10px; color: #64748b; margin-top: 2px;"></div>
+          </div>
+
+          <!-- Officer Signature Box -->
+          <div style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px dashed #cbd5e1; border-radius: 8px; margin-left: 8px; background: #f8fafc;">
+            <div style="font-weight: bold; text-transform: uppercase; font-size: 13px;">CÁN BỘ / CHỈ HUY TIẾP NHẬN</div>
+            <div style="font-style: italic; font-size: 11px; color: #64748b; margin-bottom: 8px;">(Ký, đóng dấu và xác thực điện tử)</div>
+
+            <!-- Signature Canvas / Preview container -->
+            <div id="officerSigPreviewContainer" style="min-height: 70px; display: flex; align-items: center; justify-content: center; width: 100%; margin-bottom: 6px;">
+              <div id="officerSigPlaceholder" style="color: #94a3b8; font-size: 12px; font-style: italic;">Chờ cán bộ ký xác nhận</div>
+              <img id="officerSigImg" style="max-height: 60px; max-width: 160px; display: none;" alt="Chữ ký cán bộ">
+              <div id="officerSigText" style="display: none; font-size: 22px; font-family: 'Brush Script MT', cursive, serif; font-weight: bold; color: #1e3a8a;"></div>
+            </div>
+
+            <button type="button" id="btnOpenOfficerSignPad" class="btn-refresh-loc" style="font-size: 11px; padding: 4px 12px; background: rgba(148, 163, 184, 0.15); border-color: #94a3b8; color: #64748b; font-weight: 700; border-radius: 20px; margin-bottom: 6px; display: inline-flex; align-items: center; gap: 4px; cursor: not-allowed;" title="Chữ ký cán bộ trực ban (Chỉ dành cho cán bộ có thẩm quyền trên hệ thống điều phối tác chiến)">
+              <svg class="svg-ico ico-xs" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 🔒 Chờ Cán Bộ Ký Xác Thực
+            </button>
+
+            <!-- Officer name display (managed by Dispatcher system, read-only for citizen) -->
+            <div style="width: 100%; text-align: center; margin-top: 4px;">
+              <input type="text" id="docSignOfficerInput" class="doc-inline-input" readonly placeholder="Họ và tên Cán bộ trực ban..." style="width: 90%; text-align: center; font-weight: bold; font-size: 13px; border: none; border-bottom: 1px dashed #94a3b8; background: transparent; padding: 3px; color: #334155; cursor: default;" title="Họ và tên Cán bộ trực ban tiếp nhận">
+              <div style="font-size: 10px; color: #64748b; font-style: italic; margin-top: 2px;">(Cán bộ trực ban tiếp nhận ký trên hệ thống tác chiến)</div>
+            </div>
+            <div id="docOfficerSignTime" style="font-size: 10px; color: #64748b; margin-top: 2px;"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Footer action close & return home -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 10px;">
+        <div id="docLockHint" style="font-size: 12px; color: #f87171; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+          <svg class="svg-ico ico-sm ico-red" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Nút tải file Word/Ảnh và nút Đóng cửa sổ sẽ tự động mở khóa khi hoàn tất cả 2 chữ ký và điền họ tên.
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" id="btnBottomConfirmResolvedGoHome" class="btn-submit-sos" style="display: none; background: linear-gradient(135deg, #10b981, #059669); font-size: 12px; margin: 0; padding: 8px 16px; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-sm ico-white" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> XÁC NHẬN HOÀN TẤT & VỀ TRANG CHỦ
+          </button>
+          <button type="button" id="btnBottomCloseReportDocx" class="btn-refresh-loc" style="display: none; padding: 8px 18px; font-size: 12px;">Đóng Cửa Sổ</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: BẢNG KÝ TÊN ĐIỆN TỬ (VẼ TAY HOẶC GÕ CHỮ) -->
+  <div class="modal-backdrop" id="signaturePadModal" style="display: none; z-index: 100005; align-items: center; justify-content: center;">
+    <div class="modal-container" style="max-width: 480px; background: #0f172a; border: 2px solid #38bdf8; box-shadow: 0 10px 40px rgba(0,0,0,0.8);">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div class="modal-title" style="color: #38bdf8; display: flex; align-items: center; gap: 8px;">
+          <svg class="svg-ico ico-md ico-blue" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          <span id="sigModalTitle">KÝ TÊN ĐIỆN TỬ</span>
+        </div>
+        <button class="btn-close-modal" id="btnCloseSigPadModal">&times;</button>
+      </div>
+
+      <div style="padding: 10px 0;">
+        <!-- Tabs: Draw / Type -->
+        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+          <button type="button" id="tabSigDraw" class="btn-refresh-loc is-active" style="flex: 1; justify-content: center; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-xs" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Vẽ Nét Tay</button>
+          <button type="button" id="tabSigType" class="btn-refresh-loc" style="flex: 1; justify-content: center; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-xs" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6" y2="8"></line><line x1="10" y1="8" x2="10" y2="8"></line><line x1="14" y1="8" x2="14" y2="8"></line><line x1="18" y1="8" x2="18" y2="8"></line></svg> Gõ Họ Tên</button>
+        </div>
+
+        <!-- View 1: Draw Pad Canvas -->
+        <div id="sigDrawView" style="display: flex; flex-direction: column; align-items: center;">
+          <div style="font-size: 11px; color: #94a3b8; margin-bottom: 6px; width: 100%;">Dùng chuột hoặc ngón tay để vẽ chữ ký vào khung trắng:</div>
+          <div style="width: 100%; height: 160px; background: #ffffff; border-radius: 8px; border: 2px solid #38bdf8; overflow: hidden; position: relative;">
+            <canvas id="sigCanvas" width="440" height="160" style="touch-action: none; cursor: crosshair; width: 100%; height: 100%;"></canvas>
+          </div>
+          <div style="display: flex; justify-content: flex-end; width: 100%; margin-top: 6px;">
+            <button type="button" id="btnClearSigCanvas" class="btn-refresh-loc" style="font-size: 11px; padding: 4px 10px; color: #f87171; border-color: rgba(239,68,68,0.4); display: inline-flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-xs ico-red" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Xóa Vẽ Lại</button>
+          </div>
+        </div>
+
+        <!-- View 2: Type Text Signature -->
+        <div id="sigTypeView" style="display: none; flex-direction: column;">
+          <label style="font-size: 12px; font-weight: 700; color: #cbd5e1; display: block; margin-bottom: 6px;">Nhập họ và tên để tạo chữ ký số:</label>
+          <input type="text" id="inputSigTypedName" class="input-field" placeholder="Ví dụ: Nguyễn Văn An" style="margin-bottom: 12px;">
+          <div style="background: #ffffff; border-radius: 8px; padding: 15px; text-align: center; border: 2px dashed #38bdf8; min-height: 80px; display: flex; align-items: center; justify-content: center;">
+            <div id="sigTypePreview" style="font-size: 26px; font-family: 'Brush Script MT', cursive, serif; font-weight: bold; color: #1e3a8a;">Chữ ký mẫu</div>
+          </div>
+        </div>
+
+        <!-- Submit Signature Button -->
+        <div style="margin-top: 16px;">
+          <button type="button" id="btnSubmitSignature" class="btn-submit-sos" style="margin: 0; justify-content: center; background: linear-gradient(135deg, #10b981, #059669); font-size: 13px; width: 100%; display: inline-flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-md ico-white" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> XÁC NHẬN KÝ TÊN VÀ ĐỒNG BỘ LÊN VĂN BẢN
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: XÁC NHẬN HOÀN TẤT & TRỞ VỀ MÀN HÌNH CHÍNH -->
+  <div class="modal-backdrop" id="incidentResolvedPromptModal" style="display: none; z-index: 100002; align-items: center; justify-content: center;">
+    <div class="modal-container" style="max-width: 480px; text-align: center; border: 2px solid #10b981; box-shadow: 0 0 50px rgba(16, 185, 129, 0.35); background: #0f172a;">
+      <div style="margin-bottom: 10px;"><svg class="svg-ico ico-2xl ico-emerald" style="width: 48px; height: 48px;" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+      <div style="font-size: 18px; font-weight: 800; color: #34d399; margin-bottom: 8px;">
+        CA CỨU HỘ ĐÃ ĐƯỢC XỬ LÝ HOÀN TẤT!
+      </div>
+      <div style="font-size: 13px; color: #cbd5e1; line-height: 1.5; margin-bottom: 20px;">
+        Lực lượng trực ban và đội ứng cứu đã xử lý an toàn hiện trường. Bạn muốn quay lại trang chủ hay ở lại để theo dõi và lưu phiếu tiếp nhận?
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button type="button" id="btnConfirmResolvedGoHome" class="btn-submit-sos" style="margin: 0; justify-content: center; background: linear-gradient(135deg, #10b981, #059669); font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+          <svg class="svg-ico ico-md ico-white" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> XÁC NHẬN HOÀN TẤT & QUAY VỀ TRANG CHỦ
+        </button>
+        <button type="button" id="btnStayAndReviewReport" class="btn-refresh-loc" style="justify-content: center; font-size: 12px; padding: 10px; border-color: #38bdf8; color: #38bdf8; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+          <svg class="svg-ico ico-sm ico-blue" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> Ở Lại Xem & Ký / Tải Phiếu Tiếp Nhận
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CHI TIẾT DOANH NGHIỆP CỨU HỘ & ĐÁNH GIÁ CHẤT LƯỢNG -->
+  <div class="modal-backdrop" id="enterpriseDetailModal" style="display: none; z-index: 100004; align-items: center; justify-content: center;">
+    <div class="modal-container" style="max-width: 580px; max-height: 90vh; overflow-y: auto; background: #0f172a; border: 2px solid #f97316; border-radius: 20px; padding: 20px; box-shadow: 0 15px 50px rgba(0,0,0,0.9);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 12px;">
+        <div>
+          <div style="font-size: 11px; font-weight: 700; color: #fb923c; text-transform: uppercase;">THÔNG TIN DOANH NGHIỆP CỨU HỘ XE</div>
+          <div id="entModalName" style="font-size: 17px; font-weight: 800; color: #f8fafc; margin-top: 2px;">Tên Doanh Nghiệp</div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+            <span id="entModalStars" style="color: #fbbf24; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 3px;"><svg class="svg-ico ico-xs ico-amber" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 4.95/5</span>
+            <span id="entModalReviewCount" style="color: #94a3b8; font-size: 12px;">(142 đánh giá)</span>
+            <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.4);">ĐÃ XÁC THỰC</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" id="btnCloseEnterpriseModal" style="margin-top: -6px;">&times;</button>
+      </div>
+
+      <!-- Contact and Quick Call Action -->
+      <div style="background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+        <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 6px; line-height: 1.4; display: flex; align-items: center; gap: 4px;">
+          <svg class="svg-ico ico-xs ico-red" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> <b>Địa chỉ xưởng:</b> <span id="entModalAddress">Địa chỉ</span>
+        </div>
+        <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 10px; display: flex; align-items: center; gap: 4px;">
+          <svg class="svg-ico ico-xs ico-emerald" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg> <b>Mức giá tham khảo:</b> <span id="entModalPrice" style="color: #34d399; font-weight: 700;">300.000đ - 1.500.000đ</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <a href="#" id="entModalCallBtn" class="btn-submit-sos" style="margin: 0; justify-content: center; background: linear-gradient(135deg, #f97316, #ea580c); font-size: 13px; text-decoration: none; padding: 10px; display: inline-flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-sm ico-white" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> GỌI TRỰC TIẾP
+          </a>
+          <a href="#" target="_blank" rel="noopener" id="entModalGmapsBtn" class="btn-refresh-loc" style="justify-content: center; background: rgba(66, 133, 244, 0.15); border-color: #4285f4; color: #93c5fd; font-weight: 700; text-decoration: none; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">
+            <svg class="svg-ico ico-sm" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg> Chỉ Đường Google Maps
+          </a>
+        </div>
+      </div>
+
+      <!-- Services List -->
+      <div style="margin-bottom: 16px;">
+        <div style="font-size: 12px; font-weight: 700; color: #fb923c; text-transform: uppercase; margin-bottom: 6px;">Các Dịch Vụ Cung Cấp:</div>
+        <div id="entModalServicesList" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+      </div>
+
+      <!-- Customer Reviews Section -->
+      <div style="border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 14px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <div style="font-size: 13px; font-weight: 700; color: #f8fafc;">Đánh Giá Từ Khách Hàng</div>
+          <button type="button" id="btnToggleReviewForm" class="btn-refresh-loc" style="font-size: 11px; padding: 3px 8px; color: #fb923c; border-color: #f97316; display: inline-flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-xs" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Viết Đánh Giá</button>
+        </div>
+
+        <!-- Add Review Form -->
+        <div id="entAddReviewForm" style="display: none; background: rgba(0,0,0,0.3); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 10px; padding: 12px; margin-bottom: 12px;">
+          <div style="font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">Đánh giá của bạn:</div>
+          <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+            <select id="inputReviewStars" class="input-field" style="width: 140px; padding: 6px;">
+              <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+              <option value="4">⭐⭐⭐⭐ (4/5)</option>
+              <option value="3">⭐⭐⭐ (3/5)</option>
+              <option value="2">⭐⭐ (2/5)</option>
+              <option value="1">⭐ (1/5)</option>
+            </select>
+            <input type="text" id="inputReviewAuthor" class="input-field" placeholder="Họ và tên của bạn" style="flex: 1; padding: 6px;">
+          </div>
+          <textarea id="inputReviewComment" class="textarea-field" rows="2" placeholder="Nhận xét về thái độ, thời gian đến, giá cả dịch vụ..." style="margin-bottom: 8px; font-size: 12px;"></textarea>
+          <button type="button" id="btnSubmitReview" class="btn-refresh-loc" style="width: 100%; justify-content: center; background: #f97316; color: white; font-weight: 700; font-size: 11px; padding: 6px;">GỬI ĐÁNH GIÁ</button>
+        </div>
+
+        <!-- Reviews List Container -->
+        <div id="entModalReviewsContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow-y: auto;"></div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <button type="button" id="btnCloseEnterpriseModalBottom" class="btn-refresh-loc" style="padding: 6px 16px; font-size: 12px;">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ĐÁNH GIÁ BỆNH VIỆN / TRẠM CẤP CỨU -->
+  <div class="modal-backdrop" id="hospitalReviewModal" style="display: none; z-index: 100005; align-items: center; justify-content: center;">
+    <div class="modal-container" style="max-width: 480px; max-height: 85vh; overflow-y: auto; background: #0f172a; border: 2px solid #10b981; border-radius: 20px; padding: 20px; box-shadow: 0 15px 50px rgba(0,0,0,0.9);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 12px;">
+        <div>
+          <div style="font-size: 11px; font-weight: 700; color: #34d399; text-transform: uppercase;">ĐÁNH GIÁ BỆNH VIỆN</div>
+          <div id="hospReviewName" style="font-size: 15px; font-weight: 800; color: #f8fafc; margin-top: 2px;">Tên Bệnh Viện</div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+            <span id="hospReviewStarsDisplay" style="color: #fbbf24; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 3px;"><svg class="svg-ico ico-xs ico-amber" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 4.5/5</span>
+            <span id="hospReviewCount" style="color: #94a3b8; font-size: 12px;">(0 đánh giá)</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" id="btnCloseHospReviewModal" style="margin-top: -6px;">&times;</button>
+      </div>
+
+      <!-- Existing Reviews -->
+      <div id="hospReviewsContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; margin-bottom: 14px;"></div>
+
+      <!-- Add Review Form -->
+      <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 12px;">
+        <div style="font-size: 12px; font-weight: 700; color: #34d399; margin-bottom: 8px; display: flex; align-items: center; gap: 4px;"><svg class="svg-ico ico-xs" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Viết đánh giá của bạn:</div>
+        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+          <select id="hospInputStars" class="input-field" style="width: 140px; padding: 6px;">
+            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+            <option value="4">⭐⭐⭐⭐ (4/5)</option>
+            <option value="3">⭐⭐⭐ (3/5)</option>
+            <option value="2">⭐⭐ (2/5)</option>
+            <option value="1">⭐ (1/5)</option>
+          </select>
+          <input type="text" id="hospInputAuthor" class="input-field" placeholder="Họ và tên" style="flex: 1; padding: 6px;">
+        </div>
+        <textarea id="hospInputComment" class="textarea-field" rows="2" placeholder="Nhận xét về bác sĩ, thời gian cấp cứu, thái độ phục vụ..." style="margin-bottom: 8px; font-size: 12px;"></textarea>
+        <button type="button" id="btnSubmitHospReview" class="btn-refresh-loc" style="width: 100%; justify-content: center; background: #10b981; color: white; font-weight: 700; font-size: 11px; padding: 6px;">GỬI ĐÁNH GIÁ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tạo Lối Tắt Màn Hình (Install Shortcut Modal - Android, iPhone, iPad, PC/Laptop) -->
+  <div class="modal-backdrop" id="installShortcutModal">
+    <div class="modal-container liquid-glass install-modal-container">
+      <div class="modal-header">
+        <div class="modal-title" style="color: #34d399;">
+          <svg class="svg-ico ico-lg ico-emerald" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><path d="M12 7v6m-3-3l3 3 3-3"></path><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+          TẠO LỐI TẮT MÀN HÌNH CHÍNH
+        </div>
+        <button type="button" class="btn-close-modal" id="btnCloseInstallModal" aria-label="Đóng">&times;</button>
+      </div>
+
+      <div class="install-modal-intro">
+        Ghim ứng dụng SOS Việt Nam ra Màn hình chính của điện thoại hoặc máy tính để <strong>mở khẩn cấp trong 1 chạm</strong> khi gặp nguy hiểm, không cần mở trình duyệt và gõ địa chỉ web!
+      </div>
+
+      <!-- Official Shortcut Emblem Display -->
+      <div style="display: flex; align-items: center; gap: 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 16px; padding: 12px 16px; margin-bottom: 14px; backdrop-filter: blur(10px);">
+        <img src="/assets/icons/logo-police-round-192.png" alt="Biểu tượng Lối tắt SOS Việt Nam" style="width: 54px; height: 54px; border-radius: 50%; box-shadow: 0 4px 16px rgba(0,0,0,0.6); border: 2px solid rgba(245, 158, 11, 0.5); object-fit: contain; flex-shrink: 0; background: #030712;">
+        <div style="flex: 1; text-align: left;">
+          <div style="font-weight: 800; font-size: 13.5px; color: #f8fafc; letter-spacing: 0.3px;">Biểu Tượng Lối Tắt Chính Thức</div>
+        </div>
+      </div>
+
+      <!-- Device Switcher Tabs -->
+      <div class="install-device-tabs">
+        <button type="button" class="install-tab-btn is-active" data-tab="ios" id="tabBtnIos">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.38c.62-.75 1.04-1.8 0.93-2.85-.9.04-1.99.6-2.64 1.35-.58.65-1.09 1.71-.95 2.73 1 .08 2.04-.48 2.66-1.23z"/></svg>
+          iPhone / iPad
+        </button>
+        <button type="button" class="install-tab-btn" data-tab="android" id="tabBtnAndroid">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M17.523 15.341a1 1 0 1 0-1.732 1A9.97 9.97 0 0 0 20 22h2a11.96 11.96 0 0 0-4.477-6.659zM2 22h2a9.97 9.97 0 0 0 4.209-5.659 1 1 0 1 0-1.732-1A11.96 11.96 0 0 0 2 22zm10-18a6 6 0 0 0-6 6v3h12v-3a6 6 0 0 0-6-6zm-3.5 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm7 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM9 1.75a.75.75 0 0 0-1.3-.75l-1.5 2.6a.75.75 0 0 0 1.3.75l1.5-2.6zm6 0a.75.75 0 0 1 1.3-.75l1.5 2.6a.75.75 0 1 1-1.3.75l-1.5-2.6z"/></svg>
+          Android
+        </button>
+        <button type="button" class="install-tab-btn" data-tab="desktop" id="tabBtnDesktop">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          PC / Laptop
+        </button>
+      </div>
+
+      <!-- Tab Content 1: iOS (iPhone / iPad) -->
+      <div class="install-tab-content is-active" id="tabContentIos">
+        <div class="install-native-action-box" id="iosNativeActionBox">
+          <button type="button" class="btn-install-native btn-install-ios-native" id="btnTriggerIosShare">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+            MỞ MENU CHIA SẺ SAFARI (1 CHẠM)
+          </button>
+          <div style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 6px;">Bấm nút để mở ngay menu chia sẻ của Safari, sau đó chỉ cần chạm <strong>"Thêm vào MH chính"</strong></div>
+        </div>
+
+        <div class="install-step-card" style="margin-top: 6px;">
+          <div class="step-num-badge">1</div>
+          <div class="step-desc-wrap">
+            <div class="step-title">Nhấn nút Chia sẻ (Share)</div>
+            <div class="step-sub">Trên trình duyệt Safari, bấm vào biểu tượng hình vuông có mũi tên trỏ lên <span class="ios-share-badge"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> Chia sẻ</span> ở thanh công cụ dưới màn hình.</div>
+          </div>
+        </div>
+
+        <div class="install-step-card">
+          <div class="step-num-badge">2</div>
+          <div class="step-desc-wrap">
+            <div class="step-title">Chọn "Thêm vào MH chính"</div>
+            <div class="step-sub">Cuộn menu bảng chia sẻ xuống dưới và nhấn chọn mục <strong>"Thêm vào MH chính"</strong> (hoặc <em>"Add to Home Screen ⊞"</em>).</div>
+          </div>
+        </div>
+
+        <div class="install-step-card">
+          <div class="step-num-badge">3</div>
+          <div class="step-desc-wrap">
+            <div class="step-title">Xác nhận "Thêm"</div>
+            <div class="step-sub">Nhấn nút <strong>"Thêm" (Add)</strong> ở góc trên bên phải màn hình. Biểu tượng SOS Việt Nam sẽ xuất hiện ngay ngoài màn hình chính của iPhone/iPad.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: Android -->
+      <div class="install-tab-content" id="tabContentAndroid">
+        <div class="install-native-action-box" id="androidNativeActionBox">
+          <button type="button" class="btn-install-native" id="btnTriggerNativeInstall">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg>
+            CÀI ĐẶT ỨNG DỤNG NGAY (1 CHẠM)
+          </button>
+          <div style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 6px;">Bấm nút trên để mở hộp thoại cài đặt trực tiếp của hệ điều hành Android</div>
+        </div>
+
+        <div class="install-step-card" style="margin-top: 6px;">
+          <div class="step-num-badge">1</div>
+          <div class="step-desc-wrap">
+            <div class="step-title">Cách thủ công trên Chrome / Samsung Internet</div>
+            <div class="step-sub">Nhấn vào biểu tượng <strong>Menu 3 chấm ⋮</strong> ở góc trên bên phải trình duyệt.</div>
+          </div>
+        </div>
+
+        <div class="install-step-card">
+          <div class="step-num-badge">2</div>
+          <div class="step-desc-wrap">
+            <div class="step-title">Chọn "Cài đặt ứng dụng"</div>
+            <div class="step-sub">Chọn dòng <strong>"Cài đặt ứng dụng"</strong> (hoặc <em>"Thêm vào Màn hình chính" / "Install App"</em>). Ứng dụng sẽ tự động tải icon ra màn hình chính.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 3: PC / Laptop -->
+      <div class="install-tab-content" id="tabContentDesktop">
+        <div class="install-native-action-box" id="desktopNativeActionBox">
+          <button type="button" class="btn-install-native btn-install-desktop-native" id="btnTriggerDesktopInstall">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><polyline points="9 10 12 13 15 10"></polyline><line x1="12" y1="6" x2="12" y2="13"></line></svg>
+            CÀI ỨNG DỤNG LỐI TẮT MÀN HÌNH CHÍNH (1 CLICK)
+          </button>
+          <div id="desktopInstallTipText" style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 6px;">Bấm nút để mở hộp thoại cài đặt ứng dụng Desktop ngay lập tức hoặc tải lối tắt Desktop</div>
+        </div>
+
+        <div class="install-step-card" style="margin-top: 6px;">
+          <div class="step-num-badge">1</div>
+          <div class="step-desc-wrap">
+            <div class="step-title">Cài đặt PWA trên Google Chrome / Microsoft Edge</div>
+            <div class="step-sub">Nhìn lên góc phải thanh địa chỉ trình duyệt, bấm vào biểu tượng <strong>Cài đặt [ ⊕ ]</strong> hoặc biểu tượng máy tính có mũi tên tải xuống.</div>
+          </div>
+        </div>
+
+        <div class="install-step-card">
+          <div class="step-num-badge">2</div>
+          <div class="step-desc-wrap">
+            <div class="step-title">Chạy độc lập như phần mềm Desktop</div>
+            <div class="step-sub">Ứng dụng sẽ mở trong cửa sổ riêng không viền URL, tự tạo lối tắt trên Desktop và thanh Taskbar Windows / Dock macOS.</div>
+          </div>
+        </div>
+
+        <div class="install-step-card">
+          <div class="step-num-badge">3</div>
+          <div class="step-desc-wrap">
+            <div class="step-title">Lưu Bookmark phím tắt</div>
+            <div class="step-sub">Nhấn tổ hợp phím <strong>Ctrl + D</strong> (Windows) hoặc <strong>Cmd + D</strong> (Mac) để lưu trang khẩn cấp vào thanh dấu trang luôn sẵn sàng!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer-action" style="margin-top: 16px;">
+        <button type="button" class="btn-refresh-loc" id="btnDismissInstallModal" style="width: 100%; justify-content: center; font-size: 13px; font-weight: 700; padding: 10px; border-radius: 9999px;">
+          Đã Hiểu, Đóng Hướng Dẫn
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Beacon Guidance for iOS Safari Share Button -->
+  <div id="iosSafariShareBeacon" class="ios-safari-beacon" style="display: none;" aria-hidden="true">
+    <div class="ios-beacon-content">
+      <div class="ios-beacon-text">
+        <span class="ios-beacon-badge">1 Chạm</span>
+        <span>Nhấn biểu tượng <strong>Chia sẻ [↑]</strong> ở dưới rồi chọn <strong>"Thêm vào MH chính"</strong></span>
+      </div>
+      <button type="button" class="ios-beacon-close" id="btnCloseIosBeacon" aria-label="Đóng hướng dẫn">✕</button>
+    </div>
+    <div class="ios-beacon-pointer">
+      <div class="ios-beacon-pulse"></div>
+      <div class="ios-beacon-arrow">▼</div>
+    </div>
+  </div>
+
+  <!-- Audio Alert Chimes -->
+  <audio id="sfxSiren" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3"></audio>
+  <audio id="sfxIncomingCall" preload="auto" loop src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+
+  <!-- Scripts -->
+  <script src="/js/vector-icons.js"></script>
+  <script src="/vendor/maplibre-gl.js"></script>
+  <script src="/assets/vendor/lame.min.js"></script>
+  <script src="/js/call-audio-recorder.js"></script>
+  <script src="/js/ios-bubble-ambient.js"></script>
+  <script src="/js/connection-aware-background.js?v=20260914_1"></script>
+  <script src="/js/tactical-layout.js?v=20260904_2"></script>
+
+  <script type="module" src="/js/app.js?v=20260907_call_ring"></script>
+  <script>
+    // Register PWA Service Worker for Home Screen Installability
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => {
+          console.warn('PWA ServiceWorker non-blocking error:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
