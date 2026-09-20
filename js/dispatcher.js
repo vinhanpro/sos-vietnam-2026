@@ -7951,6 +7951,9 @@ class DispatcherApp {
         : ['Đà Nẵng', 'Hải Phòng', 'Huế', 'Cần Thơ', 'Đồng Nai'].includes(provName) ? `Thành phố ${provName}`
         : ['TP. Hồ Chí Minh'].includes(provName) ? provName : `Tỉnh ${provName}`);
     if (provEl) provEl.textContent = `(${provFormatted})`;
+    if (this.mapController && typeof this.mapController.showWardStationPin === 'function') {
+      this.mapController.showWardStationPin(boundaryFeature, overrideStation);
+    }
     if (sapNhapEl) sapNhapEl.textContent = props.sapNhapTu || `${props.ward} (giữ nguyên)`;
     if (adminCenterEl) adminCenterEl.textContent = props.trungTamHanhChinh || props.address || `UBND ${props.ward}`;
     if (dienTichEl) dienTichEl.textContent = props.dienTich || '45,86 (km²)';

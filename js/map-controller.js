@@ -653,10 +653,10 @@ export class MapController {
     // Lookup station from memory
     let station = overrideStation;
     if (!station && Array.isArray(this.stationsData)) {
-      const cleanW = wardName.toLowerCase().replace(/^(phường|xã|thị trấn)s+/i, '').trim();
+      const cleanW = wardName.toLowerCase().replace(/^(phường|xã|thị trấn)\s+/i, '').trim();
       station = this.stationsData.find(s => {
         if (!s || s.id === 'st-admin' || s.level === 'national') return false;
-        const sW = (s.ward || s.name || '').toLowerCase().replace(/^(phường|xã|thị trấn|công an phường|công an xã)s+/i, '').trim();
+        const sW = (s.ward || s.name || '').toLowerCase().replace(/^(phường|xã|thị trấn|công an phường|công an xã)\s+/i, '').trim();
         const sProv = (s.province || '').toLowerCase();
         const matchProv = !provName || sProv.includes(provName.toLowerCase()) || provName.toLowerCase().includes(sProv);
         return matchProv && (sW === cleanW || sW.includes(cleanW) || cleanW.includes(sW));
@@ -1120,8 +1120,17 @@ export class MapController {
     let stationsToRender = allStations.filter(s => {
       // Bỏ qua trạm chưa có toạ độ hoặc trung tâm chỉ huy quốc gia (để chọn sau)
       if (!s.lat || !s.lng || s.id === 'st-admin' || s.level === 'national') return false;
+
+      // KHÔNG vẽ trước các trạm cấp Xã / Phường (tránh đơ lag và rối bản đồ)
+      // Các trạm Xã / Phường sẽ xuất hiện khi trực ban click vào ô lưới xã/phường đó!
+      const nameLower = (s.name || '').toLowerCase();
+      const isWardLevel = s.level === 'ward' || s.level === 'commune' || s.type === 'ward' || s.type === 'commune' ||
+        nameLower.startsWith('công an xã') || nameLower.startsWith('công an phường') || nameLower.startsWith('công an thị trấn');
+      if (isWardLevel) return false;
+
+      // Đối với các trụ sở cấp Tỉnh / Thành phố hoặc các lực lượng chuyên trách (PCCC, Bệnh viện, CSGT, Cứu hộ):
       if (isAdmin || isAll) return true;
-      const matchProv = s.level === 'national' || s.id === 'st-admin' || (s.name && s.name.includes('Quốc Gia')) ||
+      const matchProv = s.level === 'province' || (s.name && s.name.includes('Quốc Gia')) ||
         (s.province || '').toLowerCase().includes(filterRegion.toLowerCase());
       if (!matchProv) return false;
       if (agency && agency !== 'all' && s.level !== 'national' && s.id !== 'st-admin') {
@@ -1365,6 +1374,9 @@ export class MapController {
       }
 
       this.currentWardBoundary = featureData;
+      if (options.showPin !== false) {
+        this.showWardStationPin(featureData);
+      }
 
       if (this.map.getSource(sourceId)) {
         this.map.getSource(sourceId).setData(featureData);
@@ -1466,6 +1478,7 @@ export class MapController {
 
   clearWardBoundary() {
     this.currentWardBoundary = null;
+    this.clearActiveWardPin();
     if (!this.map) return;
     const sourceId = 'ward-boundary-source';
     if (this.map.getSource(sourceId)) {
