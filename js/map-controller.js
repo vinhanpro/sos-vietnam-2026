@@ -635,8 +635,13 @@ export class MapController {
     } else if (wardFeature.geometry) {
       const geom = wardFeature.geometry;
       let allCoords = [];
-      if (geom.type === 'Polygon') allCoords = geom.coordinates[0] || [];
-      else if (geom.type === 'MultiPolygon') allCoords = (geom.coordinates[0] && geom.coordinates[0][0]) || [];
+      if (geom.type === 'Polygon') {
+        allCoords = geom.coordinates[0] || [];
+      } else if (geom.type === 'MultiPolygon') {
+        (geom.coordinates || []).forEach(poly => {
+          if (poly && poly[0]) allCoords.push(...poly[0]);
+        });
+      }
       if (allCoords.length > 0) {
         const sumLng = allCoords.reduce((acc, c) => acc + c[0], 0);
         const sumLat = allCoords.reduce((acc, c) => acc + c[1], 0);
@@ -673,8 +678,8 @@ export class MapController {
     const el = document.createElement('div');
     el.className = 'custom-map-pin congan-station-pin permanent-station neon-selected active-ward-reveal-pin';
     el.innerHTML = `
-      <div class="congan-pin-emblem-wrap" style="filter: drop-shadow(0 0 10px #facc15);">
-        <img src="/assets/iconcongan.png" class="congan-pin-emblem" alt="Huy hiệu CAND" />
+      <div class="congan-pin-emblem-wrap" style="width: 40px !important; height: 40px !important; max-width: 40px !important; max-height: 40px !important; overflow: hidden !important; border-radius: 50% !important; flex-shrink: 0 !important; filter: drop-shadow(0 0 10px #facc15);">
+        <img src="/assets/iconcongan.png" width="32" height="32" class="congan-pin-emblem" style="width: 32px !important; height: 32px !important; max-width: 32px !important; max-height: 32px !important; object-fit: contain !important; display: block !important;" alt="Huy hiệu CAND" />
       </div>
       <div class="congan-pin-label" style="background: rgba(15, 23, 42, 0.95); border: 1.5px solid #facc15; color: #fef08a; font-weight: 800; font-size: 11.5px; box-shadow: 0 4px 14px rgba(0,0,0,0.8);">
         ${displayName}
@@ -934,8 +939,8 @@ export class MapController {
     if (isPolice) {
       el.className = 'custom-map-pin congan-station-pin permanent-station' + (isNational ? ' pin-national-hq' : '');
       el.innerHTML = `
-        <div class="congan-pin-emblem-wrap ${isNational ? 'pin-national-hq' : ''}">
-          <img src="/assets/iconcongan.png" class="congan-pin-emblem" alt="Huy hiệu CAND" />
+        <div class="congan-pin-emblem-wrap ${isNational ? 'pin-national-hq' : ''}" style="width: 40px !important; height: 40px !important; max-width: 40px !important; max-height: 40px !important; overflow: hidden !important; border-radius: 50% !important; flex-shrink: 0 !important;">
+          <img src="/assets/iconcongan.png" width="32" height="32" class="congan-pin-emblem" style="width: 32px !important; height: 32px !important; max-width: 32px !important; max-height: 32px !important; object-fit: contain !important; display: block !important;" alt="Huy hiệu CAND" />
         </div>
         <div class="congan-pin-label">${isNational ? '★ ' : ''}${st.name}</div>
       `;
@@ -1219,6 +1224,25 @@ export class MapController {
       const data = await res.json();
       if (!data.ok || !data.boundaries) return;
 
+      // Store complete nationwide GeoJSON and build fast lookup indices
+      this.allWardsData = data.boundaries;
+      this.wardsById = new Map();
+      this.wardsByProvWard = new Map();
+      if (Array.isArray(data.boundaries.features)) {
+        data.boundaries.features.forEach(f => {
+          const p = f.properties || {};
+          if (p.id) this.wardsById.set(String(p.id).toLowerCase().trim(), f);
+          if (f.id) this.wardsById.set(String(f.id).toLowerCase().trim(), f);
+          if (p.ward && p.province) {
+            const cleanP = p.province.trim().toLowerCase();
+            const rawW = p.ward.trim().toLowerCase();
+            const cleanW = rawW.replace(/^(phường|xã|thị trấn)\s+/i, '').trim();
+            this.wardsByProvWard.set(`${cleanP}___${rawW}`, f);
+            this.wardsByProvWard.set(`${cleanP}___${cleanW}`, f);
+          }
+        });
+      }
+
       const sourceId = 'vn-all-wards-source';
       const fillLayerId = 'vn-all-wards-fill';
       const lineLayerId = 'vn-all-wards-line';
@@ -1315,9 +1339,25 @@ export class MapController {
 
         this.map.on('click', fillLayerId, (e) => {
           if (e.features && e.features[0]) {
-            const feature = e.features[0];
-            this.highlightWardBoundary(feature);
-            if (onWardClick) onWardClick(feature);
+            const clicked = e.features[0];
+            const p = clicked.properties || {};
+
+            // CRITICAL: Look up the original unclipped GeoJSON feature so we never get a sliced vector tile!
+            let fullFeature = null;
+            if (p.id) {
+              fullFeature = this.wardsById?.get(String(p.id).toLowerCase().trim());
+            }
+            if (!fullFeature && p.province && p.ward) {
+              const cleanP = p.province.trim().toLowerCase();
+              const rawW = p.ward.trim().toLowerCase();
+              const cleanW = rawW.replace(/^(phường|xã|thị trấn)\s+/i, '').trim();
+              fullFeature = this.wardsByProvWard?.get(`${cleanP}___${rawW}`) ||
+                            this.wardsByProvWard?.get(`${cleanP}___${cleanW}`);
+            }
+
+            const targetFeature = fullFeature || clicked;
+            this.highlightWardBoundary(targetFeature);
+            if (onWardClick) onWardClick(targetFeature);
           }
         });
       };
@@ -1371,6 +1411,29 @@ export class MapController {
           properties: boundaryGeoJSON.properties || {},
           geometry: boundaryGeoJSON
         };
+      }
+
+      // Check if feature can be resolved to full unclipped geometry from cache
+      if (featureData && featureData.properties) {
+        const p = featureData.properties;
+        let original = null;
+        if (p.id) {
+          original = this.wardsById?.get(String(p.id).toLowerCase().trim());
+        }
+        if (!original && p.province && p.ward) {
+          const cleanP = p.province.trim().toLowerCase();
+          const rawW = p.ward.trim().toLowerCase();
+          const cleanW = rawW.replace(/^(phường|xã|thị trấn)\s+/i, '').trim();
+          original = this.wardsByProvWard?.get(`${cleanP}___${rawW}`) ||
+                     this.wardsByProvWard?.get(`${cleanP}___${cleanW}`);
+        }
+        if (original && original.geometry) {
+          featureData = {
+            type: 'Feature',
+            properties: { ...original.properties, ...(p || {}) },
+            geometry: original.geometry
+          };
+        }
       }
 
       this.currentWardBoundary = featureData;
@@ -1458,7 +1521,9 @@ export class MapController {
             pts.forEach(pt => {
               bounds.extend([pt[0], pt[1]]);
             });
-            this.map.fitBounds(bounds, { padding: { top: 60, bottom: 90, left: 60, right: 380 }, maxZoom: 14.5, duration: 1000 });
+            const isMob = window.innerWidth <= 768;
+            const fitPad = isMob ? { top: 70, bottom: 90, left: 24, right: 24 } : { top: 60, bottom: 90, left: 60, right: 380 };
+            this.map.fitBounds(bounds, { padding: fitPad, maxZoom: 14.5, duration: 1000 });
           } else if (featureData.properties?.center) {
             const c = featureData.properties.center;
             this.map.flyTo({ center: [c[0], c[1]], zoom: 14, duration: 1000 });

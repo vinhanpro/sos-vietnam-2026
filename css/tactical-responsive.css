@@ -2742,3 +2742,86 @@ body.tac-mobile-console[data-tac-view="detail"]:not(.tac-incident-selected) #tac
   height: 100% !important;
   min-height: 0 !important;
 }
+
+/* =====================================================================
+   MOBILE IPHONE & PHONE MAP OPTIMIZATION (CLEAN SINGLE-ROW TOP BAR, FULL MAP)
+   ===================================================================== */
+@media (max-width: 768px) {
+  /* Prevent any image blowout in map pins on mobile WebKit / Safari */
+  .congan-pin-emblem-wrap {
+    width: 36px !important;
+    height: 36px !important;
+    max-width: 36px !important;
+    max-height: 36px !important;
+    overflow: hidden !important;
+    border-radius: 50% !important;
+    flex-shrink: 0 !important;
+  }
+  .congan-pin-emblem {
+    width: 28px !important;
+    height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  /* Single-row smooth swipeable top bar: preserves map vertical space */
+  .tactical-map-top-bar {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding: 4px 8px !important;
+    gap: 6px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    max-height: 42px !important;
+    align-items: center !important;
+  }
+  .tactical-map-top-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .tactical-stripe-left,
+  .tactical-stripe-center {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    flex-shrink: 0 !important;
+    gap: 5px !important;
+    align-items: center !important;
+  }
+
+  .national-banner-pill,
+  .resolved-pill,
+  .top-bar-pill {
+    min-height: 32px !important;
+    height: 32px !important;
+    padding: 3px 9px !important;
+    font-size: 10.5px !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Full vertical height for tactical map area on phones */
+  .dispatcher-map-area {
+    display: flex !important;
+    flex-direction: column !important;
+    height: calc(100% - var(--tac-tabbar-h, 60px)) !important;
+    min-height: 0 !important;
+  }
+  .dispatcher-map-canvas-wrap {
+    flex: 1 1 auto !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    position: relative !important;
+  }
+  #dispatcherMap {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+}
