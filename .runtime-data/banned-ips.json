@@ -1,1 +1,1 @@
-{"format":"sos-encrypted-runtime-v1","version":1,"writtenAt":"2026-09-20T12:58:36.263Z","encryptedBox":{"ciphertext":"ecec","iv":"938c4e7bbee3c61fa046fa12","authTag":"0e3fcd663ffe7462127e9b97794f4391","algo":"aes-256-gcm"}}
+{"format":"sos-encrypted-runtime-v1","version":1,"writtenAt":"2026-09-20T13:10:14.109Z","encryptedBox":{"ciphertext":"0806","iv":"1a7fc9c41caac99f94806fa0","authTag":"92e4d23b44685f01ed5b6fe4606d1599","algo":"aes-256-gcm"}}

@@ -247,22 +247,19 @@
 
 /* =============================================================
    TACTICAL POLICE PINS & NEON CLUSTERS (ICON CONG AN NHAN DAN)
+   - CRITICAL: NO transition on transform (MapLibre handles 60fps frame positioning)
+   - Fixed 40x40 dimension with anchor: center locked to exact coordinates
    ============================================================= */
 .congan-cluster-pin,
 .congan-station-pin {
   cursor: pointer;
   user-select: none;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.2s ease;
-}
-
-.congan-cluster-pin:hover,
-.congan-station-pin:hover {
-  transform: scale(1.15);
-  z-index: 9999;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .congan-pin-emblem-wrap {
@@ -275,10 +272,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
   padding: 3px;
   box-sizing: border-box;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.congan-station-pin:hover .congan-pin-emblem-wrap,
+.congan-cluster-pin:hover .congan-pin-emblem-wrap {
+  transform: scale(1.22);
+  z-index: 999;
 }
 
 .congan-pin-emblem {
@@ -292,8 +297,8 @@
 /* Cluster Count Badge */
 .congan-count-badge {
   position: absolute;
-  top: -8px;
-  right: -10px;
+  top: -7px;
+  right: -9px;
   background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
   border: 1.8px solid #facc15;
   color: #ffffff;
@@ -304,11 +309,15 @@
   border-radius: 12px;
   box-shadow: 0 0 12px rgba(2, 132, 199, 0.9), 0 2px 6px rgba(0,0,0,0.8);
   letter-spacing: -0.2px;
+  pointer-events: none;
 }
 
-/* Tactical Pin Label Underneath */
+/* Tactical Pin Label Underneath (Absolute positioned so it does NOT shift the 40x40 center!) */
 .congan-pin-label {
-  margin-top: 4px;
+  position: absolute;
+  top: 43px;
+  left: 50%;
+  transform: translateX(-50%);
   background: rgba(15, 23, 42, 0.94);
   border: 1px solid rgba(56, 189, 248, 0.4);
   color: #38bdf8;
@@ -320,23 +329,24 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
   pointer-events: none;
   letter-spacing: 0.2px;
+  z-index: 10;
 }
 
 /* NEON GLOW SELECTION EFFECT (HIEU UNG CHON SANG NEON RUC RO) */
 @keyframes conganNeonAura {
   0% {
     box-shadow: 0 0 15px #00f0ff, 0 0 30px #0099ff, 0 0 45px rgba(0, 240, 255, 0.8), 0 0 0 3px #00f0ff;
-    transform: scale(1.12);
+    transform: scale(1.15);
     filter: drop-shadow(0 0 10px #00f0ff);
   }
   50% {
     box-shadow: 0 0 30px #00f0ff, 0 0 60px #00a8ff, 0 0 95px rgba(0, 240, 255, 1), 0 0 130px rgba(0, 168, 255, 0.7), 0 0 0 5px #facc15;
-    transform: scale(1.25);
+    transform: scale(1.28);
     filter: drop-shadow(0 0 22px #facc15);
   }
   100% {
     box-shadow: 0 0 15px #00f0ff, 0 0 30px #0099ff, 0 0 45px rgba(0, 240, 255, 0.8), 0 0 0 3px #00f0ff;
-    transform: scale(1.12);
+    transform: scale(1.15);
     filter: drop-shadow(0 0 10px #00f0ff);
   }
 }

@@ -810,7 +810,7 @@ export class MapController {
       this.currentSelectedPinEl = el;
     });
 
-    const marker = new window.maplibregl.Marker({ element: el })
+    const marker = new window.maplibregl.Marker({ element: el, anchor: 'center' })
       .setLngLat([cluster.lng, cluster.lat])
       .setPopup(popup)
       .addTo(this.map);
@@ -862,8 +862,10 @@ export class MapController {
       this.currentSelectedPinEl = el;
     });
 
-    const marker = new window.maplibregl.Marker({ element: el })
-      .setLngLat([st.lng, st.lat])
+    const exactLng = Number(st.lng || st.stationLng);
+    const exactLat = Number(st.lat || st.stationLat);
+    const marker = new window.maplibregl.Marker({ element: el, anchor: 'center' })
+      .setLngLat([exactLng, exactLat])
       .setPopup(popup)
       .addTo(this.map);
 
@@ -890,7 +892,8 @@ export class MapController {
       st.lng >= west && st.lng <= east && st.lat >= south && st.lat <= north
     );
 
-    if (zoom >= 13) {
+    // When zoom >= 9.2 (viewing a province, city, or district), show all stations at their exact real coordinates!
+    if (zoom >= 9.2) {
       visible.forEach(st => this.renderSingleStationPin(st));
       return;
     }

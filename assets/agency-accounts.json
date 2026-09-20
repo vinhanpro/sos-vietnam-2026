@@ -3,8 +3,8 @@
     "username": "admin",
     "initialPassword": "2002",
     "passwordHash": {
-      "hash": "4f1320cafcbb77d5d9db72bc17bdb0d5af0df5bca7822aea7fa94418f2caec0e716429bd2298ede1fd2644ee17baf3439013a9a8b4cf13abc6af77c28bf9d891",
-      "salt": "d04422a03485b1c99444c004516d3830",
+      "hash": "48bc38a9755b9e2416bb2c0e4abd946461a89c1906b01843b1f28a6eef738aab0c47c172d28d3ef3dfa4e4dca04c0b395310e933da62ebc579e157d47ec6925e",
+      "salt": "493525bb440bd64593b1ed350656fde5",
       "iterations": 100000,
       "digest": "sha512"
     },
