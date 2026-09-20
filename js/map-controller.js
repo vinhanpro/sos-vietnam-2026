@@ -802,12 +802,33 @@ export class MapController {
       }
     });
 
-    el.addEventListener('click', () => {
+        el.addEventListener('click', async () => {
       if (this.currentSelectedPinEl) {
         this.currentSelectedPinEl.classList.remove('neon-selected');
       }
       el.classList.add('neon-selected');
       this.currentSelectedPinEl = el;
+
+      // Tự động khoanh vùng tô tím địa bàn phường xã của Công an khu vực khi được chọn
+      try {
+        const queryParams = new URLSearchParams({
+          lat: exactLat,
+          lng: exactLng,
+          ward: st.ward || '',
+          province: st.province || '',
+          address: st.address || st.name || ''
+        });
+        const res = await fetch('/api/geo/locate-ward?' + queryParams.toString());
+        const data = await res.json();
+        if (data.ok && data.boundary) {
+          this.highlightWardBoundary(data.boundary, { fitBounds: false });
+          if (window.dispatcherApp && typeof window.dispatcherApp.showWardHud === 'function') {
+            window.dispatcherApp.showWardHud(data.boundary);
+          }
+        }
+      } catch (e) {
+        console.warn('Could not highlight station ward boundary on click:', e);
+      }
     });
 
     const marker = new window.maplibregl.Marker({ element: el, anchor: 'center' })
@@ -1326,4 +1347,5 @@ export class MapController {
     });
   }
 }
+
 
