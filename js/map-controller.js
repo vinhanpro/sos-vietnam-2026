@@ -610,10 +610,19 @@ export class MapController {
   }
 
   clearStationMarkers() {
+    if (this._clusterMoveHandler && this.map) {
+      this.map.off('moveend', this._clusterMoveHandler);
+      this.map.off('zoomend', this._clusterMoveHandler);
+      this._clusterMoveHandler = null;
+    }
     if (this.stationMarkers && Array.isArray(this.stationMarkers)) {
       this.stationMarkers.forEach(m => m.remove());
     }
     this.stationMarkers = [];
+    if (this.currentSelectedPinEl) {
+      this.currentSelectedPinEl.classList.remove('neon-selected');
+      this.currentSelectedPinEl = null;
+    }
   }
 
   removeClusteredStationsLayers() {
@@ -650,146 +659,308 @@ export class MapController {
     return [];
   }
 
+  zoomToCoordinates(lng, lat, targetZoom = null) {
+    if (!this.map) return;
+    const currentZ = this.map.getZoom();
+    const nextZ = targetZoom || Math.min(currentZ + 2.5, 14.5);
+    this.map.flyTo({
+      center: [lng, lat],
+      zoom: nextZ,
+      essential: true,
+      duration: 750
+    });
+  }
+
+  createPoliceStationPopupHtml(st) {
+    const isNational = st.level === 'national' || st.id === 'st-admin' || (st.name && st.name.toLowerCase().includes('quốc gia'));
+    const isPolice = st.agency === 'police' || isNational;
+    const emblemHtml = isPolice
+      ? `<img src="/assets/iconcongan.png" style="width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.8)); margin-right: 10px; flex-shrink: 0;" />`
+      : `<div style="font-size: 32px; margin-right: 10px; flex-shrink: 0;">${st.agency === 'hospital' ? '🏥' : '🚒'}</div>`;
+
+    const badgeText = isNational ? 'CƠ QUAN CHỈ HUY QUỐC GIA' : (isPolice ? 'CÔNG AN NHÂN DÂN VIỆT NAM' : (st.agency === 'hospital' ? 'CẤP CỨU Y TẾ 115' : 'PCCC & CNCH 114'));
+    const badgeColor = isPolice ? '#38bdf8' : (st.agency === 'hospital' ? '#34d399' : '#fb923c');
+    const badgeBorder = isPolice ? 'rgba(56, 189, 248, 0.4)' : (st.agency === 'hospital' ? 'rgba(52, 211, 153, 0.4)' : 'rgba(251, 146, 60, 0.4)');
+
+    return `
+      <div class="tactical-police-popup-card" style="font-family: system-ui, -apple-system, sans-serif; background: rgba(15, 23, 42, 0.96); border: 1.5px solid ${badgeBorder}; border-radius: 12px; padding: 14px; color: #f8fafc; min-width: 290px; max-width: 340px; box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(2, 132, 199, 0.4); backdrop-filter: blur(12px);">
+        <div style="display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 10px;">
+          ${emblemHtml}
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 9px; font-weight: 800; letter-spacing: 0.8px; color: ${badgeColor}; text-transform: uppercase; margin-bottom: 2px;">
+              🛡️ ${badgeText}
+            </div>
+            <div style="font-size: 13px; font-weight: 800; color: #ffffff; line-height: 1.35; word-break: break-word;">
+              ${st.name}
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size: 11.5px; line-height: 1.55; color: #cbd5e1; margin-bottom: 12px;">
+          <div style="margin-bottom: 5px; display: flex; align-items: flex-start;">
+            <span style="color: #94a3b8; width: 85px; flex-shrink: 0;">👮‍♂️ Trực ban:</span>
+            <span style="color: #f1f5f9; font-weight: 600;">${st.officerRank || 'Đại úy'} — ${st.officerName || 'Trực ban đơn vị'}</span>
+          </div>
+          <div style="margin-bottom: 5px; display: flex; align-items: flex-start;">
+            <span style="color: #94a3b8; width: 85px; flex-shrink: 0;">📍 Địa chỉ:</span>
+            <span style="color: #e2e8f0;">${st.address}</span>
+          </div>
+          <div style="margin-bottom: 5px; display: flex; align-items: center;">
+            <span style="color: #94a3b8; width: 85px; flex-shrink: 0;">☎️ Hotline 113:</span>
+            <a href="tel:${st.phone}" style="color: #38bdf8; font-weight: 800; font-size: 12.5px; text-decoration: none; background: rgba(2,132,199,0.15); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(56,189,248,0.3);">
+              📞 ${st.phone}
+            </a>
+          </div>
+          <div style="display: flex; align-items: center;">
+            <span style="color: #94a3b8; width: 85px; flex-shrink: 0;">📡 Tác chiến:</span>
+            <span style="color: #22c55e; font-weight: 700; font-size: 10.5px;">● Kênh 113 BCA (Trực tuyến 24/7)</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 6px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=driving" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: linear-gradient(135deg, #0284c7, #0369a1); color: white; padding: 7px 4px; border-radius: 8px; font-size: 11px; font-weight: 700; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 12px rgba(2,132,199,0.4);" title="Dẫn đường ô tô">
+            🚗 Ô tô
+          </a>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=two_wheeler" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: linear-gradient(135deg, #059669, #047857); color: white; padding: 7px 4px; border-radius: 8px; font-size: 11px; font-weight: 700; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 12px rgba(5,150,105,0.4);" title="Dẫn đường xe máy">
+            🛵 Xe máy
+          </a>
+          <a href="tel:${st.phone}" style="flex: 0.9; text-align: center; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; padding: 7px 4px; border-radius: 8px; font-size: 11px; font-weight: 700; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 12px rgba(220,38,38,0.4);" title="Gọi trực ban">
+            📞 Gọi
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  createPoliceClusterPopupHtml(cluster) {
+    const stationList = cluster.stations || [];
+    const displayStations = stationList.slice(0, 5);
+    const remainingCount = stationList.length - displayStations.length;
+
+    return `
+      <div class="tactical-police-popup-card" style="font-family: system-ui, -apple-system, sans-serif; background: rgba(15, 23, 42, 0.96); border: 1.5px solid rgba(250, 204, 21, 0.6); border-radius: 12px; padding: 14px; color: #f8fafc; min-width: 300px; max-width: 350px; box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 30px rgba(250, 204, 21, 0.35); backdrop-filter: blur(12px);">
+        <div style="display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 10px;">
+          <img src="/assets/iconcongan.png" style="width: 46px; height: 46px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.9)); margin-right: 10px; flex-shrink: 0;" />
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 9px; font-weight: 800; letter-spacing: 0.8px; color: #facc15; text-transform: uppercase; margin-bottom: 2px;">
+              🛡️ BỘ CÔNG AN — CỤM LỰC LƯỢNG VŨ TRANG
+            </div>
+            <div style="font-size: 13.5px; font-weight: 800; color: #ffffff; line-height: 1.35;">
+              Cụm Công An (${stationList.length} Đồn Trạm & Trụ Sở)
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; background: rgba(2, 132, 199, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 6px 10px; margin-bottom: 10px; font-size: 11px;">
+          <span style="color: #94a3b8;">Tổng đơn vị: <b style="color: #f8fafc;">${stationList.length} cơ quan</b></span>
+          <span style="color: #22c55e; font-weight: 700;">● Trực chiến 24/7</span>
+        </div>
+
+        <div style="font-size: 10.5px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+          Danh sách đồn trạm trong cụm:
+        </div>
+
+        <div style="max-height: 130px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; padding-right: 4px;">
+          ${displayStations.map(st => `
+            <div style="background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 5px 8px; font-size: 11px;">
+              <div style="font-weight: 700; color: #38bdf8;">👮‍♂️ ${st.name}</div>
+              <div style="display: flex; justify-content: space-between; color: #94a3b8; font-size: 10px; margin-top: 2px;">
+                <span>📍 ${st.ward || st.province || ''}</span>
+                <a href="tel:${st.phone}" style="color: #facc15; text-decoration: none; font-weight: 700;">📞 ${st.phone}</a>
+              </div>
+            </div>
+          `).join('')}
+          ${remainingCount > 0 ? `<div style="text-align: center; color: #94a3b8; font-size: 10px; padding: 4px 0; font-style: italic;">... và ${remainingCount} đồn trạm khác</div>` : ''}
+        </div>
+
+        <button onclick="window.dispatcherApp?.mapController?.zoomToCoordinates(${cluster.lng}, ${cluster.lat})" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: linear-gradient(135deg, #0284c7, #0369a1); color: white; border: 1px solid #38bdf8; border-radius: 8px; padding: 8px 12px; font-size: 11.5px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.5); transition: all 0.2s;">
+          🔍 Thu phóng mở rộng cụm này
+        </button>
+      </div>
+    `;
+  }
+
+  renderClusterPin(cluster) {
+    const el = document.createElement('div');
+    el.className = 'custom-map-pin congan-cluster-pin';
+    el.innerHTML = `
+      <div class="congan-pin-emblem-wrap">
+        <img src="/assets/iconcongan.png" class="congan-pin-emblem" alt="Huy hiệu CAND" />
+        <span class="congan-count-badge">${cluster.count}</span>
+      </div>
+      <div class="congan-pin-label">Công An (${cluster.count} đồn)</div>
+    `;
+
+    const popupContent = this.createPoliceClusterPopupHtml(cluster);
+    const popup = new window.maplibregl.Popup({ offset: 25, closeButton: true })
+      .setHTML(popupContent);
+
+    popup.on('close', () => {
+      if (this.currentSelectedPinEl === el) {
+        el.classList.remove('neon-selected');
+        this.currentSelectedPinEl = null;
+      }
+    });
+
+    el.addEventListener('click', () => {
+      if (this.currentSelectedPinEl) {
+        this.currentSelectedPinEl.classList.remove('neon-selected');
+      }
+      el.classList.add('neon-selected');
+      this.currentSelectedPinEl = el;
+    });
+
+    const marker = new window.maplibregl.Marker({ element: el })
+      .setLngLat([cluster.lng, cluster.lat])
+      .setPopup(popup)
+      .addTo(this.map);
+
+    this.stationMarkers.push(marker);
+  }
+
+  renderSingleStationPin(st) {
+    const isNational = st.level === 'national' || st.id === 'st-admin' || (st.name && st.name.toLowerCase().includes('quốc gia'));
+    const isPolice = st.agency === 'police' || isNational;
+
+    const el = document.createElement('div');
+    if (isPolice) {
+      el.className = 'custom-map-pin congan-station-pin permanent-station' + (isNational ? ' pin-national-hq' : '');
+      el.innerHTML = `
+        <div class="congan-pin-emblem-wrap ${isNational ? 'pin-national-hq' : ''}">
+          <img src="/assets/iconcongan.png" class="congan-pin-emblem" alt="Huy hiệu CAND" />
+        </div>
+        <div class="congan-pin-label">${isNational ? '⭐ ' : ''}${st.name}</div>
+      `;
+    } else {
+      const icon = st.agency === 'hospital' ? '🏥' : '🚒';
+      const colorClass = st.agency === 'hospital' ? 'green' : 'orange';
+      el.className = 'custom-map-pin station-pin permanent-station';
+      el.innerHTML = `
+        <div class="pin-core ${colorClass}">
+          <span>${icon}</span>
+        </div>
+        <div class="pin-tooltip">${st.name}</div>
+      `;
+    }
+
+    const popupContent = this.createPoliceStationPopupHtml(st);
+    const popup = new window.maplibregl.Popup({ offset: 25, closeButton: true })
+      .setHTML(popupContent);
+
+    popup.on('close', () => {
+      if (this.currentSelectedPinEl === el) {
+        el.classList.remove('neon-selected');
+        this.currentSelectedPinEl = null;
+      }
+    });
+
+    el.addEventListener('click', () => {
+      if (this.currentSelectedPinEl) {
+        this.currentSelectedPinEl.classList.remove('neon-selected');
+      }
+      el.classList.add('neon-selected');
+      this.currentSelectedPinEl = el;
+    });
+
+    const marker = new window.maplibregl.Marker({ element: el })
+      .setLngLat([st.lng, st.lat])
+      .setPopup(popup)
+      .addTo(this.map);
+
+    this.stationMarkers.push(marker);
+  }
+
+  updateClusterPins() {
+    if (!this.map || !this.clusterableStations || this.clusterableStations.length === 0) return;
+    
+    // Clear existing markers
+    if (this.stationMarkers && Array.isArray(this.stationMarkers)) {
+      this.stationMarkers.forEach(m => m.remove());
+    }
+    this.stationMarkers = [];
+
+    const zoom = this.map.getZoom();
+    const bounds = this.map.getBounds();
+    const west = bounds.getWest() - 0.5;
+    const east = bounds.getEast() + 0.5;
+    const south = bounds.getSouth() - 0.5;
+    const north = bounds.getNorth() + 0.5;
+
+    const visible = this.clusterableStations.filter(st =>
+      st.lng >= west && st.lng <= east && st.lat >= south && st.lat <= north
+    );
+
+    if (zoom >= 13) {
+      visible.forEach(st => this.renderSingleStationPin(st));
+      return;
+    }
+
+    // Grid clustering by screen pixels (radius 65px)
+    const clusterRadius = 65;
+    const clusters = [];
+    const assigned = new Set();
+
+    for (let i = 0; i < visible.length; i++) {
+      if (assigned.has(i)) continue;
+      const stA = visible[i];
+      const ptA = this.map.project([stA.lng, stA.lat]);
+      const group = [stA];
+      assigned.add(i);
+
+      for (let j = i + 1; j < visible.length; j++) {
+        if (assigned.has(j)) continue;
+        const stB = visible[j];
+        const ptB = this.map.project([stB.lng, stB.lat]);
+        const dx = ptA.x - ptB.x;
+        const dy = ptA.y - ptB.y;
+        if (Math.hypot(dx, dy) <= clusterRadius) {
+          group.push(stB);
+          assigned.add(j);
+        }
+      }
+
+      if (group.length === 1) {
+        clusters.push({ isCluster: false, station: group[0] });
+      } else {
+        const avgLng = group.reduce((sum, s) => sum + s.lng, 0) / group.length;
+        const avgLat = group.reduce((sum, s) => sum + s.lat, 0) / group.length;
+        clusters.push({
+          isCluster: true,
+          lng: avgLng,
+          lat: avgLat,
+          count: group.length,
+          stations: group
+        });
+      }
+    }
+
+    clusters.forEach(item => {
+      if (item.isCluster) {
+        this.renderClusterPin(item);
+      } else {
+        this.renderSingleStationPin(item.station);
+      }
+    });
+  }
+
   renderClusteredStations(stations) {
     if (!this.map) return;
     this.clearStationMarkers();
     this.removeClusteredStationsLayers();
 
-    const geojsonData = {
-      type: 'FeatureCollection',
-      features: stations.map(st => ({
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [st.lng, st.lat] },
-        properties: { ...st }
-      }))
+    this.clusterableStations = stations;
+    this.updateClusterPins();
+
+    let debounceTimer = null;
+    this._clusterMoveHandler = () => {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        this.updateClusterPins();
+      }, 120);
     };
 
-    const sourceId = 'stations-cluster-source';
-    try {
-      this.map.addSource(sourceId, {
-        type: 'geojson',
-        data: geojsonData,
-        cluster: true,
-        clusterMaxZoom: 13,
-        clusterRadius: 45
-      });
-
-      // Layer 1: Cluster Circles (3-tier gradient: blue -> gold -> red)
-      this.map.addLayer({
-        id: 'stations-clusters-layer',
-        type: 'circle',
-        source: sourceId,
-        filter: ['has', 'point_count'],
-        paint: {
-          'circle-color': [
-            'step', ['get', 'point_count'],
-            '#0284c7', 15,
-            '#eab308', 40,
-            '#ef4444'
-          ],
-          'circle-radius': [
-            'step', ['get', 'point_count'],
-            18, 15, 23, 40, 30
-          ],
-          'circle-stroke-width': 3,
-          'circle-stroke-color': '#ffffff',
-          'circle-opacity': 0.92
-        }
-      });
-
-      // Layer 2: Cluster Numbers
-      this.map.addLayer({
-        id: 'stations-cluster-count-layer',
-        type: 'symbol',
-        source: sourceId,
-        filter: ['has', 'point_count'],
-        layout: {
-          'text-field': '{point_count_abbreviated}',
-          'text-size': 13,
-          'text-allow-overlap': true
-        },
-        paint: {
-          'text-color': '#ffffff'
-        }
-      });
-
-      // Layer 3: Unclustered Individual Points (when zoomed in)
-      this.map.addLayer({
-        id: 'stations-unclustered-point-layer',
-        type: 'circle',
-        source: sourceId,
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-          'circle-color': [
-            'match', ['get', 'agency'],
-            'police', '#0066cc',
-            'csgt', '#eab308',
-            'fire', '#ea580c',
-            'hospital', '#16a34a',
-            '#0284c7'
-          ],
-          'circle-radius': 8,
-          'circle-stroke-width': 2.5,
-          'circle-stroke-color': '#ffffff'
-        }
-      });
-
-      // Click cluster to zoom into that region
-      this.map.on('click', 'stations-clusters-layer', (e) => {
-        const features = this.map.queryRenderedFeatures(e.point, { layers: ['stations-clusters-layer'] });
-        if (!features || !features[0]) return;
-        const clusterId = features[0].properties.cluster_id;
-        this.map.getSource(sourceId).getClusterExpansionZoom(clusterId, (err, zoom) => {
-          if (err) return;
-          this.map.easeTo({
-            center: features[0].geometry.coordinates,
-            zoom: Math.min(zoom + 0.8, 16),
-            duration: 600
-          });
-        });
-      });
-
-      // Click individual unclustered point to show popup
-      this.map.on('click', 'stations-unclustered-point-layer', (e) => {
-        if (!e.features || !e.features[0]) return;
-        const st = e.features[0].properties;
-        const coords = e.features[0].geometry.coordinates.slice();
-        const isNational = st.level === 'national' || st.id === 'st-admin';
-        const icon = isNational ? '⭐' : (st.agency === 'police' ? '👮‍♂️' : (st.agency === 'hospital' ? '🏥' : '🚒'));
-        const popupHtml = `
-          <div style="font-family: system-ui, sans-serif; padding: 6px; max-width: 220px; color: #0f172a;">
-            <div style="font-weight: 800; font-size: 12px; color: ${st.agency === 'police' ? '#0066cc' : (st.agency === 'hospital' ? '#059669' : '#d97706')}; margin-bottom: 3px;">
-              ${icon} ${st.name}
-            </div>
-            <div style="font-size: 11px; color: #475569; margin-bottom: 4px; line-height: 1.4;">
-              📍 <b>Địa chỉ:</b> ${st.address}
-            </div>
-            <div style="font-size: 11px; color: #0f172a; margin-bottom: 6px;">
-              ☎️ <b>Trực ban:</b> <a href="tel:${st.phone}" style="color: #0284c7; font-weight: 700; text-decoration: none;">${st.phone}</a>
-            </div>
-            <div style="display: flex; gap: 4px; margin-top: 6px;">
-              <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=driving" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: #0088ff; color: white; padding: 5px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;" title="Dẫn đường ô tô">
-                🚗 Ô tô
-              </a>
-              <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=two_wheeler" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: #059669; color: white; padding: 5px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;" title="Dẫn đường xe máy">
-                🛵 Xe máy
-              </a>
-            </div>
-          </div>
-        `;
-        new window.maplibregl.Popup({ offset: 15, closeButton: false })
-          .setLngLat(coords)
-          .setHTML(popupHtml)
-          .addTo(this.map);
-      });
-
-      this.map.on('mouseenter', 'stations-clusters-layer', () => { this.map.getCanvas().style.cursor = 'pointer'; });
-      this.map.on('mouseleave', 'stations-clusters-layer', () => { this.map.getCanvas().style.cursor = ''; });
-      this.map.on('mouseenter', 'stations-unclustered-point-layer', () => { this.map.getCanvas().style.cursor = 'pointer'; });
-      this.map.on('mouseleave', 'stations-unclustered-point-layer', () => { this.map.getCanvas().style.cursor = ''; });
-    } catch(err) {
-      console.warn('Error adding cluster layer:', err);
-    }
+    this.map.on('moveend', this._clusterMoveHandler);
+    this.map.on('zoomend', this._clusterMoveHandler);
   }
 
   async loadAllStationsMarkers(filterRegion = null, agency = null, isAdmin = false) {
@@ -798,14 +969,14 @@ export class MapController {
     const allStations = await this.getStationsData();
     if (!allStations || allStations.length === 0) return;
 
-    // Cách 2: Clustering gom cụm cho Admin hoặc khi chọn Toàn Quốc
+    // Admin / All: Clustered mode with CAND emblem & glowing count badges
     const isAll = !filterRegion || filterRegion === 'all' || filterRegion === 'Toàn Quốc' || filterRegion === 'Cấp Quốc Gia';
     if (isAdmin || isAll) {
       this.renderClusteredStations(allStations);
       return;
     }
 
-    // Cách 1 & 2: Local Unit Mode (Hà Nội, Cần Thơ, TP.HCM, v.v.)
+    // Local Unit Mode (Cần Thơ, Hà Nội, TP.HCM, v.v.)
     this.removeClusteredStationsLayers();
     this.clearStationMarkers();
 
@@ -821,50 +992,7 @@ export class MapController {
     });
 
     stationsToRender.forEach(st => {
-      const isNational = st.level === 'national' || st.id === 'st-admin' || (st.name && st.name.toLowerCase().includes('quốc gia'));
-      const icon = isNational ? '⭐' : (st.agency === 'police' ? '👮‍♂️' : (st.agency === 'hospital' ? '🏥' : '🚒'));
-      const colorClass = isNational ? 'gold' : (st.agency === 'police' ? 'blue' : (st.agency === 'hospital' ? 'green' : 'orange'));
-
-      const el = document.createElement('div');
-      el.className = 'custom-map-pin station-pin permanent-station' + (isNational ? ' pin-national-hq' : '');
-      el.innerHTML = `
-        <div class="pin-core ${colorClass}" style="${isNational ? 'width: 38px; height: 38px; font-size: 18px; border: 2.5px solid #facc15; box-shadow: 0 0 25px #eab308, 0 8px 20px rgba(0,0,0,0.9); background: radial-gradient(circle at 35% 30%, #fef08a 0%, #b45309 65%, #451a03 100%); animation: pulseHqPin 2.2s infinite ease-in-out;' : 'width: 30px; height: 30px; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.6);'}">
-          <span>${icon}</span>
-        </div>
-        <div class="pin-tooltip" style="font-size: 10px; font-weight: 800; ${isNational ? 'color: #fef08a; border-color: #facc15; background: rgba(15,23,42,0.95);' : ''}">${isNational ? '⭐ ' : ''}${st.name}</div>
-      `;
-
-      const popupContent = `
-        <div style="font-family: system-ui, sans-serif; padding: 6px; max-width: 220px; color: #0f172a;">
-          <div style="font-weight: 800; font-size: 12px; color: ${st.agency === 'police' ? '#0066cc' : (st.agency === 'hospital' ? '#059669' : '#d97706')}; margin-bottom: 3px;">
-            ${icon} ${st.name}
-          </div>
-          <div style="font-size: 11px; color: #475569; margin-bottom: 4px; line-height: 1.4;">
-            📍 <b>Địa chỉ:</b> ${st.address}
-          </div>
-          <div style="font-size: 11px; color: #0f172a; margin-bottom: 6px;">
-            ☎️ <b>Trực ban:</b> <a href="tel:${st.phone}" style="color: #0284c7; font-weight: 700; text-decoration: none;">${st.phone}</a>
-          </div>
-          <div style="display: flex; gap: 4px; margin-top: 6px;">
-            <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=driving" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: #0088ff; color: white; padding: 5px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;" title="Dẫn đường ô tô nhanh nhất">
-              🚗 Ô tô
-            </a>
-            <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=two_wheeler" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: #059669; color: white; padding: 5px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;" title="Dẫn đường xe máy nhanh nhất">
-              🛵 Xe máy
-            </a>
-          </div>
-        </div>
-      `;
-
-      const popup = new window.maplibregl.Popup({ offset: 20, closeButton: false })
-        .setHTML(popupContent);
-
-      const marker = new window.maplibregl.Marker({ element: el })
-        .setLngLat([st.lng, st.lat])
-        .setPopup(popup)
-        .addTo(this.map);
-
-      this.stationMarkers.push(marker);
+      this.renderSingleStationPin(st);
     });
   }
 

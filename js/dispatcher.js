@@ -2060,34 +2060,55 @@ class DispatcherApp {
     }
   }
 
-  exportAccountsExcel() {
+  async exportAccountsExcel() {
     const btn = document.getElementById('btnExportAccountsExcel');
+    const originalHtml = btn ? btn.innerHTML : '';
     if (btn) {
       btn.disabled = true;
-      btn.innerHTML = '⏳ Đang tải xuống...';
+      btn.innerHTML = '⏳ Đang kết nối tải Excel...';
     }
 
     try {
-      // Direct Native Browser Download via Hidden Iframe (Ensures 100% genuine .xlsx extension on Chrome/Edge/Windows)
-      const downloadUrl = `/api/admin/export-accounts-excel?t=${Date.now()}`;
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = downloadUrl;
-      document.body.appendChild(iframe);
+      const token = this.currentOfficer?.token || localStorage.getItem('dispatcher_token') || '';
+      const headers = {
+        'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, */*'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
 
-      setTimeout(() => {
-        if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = '<span>📊</span> Xuất Excel (.xlsx)';
-        }
-      }, 3000);
-    } catch (e) {
-      console.error(e);
-      window.location.href = `/api/admin/export-accounts-excel?t=${Date.now()}`;
+      const downloadUrl = `/api/admin/export-accounts-excel?t=${Date.now()}&token=${encodeURIComponent(token)}`;
+      const res = await fetch(downloadUrl, {
+        method: 'GET',
+        headers
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.error || `Lỗi máy chủ (${res.status})`);
+      }
+
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = blobUrl;
+      a.download = `DanhSach_TaiKhoan_PhanQuyen_DonVi_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(blobUrl);
+      if (a.parentNode) a.parentNode.removeChild(a);
+
+      if (typeof window.showToast === 'function') {
+        window.showToast('✅ Đã tải xuống danh sách tài khoản thành công!');
+      }
+    } catch (err) {
+      console.error('Export accounts error:', err);
+      alert('⚠️ Không thể tải danh sách tài khoản: ' + err.message);
+    } finally {
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<span>📊</span> Xuất Excel (.xlsx)';
+        btn.innerHTML = originalHtml || '<span>📊</span> Xuất Excel (.xlsx)';
       }
     }
   }

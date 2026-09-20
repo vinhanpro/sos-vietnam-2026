@@ -11,6 +11,7 @@ import { securityCryptoService } from './services/security-crypto-service.js';
 import { securityFirewall } from './services/security-firewall-middleware.js';
 import { readRuntimeData, runtimeDataPath, writeRuntimeData } from './services/runtime-data-store.js';
 import { defaultPasswordForAccount } from './services/agency-password-policy.js';
+import { generateAccountsWorkbookBuffer } from './services/accounts-excel-generator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -5949,7 +5950,7 @@ const server = http.createServer(async (req, res) => {
           exportPayload.accounts = Object.values(AGENCY_ACCOUNTS);
         }
 
-        // Đảm bảo từng tài khoản có đầy đủ trường password plaintext phục vụ rà soát
+        // Đảm bảo từng tài khoản có đầy đủ mật khẩu hiển thị
         exportPayload.accounts = exportPayload.accounts.map(acc => ({
           ...acc,
           password: getDisplayPasswordForAccount(acc)
@@ -5958,45 +5959,26 @@ const server = http.createServer(async (req, res) => {
         exportPayload.generatedAt = exportPayload.generatedAt || new Date().toLocaleString('vi-VN');
         exportPayload.officerName = exportPayload.officerName || 'Trung Tâm Chỉ Huy Tác Chiến & Điều Phối Quốc Gia';
 
-        const tempId = Date.now().toString(36);
-        const tempJsonPath = path.join(__dirname, `temp_acc_excel_${tempId}.json`);
-        const tempXlsxPath = path.join(__dirname, `temp_acc_excel_${tempId}.xlsx`);
+        // Pure Node.js high-speed in-memory Excel generator - 100% crash-proof on local & Render
+        const xlsxBuffer = generateAccountsWorkbookBuffer(exportPayload);
+        const filename = `DanhSach_TaiKhoan_PhanQuyen_DonVi_${new Date().toISOString().slice(0, 10)}.xlsx`;
 
-        fs.writeFileSync(tempJsonPath, JSON.stringify(exportPayload, null, 2), 'utf-8');
-
-        // Execute Python script to generate styled Excel document
-        const scriptPath = path.join(__dirname, 'scripts', 'generate_accounts_excel.py');
-        exec(`${PYTHON_CMD} "${scriptPath}" "${tempJsonPath}" "${tempXlsxPath}"`, (error, stdout, stderr) => {
-          if (error || !fs.existsSync(tempXlsxPath)) {
-            console.error('Accounts Excel generation error:', error, stderr);
-            try { fs.unlinkSync(tempJsonPath); } catch(e) {}
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            return res.end(JSON.stringify({ ok: false, error: 'Không thể tạo file Excel danh sách tài khoản' }));
-          }
-
-          const fileData = fs.readFileSync(tempXlsxPath);
-          try {
-            fs.unlinkSync(tempJsonPath);
-            fs.unlinkSync(tempXlsxPath);
-          } catch(e) {}
-
-          const filename = `DanhSach_TaiKhoan_PhanQuyen_DonVi_${new Date().toISOString().slice(0,10)}.xlsx`;
-          res.writeHead(200, {
-            'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition': `attachment; filename="${filename}"`,
-            'Content-Length': fileData.length
-          });
-          return res.end(fileData);
+        res.writeHead(200, {
+          'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'Content-Disposition': `attachment; filename="${filename}"`,
+          'Content-Length': xlsxBuffer.length,
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
         });
+        return res.end(xlsxBuffer);
       } catch (err) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
+        console.error('Accounts Excel export error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ ok: false, error: err.message }));
       }
     });
     return;
   }
 
-  // -------------------------------------------------------------
   // API: Import Agency Accounts from Excel (.xlsx) File
   // -------------------------------------------------------------
   if (urlPath === '/api/admin/import-accounts-excel' && req.method === 'POST') {
