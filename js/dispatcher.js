@@ -2838,19 +2838,39 @@ class DispatcherApp {
     }
 
     try {
-      const res = await fetch('/api/admin/accounts');
+      const headers = this.getAuthHeaders();
+      let token = this.currentOfficer?.token;
+      if (!token) {
+        try {
+          const raw = sessionStorage.getItem('sos_dispatcher_officer') || localStorage.getItem('sos_dispatcher_officer');
+          if (raw) token = JSON.parse(raw)?.token;
+        } catch(e) {}
+      }
+      const qs = token ? `?token=${encodeURIComponent(token)}` : '';
+      const res = await fetch('/api/admin/accounts' + qs, {
+        headers,
+        credentials: 'same-origin'
+      });
       const d = await res.json();
-      if (d.ok && d.accounts && d.accounts.length > 0) {
+      if (d.ok && Array.isArray(d.accounts) && d.accounts.length > 0) {
         this.accountsList = d.accounts;
         this.renderAdminAccountsList();
         return;
+      }
+      if (container) {
+        container.innerHTML = `
+          <div style="text-align: center; color: #fbbf24; padding: 40px;">
+            <div style="font-size: 28px; margin-bottom: 8px;">⚠️</div>
+            <div style="font-weight: 700;">${d.error || 'Cần đăng nhập bằng tài khoản quản trị để xem danh sách tài khoản.'}</div>
+          </div>`;
       }
     } catch (e) {
       console.warn('API /api/admin/accounts fetch failed.', e);
       if (container) {
         container.innerHTML = `
           <div style="text-align: center; color: #fbbf24; padding: 40px;">
-            Cần đăng nhập bằng tài khoản quản trị để xem danh sách tài khoản.
+            <div style="font-size: 28px; margin-bottom: 8px;">⚠️</div>
+            <div style="font-weight: 700;">Cần đăng nhập bằng tài khoản quản trị để xem danh sách tài khoản.</div>
           </div>`;
       }
     }
@@ -12839,13 +12859,27 @@ class DispatcherApp {
     const filter = activeTab ? activeTab.getAttribute('data-filter') : 'all';
     const list = this.getFilteredTerritoryIncidents(filter);
 
-    if (list.length === 0) {
-      alert('Không có dữ liệu ca sự cố nào để xuất file.');
-      return;
-    }
-
     const headers = ['STT', 'Ma SOS', 'Thoi Gian', 'Luc Luong', 'Noi Dung', 'Nguoi Bao', 'SDT', 'Dia Chi', 'Phuong Xa', 'Tinh TP', 'Trang Thai'];
-    const rows = list.map((inc, i) => [
+    let rows = [];
+    if (list.length === 0) {
+      const officer = this.currentOfficer || {};
+      const prov = officer.province || 'Cần Thơ';
+      const ward = officer.ward || '';
+      rows = [[
+        1,
+        'SOS-0000',
+        new Date().toLocaleString('vi-VN'),
+        filter.toUpperCase(),
+        'Trong ca trực không phát sinh sự cố khẩn cấp (Địa bàn an toàn tuyệt đối)',
+        officer.name || 'Cán bộ trực ban',
+        officer.phone || '---',
+        'Địa bàn quản lý an toàn',
+        ward,
+        prov,
+        'Bình thường'
+      ]];
+    } else {
+      rows = list.map((inc, i) => [
       i + 1,
       inc.id,
       new Date(inc.createdAt).toLocaleString('vi-VN'),
@@ -12857,7 +12891,8 @@ class DispatcherApp {
       inc.jurisdiction?.ward || '',
       inc.jurisdiction?.province || '',
       inc.status
-    ]);
+      ]);
+    }
 
     const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))].join('\r\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -12876,11 +12911,6 @@ class DispatcherApp {
     const filter = activeTab ? activeTab.getAttribute('data-filter') : 'all';
     const incidents = this.getFilteredTerritoryIncidents(filter);
 
-    if (incidents.length === 0) {
-      alert('Không có dữ liệu ca sự cố nào để xuất file Word.');
-      return;
-    }
-
     const officer = this.currentOfficer || {};
     const prov = (officer.province || 'Cần Thơ').toUpperCase();
     const ward = (officer.ward || '').toUpperCase();
@@ -12889,7 +12919,15 @@ class DispatcherApp {
     const dateStr = `ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
 
     let rowsHtml = '';
-    incidents.forEach((inc, idx) => {
+    if (incidents.length === 0) {
+      rowsHtml = `
+        <tr>
+          <td colspan="8" style="border: 1px solid #000; padding: 16px; text-align: center; font-style: italic; color: #334155;">
+            Trong ca trực không phát sinh sự cố khẩn cấp trên địa bàn. Tình hình an ninh trật tự, an toàn xã hội được giữ vững và kiểm soát an toàn tuyệt đối.
+          </td>
+        </tr>`;
+    } else {
+      incidents.forEach((inc, idx) => {
       const timeStr = inc.createdAt ? new Date(inc.createdAt).toLocaleString('vi-VN') : '';
       const agencyLabel = inc.agency === 'police' ? 'Công An' : (inc.agency === 'csgt' ? 'CSGT' : (inc.agency === 'fire' ? 'PCCC & CNCH' : (inc.agency === 'hospital' ? 'Cấp Cứu' : 'Cứu Hộ')));
       const statusLabel = inc.status === 'resolved' ? 'Hoàn tất' : (inc.status === 'dispatching' ? 'Đang điều động' : (inc.status === 'arrived' ? 'Đã tiếp cận' : (inc.status === 'fake_alarm' ? 'Báo khống' : 'Chờ tiếp nhận')));
@@ -12904,7 +12942,8 @@ class DispatcherApp {
           <td style="border: 1px solid #000; padding: 6px;">${inc.address || ''}</td>
           <td style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold;">${statusLabel}</td>
         </tr>`;
-    });
+      });
+    }
 
     const docContent = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>

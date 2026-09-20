@@ -1,7 +1,48 @@
 import XLSX from 'xlsx';
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const PYTHON_CMD = process.platform === 'win32' ? 'python' : 'python3';
 
 export function generateAccountsWorkbookBuffer(exportPayload) {
   const accounts = exportPayload.accounts || [];
+  const generatedAt = exportPayload.generatedAt || new Date().toLocaleString('vi-VN');
+  const officerName = exportPayload.officerName || 'Trung Tâm Chỉ Huy Tác Chiến & Điều Phối Quốc Gia';
+
+  // 1. Try high-fidelity openpyxl execution via Python (produces identical 17/09/2026 file)
+  try {
+    const tempId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const tempJson = path.join(__dirname, '..', `temp_exp_${tempId}.json`);
+    const tempXlsx = path.join(__dirname, '..', `temp_exp_${tempId}.xlsx`);
+    const scriptPath = path.join(__dirname, '..', 'scripts', 'generate_accounts_excel.py');
+
+    fs.writeFileSync(tempJson, JSON.stringify({
+      accounts,
+      generatedAt,
+      officerName
+    }), 'utf-8');
+
+    execSync(`${PYTHON_CMD} "${scriptPath}" "${tempJson}" "${tempXlsx}"`, {
+      timeout: 15000,
+      stdio: 'pipe'
+    });
+
+    if (fs.existsSync(tempXlsx)) {
+      const buf = fs.readFileSync(tempXlsx);
+      try { fs.unlinkSync(tempJson); } catch(e) {}
+      try { fs.unlinkSync(tempXlsx); } catch(e) {}
+      return buf;
+    }
+  } catch (pyErr) {
+    console.warn('[EXCEL GENERATOR] Python openpyxl fallback to pure Node.js xlsx generator:', pyErr.message);
+  }
+
+  // 2. Pure Node.js high-speed in-memory generator with exact 3 sheets and 12 columns matching 17/09/2026
+  const wb = XLSX.utils.book_new();
 
   const policeAccounts = [];
   const medicalAccounts = [];
@@ -19,89 +60,84 @@ export function generateAccountsWorkbookBuffer(exportPayload) {
   });
 
   const columns = [
-    { header: 'STT', key: 'stt', width: 8 },
-    { header: 'Thao Tác (Phân Quyền)', key: 'action', width: 22 },
-    { header: 'Khu Vực (Tỉnh/TP)', key: 'province', width: 20 },
-    { header: 'Lực Lượng Nghiệp Vụ', key: 'agency', width: 24 },
-    { header: 'Cấp Hành Chính', key: 'level', width: 18 },
-    { header: 'Tên Cơ Quan / Đơn Vị Trực Ban', key: 'unitName', width: 42 },
-    { header: 'Địa Bàn (Xã/Phường)', key: 'ward', width: 25 },
-    { header: 'Tên Đăng Nhập', key: 'username', width: 22 },
-    { header: 'Mật Khẩu', key: 'password', width: 16 },
-    { header: 'Cán Bộ Phụ Trách', key: 'officerName', width: 25 },
-    { header: 'Chức Vụ / Cấp Bậc', key: 'officerRank', width: 20 },
-    { header: 'Số Điện Thoại Trực Ban', key: 'phone', width: 22 },
-    { header: 'Email Tác Chiến', key: 'email', width: 32 }
+    { header: 'STT', wch: 6 },
+    { header: 'Khu Vực (Tỉnh/TP)', wch: 18 },
+    { header: 'Lực Lượng Nghiệp Vụ', wch: 22 },
+    { header: 'Cấp Hành Chính', wch: 18 },
+    { header: 'Tên Cơ Quan / Đơn Vị Trực Ban', wch: 42 },
+    { header: 'Địa Bàn (Xã/Phường)', wch: 25 },
+    { header: 'Tên Đăng Nhập', wch: 20 },
+    { header: 'Mật Khẩu', wch: 16 },
+    { header: 'Cán Bộ Phụ Trách', wch: 22 },
+    { header: 'Chức Vụ / Cấp Bậc', wch: 18 },
+    { header: 'SĐT Trực Ban', wch: 18 },
+    { header: 'SMS Tiếp Nhận', wch: 18 }
   ];
 
-  function mapAccountToRow(acc, idx) {
-    const isNational = acc.level === 'national' || acc.username === 'admin' || (acc.unitName && acc.unitName.includes('Quốc Gia'));
-    let agencyName = 'Công An Nhân Dân';
-    if (acc.agency === 'hospital') agencyName = 'Cấp Cứu Y Tế 115';
-    else if (acc.agency === 'traffic-rescue') agencyName = 'Cứu Hộ Giao Thông 114';
-    else if (acc.agency === 'csgt') agencyName = 'Cảnh Sát Giao Thông';
-    else if (acc.agency === 'fire') agencyName = 'PCCC & CNCH';
-    else if (isNational) agencyName = 'Chỉ Huy Tác Chiến Quốc Gia';
+  function buildSheetData(accList, sheetTitle, subTitle) {
+    const rows = [];
+    // Row 1: Banner
+    rows.push(['HỆ THỐNG CỨU HỘ & CẢNH BÁO SOS KHẨN CẤP QUỐC GIA (34 TỈNH THÀNH)']);
+    // Row 2: Subtitle
+    rows.push([sheetTitle]);
+    // Row 3: Meta
+    rows.push([`Thời điểm xuất: ${generatedAt}  ·  Đơn vị: ${officerName}  ·  ${subTitle}`]);
+    // Row 4: Empty
+    rows.push([]);
+    // Row 5: Table Header
+    rows.push(columns.map(c => c.header));
 
-    let levelName = 'Cấp Xã/Phường';
-    if (isNational) levelName = 'Trung Ương (Quốc Gia)';
-    else if (acc.level === 'province') levelName = 'Cấp Tỉnh/Thành Phố';
-    else if (acc.level === 'district') levelName = 'Cấp Quận/Huyện';
+    let stt = 1;
+    accList.forEach(acc => {
+      const isNational = acc.level === 'national' || acc.username === 'admin' || (acc.unitName && acc.unitName.includes('Quốc Gia'));
+      let agencyName = 'Công An Nhân Dân';
+      if (acc.agency === 'hospital') agencyName = 'Cấp Cứu Y Tế';
+      else if (acc.agency === 'traffic-rescue') agencyName = 'Cứu Hộ Doanh Nghiệp';
+      else if (acc.agency === 'csgt') agencyName = 'Cảnh Sát Giao Thông';
+      else if (acc.agency === 'fire') agencyName = 'PCCC & CNCH';
+      else if (isNational) agencyName = 'Chỉ Huy Quốc Gia';
 
-    return {
-      'STT': idx + 1,
-      'Thao Tác (Phân Quyền)': 'Hiện có (Cập nhật)',
-      'Khu Vực (Tỉnh/TP)': isNational ? 'Toàn Quốc' : (acc.province || 'Cần Thơ'),
-      'Lực Lượng Nghiệp Vụ': agencyName,
-      'Cấp Hành Chính': levelName,
-      'Tên Cơ Quan / Đơn Vị Trực Ban': acc.agencyName || acc.unitName || acc.name || '',
-      'Địa Bàn (Xã/Phường)': acc.ward || '',
-      'Tên Đăng Nhập': acc.username || '',
-      'Mật Khẩu': acc.password || acc.initialPassword || '2002',
-      'Cán Bộ Phụ Trách': acc.officerName || 'Đ/c Trực ban tác chiến',
-      'Chức Vụ / Cấp Bậc': acc.officerRank || 'Đại úy',
-      'Số Điện Thoại Trực Ban': acc.officerPhone || acc.phone || '113',
-      'Email Tác Chiến': acc.officerEmail || acc.email || ''
-    };
+      let levelName = 'Cấp Xã/Phường';
+      if (isNational) levelName = 'Trung Ương';
+      else if (acc.level === 'province') levelName = 'Cấp Tỉnh/TP';
+      else if (acc.level === 'district') levelName = 'Cấp Quận/Huyện';
+
+      const pwd = acc.password || acc.initialPassword || '2002';
+
+      rows.push([
+        stt++,
+        isNational ? 'Toàn Quốc' : (acc.province || 'Cần Thơ'),
+        agencyName,
+        levelName,
+        acc.agencyName || acc.unitName || '',
+        acc.ward || (acc.province ? `Toàn ${acc.province.includes('TP.') ? 'Thành Phố' : 'Tỉnh'}` : ''),
+        acc.username || '',
+        pwd,
+        acc.officerName || 'Đ/c Trực ban tác chiến',
+        acc.officerRank || 'Đại úy',
+        acc.officerPhone || acc.phone || '113',
+        acc.officerSms || acc.sms || '0988 113 113'
+      ]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = columns.map(c => ({ wch: c.wch }));
+    ws['!merges'] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 11 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: 11 } },
+      { s: { r: 2, c: 0 }, e: { r: 2, c: 11 } }
+    ];
+    return ws;
   }
 
-  const wb = XLSX.utils.book_new();
-
-  const policeData = policeAccounts.map((a, i) => mapAccountToRow(a, i));
-  const wsPolice = XLSX.utils.json_to_sheet(policeData);
-  wsPolice['!cols'] = columns.map(c => ({ wch: c.width }));
+  const wsPolice = buildSheetData(policeAccounts, 'DANH SÁCH TÀI KHOẢN: LỰC LƯỢNG CÔNG AN & AN NINH NHÂN DÂN', 'Chế độ: BẢO MẬT TÁC CHIẾN');
   XLSX.utils.book_append_sheet(wb, wsPolice, 'Công An & CAND');
 
-  const medData = medicalAccounts.map((a, i) => mapAccountToRow(a, i));
-  const wsMed = XLSX.utils.json_to_sheet(medData);
-  wsMed['!cols'] = columns.map(c => ({ wch: c.width }));
-  XLSX.utils.book_append_sheet(wb, wsMed, 'Cấp Cứu Y Tế (115)');
+  const wsMed = buildSheetData(medicalAccounts, 'DANH SÁCH TÀI KHOẢN: HỆ THỐNG CẤP CỨU Y TẾ & BỆNH VIỆN 34 TỈNH THÀNH', 'Ngành: Y TẾ ĐIỀU PHỐI');
+  XLSX.utils.book_append_sheet(wb, wsMed, 'Cấp Cứu Y Tế');
 
-  const rescueData = rescueAccounts.map((a, i) => mapAccountToRow(a, i));
-  const wsRescue = XLSX.utils.json_to_sheet(rescueData);
-  wsRescue['!cols'] = columns.map(c => ({ wch: c.width }));
+  const wsRescue = buildSheetData(rescueAccounts, 'DANH SÁCH TÀI KHOẢN: DOANH NGHIỆP & GARAGE CỨU HỘ XE GIAO THÔNG 34 TỈNH THÀNH', 'Ngành: DỊCH VỤ CỨU HỘ ĐƯỜNG BỘ');
   XLSX.utils.book_append_sheet(wb, wsRescue, 'Cứu Hộ Doanh Nghiệp');
-
-  const sampleData = [
-    {
-      'STT': 1,
-      'Thao Tác (Phân Quyền)': '⭐ THÊM MỚI',
-      'Khu Vực (Tỉnh/TP)': 'TP. Hồ Chí Minh',
-      'Lực Lượng Nghiệp Vụ': 'Công An Nhân Dân',
-      'Cấp Hành Chính': 'Cấp Xã/Phường',
-      'Tên Cơ Quan / Đơn Vị Trực Ban': 'Công An Phường Bến Nghé (Mẫu)',
-      'Địa Bàn (Xã/Phường)': 'Phường Bến Nghé',
-      'Tên Đăng Nhập': 'hcm_ca_phuong_ben_nghe_moi',
-      'Mật Khẩu': '2002',
-      'Cán Bộ Phụ Trách': 'Đ/c Trực ban mẫu',
-      'Chức Vụ / Cấp Bậc': 'Đại úy',
-      'Số Điện Thoại Trực Ban': '028 3829 6957',
-      'Email Tác Chiến': 'caphuongbennghe@tphcm.bca.gov.vn'
-    }
-  ];
-  const wsSample = XLSX.utils.json_to_sheet(sampleData);
-  wsSample['!cols'] = columns.map(c => ({ wch: c.width }));
-  XLSX.utils.book_append_sheet(wb, wsSample, 'Mẫu Thêm Tài Khoản Nhanh');
 
   return XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
 }

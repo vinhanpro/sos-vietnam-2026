@@ -2579,10 +2579,13 @@ const server = http.createServer(async (req, res) => {
   // API: Get All Dispatcher & Local Accounts (Admin)
   // -------------------------------------------------------------
   if (urlPath === '/api/admin/accounts' && req.method === 'GET') {
-    const list = Object.values(AGENCY_ACCOUNTS).map(toSafeAccountProfile);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ ok: true, accounts: list }));
-  }
+      const list = Object.values(AGENCY_ACCOUNTS).map(acc => ({
+        ...toSafeAccountProfile(acc),
+        password: getDisplayPasswordForAccount(acc)
+      }));
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ ok: true, count: list.length, accounts: list }));
+    }
 
   // -------------------------------------------------------------
   // API: Save / Create / Update Local Dispatcher Account (Admin)
@@ -5903,13 +5906,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // -------------------------------------------------------------
-  // API: Get All Agency Accounts (34 Provinces & National)
-  // -------------------------------------------------------------
-  if (urlPath === '/api/admin/accounts' && req.method === 'GET') {
-    const list = Object.values(AGENCY_ACCOUNTS);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ ok: true, count: list.length, accounts: list }));
-  }
+  // [Deduplicated /api/admin/accounts]
 
 
 

@@ -8118,3 +8118,17 @@ video::-webkit-media-controls-mute-button { display: none !important; }
     user-select: none !important;
   }
 }
+
+
+/* Tactical Modal Backdrops */
+.report-docx-modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.78) !important;
+  backdrop-filter: blur(8px) !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1000050 !important;
+}

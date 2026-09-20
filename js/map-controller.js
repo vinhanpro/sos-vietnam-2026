@@ -9,6 +9,7 @@ export class MapController {
     this.routeSourceId = 'rescue-route';
     this.vehicleMarker = null;
     this.stationMarkers = [];
+    this.activeWardStationMarker = null;
     this.currentStyleMode = 'dark'; // 'dark' | 'satellite' | 'streets'
     // Restore ward visibility from localStorage
     this.allWardsVisible = localStorage.getItem('allWardsVisible') === 'true';
@@ -607,6 +608,89 @@ export class MapController {
     this.map.fitBounds(bounds, { padding: 80, maxZoom: 16 });
 
     return routeCoordinates;
+  }
+
+
+  clearActiveWardPin() {
+    if (this.activeWardStationMarker) {
+      try { this.activeWardStationMarker.remove(); } catch(e) {}
+      this.activeWardStationMarker = null;
+    }
+  }
+
+  showWardStationPin(wardFeature, overrideStation = null) {
+    if (!this.map || !wardFeature) return;
+    this.clearActiveWardPin();
+
+    const p = wardFeature.properties || {};
+    const wardName = (p.ward || p.name || '').trim();
+    const provName = (p.province || '').trim();
+
+    // Compute polygon centroid / center
+    let centerLng = null;
+    let centerLat = null;
+    if (Array.isArray(p.center) && p.center.length === 2) {
+      centerLng = Number(p.center[0]);
+      centerLat = Number(p.center[1]);
+    } else if (wardFeature.geometry) {
+      const geom = wardFeature.geometry;
+      let allCoords = [];
+      if (geom.type === 'Polygon') allCoords = geom.coordinates[0] || [];
+      else if (geom.type === 'MultiPolygon') allCoords = (geom.coordinates[0] && geom.coordinates[0][0]) || [];
+      if (allCoords.length > 0) {
+        const sumLng = allCoords.reduce((acc, c) => acc + c[0], 0);
+        const sumLat = allCoords.reduce((acc, c) => acc + c[1], 0);
+        centerLng = sumLng / allCoords.length;
+        centerLat = sumLat / allCoords.length;
+      }
+    }
+
+    if (!centerLng || !centerLat) {
+      centerLng = 105.783;
+      centerLat = 10.033;
+    }
+
+    // Lookup station from memory
+    let station = overrideStation;
+    if (!station && Array.isArray(this.stationsData)) {
+      const cleanW = wardName.toLowerCase().replace(/^(phường|xã|thị trấn)s+/i, '').trim();
+      station = this.stationsData.find(s => {
+        if (!s || s.id === 'st-admin' || s.level === 'national') return false;
+        const sW = (s.ward || s.name || '').toLowerCase().replace(/^(phường|xã|thị trấn|công an phường|công an xã)s+/i, '').trim();
+        const sProv = (s.province || '').toLowerCase();
+        const matchProv = !provName || sProv.includes(provName.toLowerCase()) || provName.toLowerCase().includes(sProv);
+        return matchProv && (sW === cleanW || sW.includes(cleanW) || cleanW.includes(sW));
+      });
+    }
+
+    const isGpsVerified = Boolean(station && station.isGpsVerified === true && station.lat && station.lng);
+    const pinLng = isGpsVerified ? Number(station.lng) : centerLng;
+    const pinLat = isGpsVerified ? Number(station.lat) : centerLat;
+
+    const baseName = station?.name || ('Công An ' + wardName);
+    const displayName = isGpsVerified ? baseName : `${baseName} (chưa xác định GPS)`;
+
+    const el = document.createElement('div');
+    el.className = 'custom-map-pin congan-station-pin permanent-station neon-selected active-ward-reveal-pin';
+    el.innerHTML = `
+      <div class="congan-pin-emblem-wrap" style="filter: drop-shadow(0 0 10px #facc15);">
+        <img src="/assets/iconcongan.png" class="congan-pin-emblem" alt="Huy hiệu CAND" />
+      </div>
+      <div class="congan-pin-label" style="background: rgba(15, 23, 42, 0.95); border: 1.5px solid #facc15; color: #fef08a; font-weight: 800; font-size: 11.5px; box-shadow: 0 4px 14px rgba(0,0,0,0.8);">
+        ${displayName}
+      </div>
+    `;
+
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (window.dispatcherApp && typeof window.dispatcherApp.showWardHud === 'function') {
+        window.dispatcherApp.showWardHud(wardFeature, station);
+      }
+    });
+
+    this.activeWardStationMarker = new window.maplibregl.Marker({ element: el, anchor: 'center' })
+      .setLngLat([pinLng, pinLat])
+      .addTo(this.map);
   }
 
   clearStationMarkers() {

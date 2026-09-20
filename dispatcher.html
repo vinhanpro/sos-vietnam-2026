@@ -1633,7 +1633,7 @@
 
         <!-- Center: Incident Count Filter Cards (Rich Cyber Theme) -->
         <div class="tactical-stripe-center">
-          <div class="top-bar-pill total-pill stat-card-btn is-active" data-stat-agency="all" id="statTotalPill" title="Tổng số ca sự cố">
+          <div class="top-bar-pill total-pill stat-card-btn is-active" data-stat-agency="all" id="statTotalPill" title="Tổng số ca sự cố - Nhấp mở Bảng Thống Kê & Xuất Báo Cáo (Word/Excel/PDF)" style="cursor: pointer;">
             <span class="top-bar-icon">Tổng</span>
             <span class="top-bar-label"><b id="statTotalCases">0</b></span>
           </div>
@@ -3150,7 +3150,7 @@
   </div>
 
   <!-- Modal: Thống Kê Chi Tiết Sự Cố & In Ấn Địa Phương (Hình 2 Top-Bar Click) -->
-  <div class="report-docx-modal-backdrop" id="territoryStatsModal" style="display: none; z-index: 10500;">
+  <div class="report-docx-modal-backdrop" id="territoryStatsModal" style="display: none; position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.78); backdrop-filter: blur(8px); align-items: center; justify-content: center; z-index: 1000050;">
     <div class="report-docx-modal-dialog" style="max-width: 1050px; width: 96%; max-height: 92vh; display: flex; flex-direction: column; background: #0b1329; border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 14px; box-shadow: 0 25px 60px rgba(0,0,0,0.85); overflow: hidden;">
       
       <!-- Modal Header (Screen Only) -->
