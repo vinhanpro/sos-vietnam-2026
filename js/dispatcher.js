@@ -7903,7 +7903,7 @@ class DispatcherApp {
     }
   }
 
-  showWardHud(boundaryFeature) {
+  showWardHud(boundaryFeature, overrideStation = null) {
     const hud = document.getElementById('tacticalWardGeofenceHud');
     if (!hud || !boundaryFeature || !boundaryFeature.properties) return;
     const props = boundaryFeature.properties;
@@ -7922,13 +7922,12 @@ class DispatcherApp {
     const phLink = document.getElementById('hudWardPhoneLink');
     const smsEl = document.getElementById('hudWardSms');
     const offEl = document.getElementById('hudWardOfficer');
-    const gmapsBtn = document.getElementById('hudGmapsBtn');
 
     if (nameEl) nameEl.textContent = props.ward || 'XÃ / PHƯỜNG QUẢN LÝ';
     const provName = props.province || 'Cần Thơ';
-    const provFormatted = provName.startsWith('TP.') || provName.startsWith('Thủ Đô') || provName.startsWith('Tỉnh') || provName.startsWith('Thành phố')
+    const provFormatted = provName.startsWith('TP.') || provName.startsWith('Thủ đô') || provName.startsWith('Tỉnh') || provName.startsWith('Thành phố')
       ? provName
-      : (['Hà Nội'].includes(provName) ? `Thủ Đô ${provName}`
+      : (['Hà Nội'].includes(provName) ? `Thủ đô ${provName}`
         : ['Đà Nẵng', 'Hải Phòng', 'Huế', 'Cần Thơ', 'Đồng Nai'].includes(provName) ? `Thành phố ${provName}`
         : ['TP. Hồ Chí Minh'].includes(provName) ? provName : `Tỉnh ${provName}`);
     if (provEl) provEl.textContent = `(${provFormatted})`;
@@ -7939,29 +7938,46 @@ class DispatcherApp {
     if (maDVHCEl) maDVHCEl.textContent = props.maDVHC || '31582';
     if (canCuEl) canCuEl.textContent = props.canCu || 'Nghị quyết số 1668/NQ-UBTVQH15';
 
-        // Look up real police station from directory / current officer profile
-    let matchedSt = null;
+    // Look up real police station from directory / current officer profile / override
+    let matchedSt = overrideStation || null;
     const targetWard = (props.ward || '').toLowerCase().trim();
-    if (this.currentOfficer && this.currentOfficer.ward && this.currentOfficer.ward.toLowerCase().trim() === targetWard) {
+    const cleanTargetWard = targetWard.replace(/^(phuong|xa|thi tran|p\.|x\.|tt\.)\s*/i, '').trim();
+
+    if (!matchedSt && this.currentOfficer && this.currentOfficer.ward && this.currentOfficer.ward.toLowerCase().trim() === targetWard) {
       matchedSt = {
         name: this.currentOfficer.agencyName || this.currentOfficer.unitName || ('Công An ' + props.ward),
-        phone: this.currentOfficer.officerPhone || '0292 382 2113',
+        phone: this.currentOfficer.officerPhone || '0292 389 7113',
         sms: this.currentOfficer.officerSms || '0988 113 113',
         officer: this.currentOfficer.officerTitle || this.currentOfficer.officerName || 'Trực ban CAX/CAP',
         address: this.currentOfficer.address || ('Trụ sở Công An ' + props.ward)
       };
-    } else if (this.stationsDirectory?.stations?.length && targetWard) {
-      matchedSt = this.stationsDirectory.stations.find(st => 
-        (st.ward && st.ward.toLowerCase().trim() === targetWard && (st.agency === 'police' || !st.agency)) ||
-        (st.name && st.name.toLowerCase().includes(targetWard))
-      );
+    } else if (!matchedSt && this.stationsDirectory?.stations?.length && targetWard) {
+      matchedSt = this.stationsDirectory.stations.find(st => {
+        const isPol = st.agency === 'police' || !st.agency;
+        if (!isPol) return false;
+        const stW = (st.ward || '').toLowerCase().trim();
+        const cleanStW = stW.replace(/^(phuong|xa|thi tran|p\.|x\.|tt\.)\s*/i, '').trim();
+        return (stW === targetWard || cleanStW === cleanTargetWard) || (st.name && st.name.toLowerCase().includes(cleanTargetWard));
+      });
     }
-    const isUpdating = (val) => !val || val === 'Đang cập nhật' || val === 'Đang cập nhật...';
 
-    const resolvedPolice = (!isUpdating(props.police) && !props.police.includes('Khu Vực')) ? props.police : (matchedSt?.name || `Công An ${props.ward || 'Phường/Xã'}`);
-    const resolvedPhone = (!isUpdating(props.phone) && props.phone !== '0292 3899 113') ? props.phone : (matchedSt?.phone || '0292 389 7113');
-    const resolvedSms = !isUpdating(props.sms) ? props.sms : (matchedSt?.sms || '0988 113 113');
-    const resolvedOfficer = (!isUpdating(props.officer) && !props.officer.includes('CAX/CAP')) ? props.officer : (matchedSt?.officer || matchedSt?.officerTitle || 'Trực ban CAX/CAP');
+    const isInvalidVal = (val) => !val || String(val).toLowerCase().includes('cập nhật');
+
+    const resolvedPolice = (!isInvalidVal(props.police) && !props.police.includes('Khu Vực'))
+      ? props.police 
+      : (matchedSt?.name || `Công An ${props.ward || 'Phường/Xã'}`);
+
+    const resolvedPhone = (!isInvalidVal(props.phone) && props.phone !== '0292 3899 113')
+      ? props.phone 
+      : (!isInvalidVal(matchedSt?.phone) ? matchedSt.phone : '0292 389 7113');
+
+    const resolvedSms = !isInvalidVal(props.sms) 
+      ? props.sms 
+      : (!isInvalidVal(matchedSt?.sms) ? matchedSt.sms : '0988 113 113');
+
+    const resolvedOfficer = (!isInvalidVal(props.officer) && !props.officer.includes('CAX/CAP'))
+      ? props.officer 
+      : (!isInvalidVal(matchedSt?.officer) ? matchedSt.officer : 'Trực ban CAX/CAP');
 
     if (polEl) polEl.textContent = resolvedPolice;
     if (phEl) phEl.textContent = resolvedPhone;
@@ -7977,7 +7993,7 @@ class DispatcherApp {
       if (gmapsCarBtn) gmapsCarBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${center[1]},${center[0]}&travelmode=driving`;
       if (gmapsMotoBtn) gmapsMotoBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${center[1]},${center[0]}&travelmode=two_wheeler`;
     } else {
-      const q = encodeURIComponent(props.police || props.ward);
+      const q = encodeURIComponent((matchedSt?.name || props.police || props.ward) + ' ' + (props.province || 'Cần Thơ'));
       if (gmapsCarBtn) gmapsCarBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${q}&travelmode=driving`;
       if (gmapsMotoBtn) gmapsMotoBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${q}&travelmode=two_wheeler`;
     }

@@ -850,7 +850,7 @@ export class MapController {
         <div class="congan-pin-emblem-wrap ${isNational ? 'pin-national-hq' : ''}">
           <img src="/assets/iconcongan.png" class="congan-pin-emblem" alt="Huy hiệu CAND" />
         </div>
-        <div class="congan-pin-label">${isNational ? '⭐ ' : ''}${st.name}</div>
+        <div class="congan-pin-label">${isNational ? '★ ' : ''}${st.name}</div>
       `;
     } else {
       const icon = st.agency === 'hospital' ? '🏥' : '🚒';
@@ -864,30 +864,60 @@ export class MapController {
       `;
     }
 
-    const popupContent = this.createPoliceStationPopupHtml(st);
-    const popup = new window.maplibregl.Popup({ offset: 25, closeButton: true })
-      .setHTML(popupContent);
+    const exactLng = Number(st.lng || st.stationLng);
+    const exactLat = Number(st.lat || st.stationLat);
 
-    popup.on('close', () => {
-      if (this.currentSelectedPinEl === el) {
-        el.classList.remove('neon-selected');
-        this.currentSelectedPinEl = null;
-      }
-    });
-
-    el.addEventListener('click', () => {
+    el.addEventListener('click', async (e) => {
+      e.stopPropagation();
       if (this.currentSelectedPinEl) {
         this.currentSelectedPinEl.classList.remove('neon-selected');
       }
       el.classList.add('neon-selected');
       this.currentSelectedPinEl = el;
+
+      // Khoanh vùng tô tím địa bàn phường/xã và mở bảng tác chiến dùng chung (Hình 3 & 4)
+      try {
+        const queryParams = new URLSearchParams({
+          id: st.wardId || '',
+          lat: exactLat,
+          lng: exactLng,
+          ward: st.ward || '',
+          province: st.province || '',
+          address: st.address || st.name || ''
+        });
+        const res = await fetch('/api/geo/locate-ward?' + queryParams.toString());
+        const data = await res.json();
+        if (data.ok && data.boundary) {
+          this.highlightWardBoundary(data.boundary, { fitBounds: false });
+          if (window.dispatcherApp && typeof window.dispatcherApp.showWardHud === 'function') {
+            window.dispatcherApp.showWardHud(data.boundary, st);
+          }
+        } else {
+          // Fallback if boundary not located via API
+          const fallbackFeature = {
+            type: 'Feature',
+            properties: {
+              ward: st.ward,
+              province: st.province,
+              police: st.name,
+              phone: st.phone,
+              sms: st.sms,
+              officer: st.officer,
+              address: st.address,
+              center: [exactLng, exactLat]
+            }
+          };
+          if (window.dispatcherApp && typeof window.dispatcherApp.showWardHud === 'function') {
+            window.dispatcherApp.showWardHud(fallbackFeature, st);
+          }
+        }
+      } catch (err) {
+        console.warn('Error loading ward HUD on pin click:', err);
+      }
     });
 
-    const exactLng = Number(st.lng || st.stationLng);
-    const exactLat = Number(st.lat || st.stationLat);
     const marker = new window.maplibregl.Marker({ element: el, anchor: 'center' })
       .setLngLat([exactLng, exactLat])
-      .setPopup(popup)
       .addTo(this.map);
 
     this.stationMarkers.push(marker);
