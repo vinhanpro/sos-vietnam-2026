@@ -1466,19 +1466,25 @@ class DispatcherApp {
     if (officer.province && officer.province !== 'Toàn Quốc' && officer.province !== 'Cấp Quốc Gia' && officer.username !== 'admin') {
       this.selectedStationRegion = officer.province;
       if (this.mapController) {
-        this.mapController.loadAllStationsMarkers(this.selectedStationRegion);
+        // Cách 1 & 2: Local units load local stations filtered by agency & province from in-memory cache
+        this.mapController.loadAllStationsMarkers(this.selectedStationRegion, officer.agency, false);
         const oLng = officer.stationLng || officer.lng;
         const oLat = officer.stationLat || officer.lat;
         if (oLng && oLat) {
           this.mapController.map?.flyTo({ center: [oLng, oLat], zoom: 14, duration: 1200 });
         } else if (officer.province.toLowerCase().includes('hà nội')) {
           this.mapController.map?.flyTo({ center: [105.850, 21.028], zoom: 13.5, duration: 1200 });
+        } else if (officer.province.toLowerCase().includes('hồ chí minh')) {
+          this.mapController.map?.flyTo({ center: [106.695, 10.772], zoom: 13.5, duration: 1200 });
+        } else if (officer.province.toLowerCase().includes('cần thơ')) {
+          this.mapController.map?.flyTo({ center: [105.775, 10.035], zoom: 13.5, duration: 1200 });
         }
       }
     } else {
       this.selectedStationRegion = 'all';
       if (this.mapController) {
-        this.mapController.loadAllStationsMarkers('all');
+        // Cách 2: Admin loads clustered national stations with 0ms DOM overhead
+        this.mapController.loadAllStationsMarkers('all', 'all', true);
       }
     }
 
@@ -3803,7 +3809,9 @@ class DispatcherApp {
 
         if (this.mapController && this.mapController.map) {
           const cfg = REGION_CENTERS[this.selectedStationRegion] || REGION_CENTERS['all'];
-          this.mapController.loadAllStationsMarkers(this.selectedStationRegion);
+          const isAdm = Boolean(this.currentOfficer && (this.currentOfficer.username === 'admin' || this.currentOfficer.agency === 'all'));
+          const isAll = this.selectedStationRegion === 'all';
+          this.mapController.loadAllStationsMarkers(this.selectedStationRegion, (isAdm || isAll) ? 'all' : this.currentOfficer?.agency, isAdm || isAll);
           this.mapController.map.flyTo({
             center: cfg.center,
             zoom: cfg.zoom,
@@ -4516,7 +4524,9 @@ class DispatcherApp {
         await this.loadStationsDirectory();
         this.renderStationsDirectory();
         if (this.mapController) {
-          this.mapController.loadAllStationsMarkers(this.selectedStationRegion || 'all');
+          const isAdm = Boolean(this.currentOfficer && (this.currentOfficer.username === 'admin' || this.currentOfficer.agency === 'all'));
+        const reg = this.selectedStationRegion || (isAdm ? 'all' : (this.currentOfficer?.province || 'all'));
+        this.mapController.loadAllStationsMarkers(reg, this.currentOfficer?.agency, isAdm);
         }
       } else {
         alert('Lỗi: ' + (data.error || 'Không thể xóa'));

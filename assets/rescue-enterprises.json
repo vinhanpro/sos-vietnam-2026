@@ -684,6 +684,25 @@
       ],
       "isVerified": true,
       "informationStatus": "official"
+    },
+    {
+      "id": "rescue-cuuhohanoi",
+      "name": "Cứu Hộ Giao Thông 116 Hà Nội",
+      "province": "Hà Nội",
+      "district": "",
+      "address": "Số 120 Phạm Hùng, Phường Mễ Trì, TP. Hà Nội",
+      "phone": "0909 116 116",
+      "lat": 21.0189,
+      "lng": 105.7812,
+      "rating": 4.8,
+      "reviewCount": 120,
+      "services": [
+        "Cứu hộ tai nạn",
+        "Cẩu kéo xe 24/7",
+        "Kích bình vá vỏ"
+      ],
+      "isVerified": true,
+      "informationStatus": "official"
     }
   ]
 }

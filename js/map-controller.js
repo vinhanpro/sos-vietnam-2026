@@ -616,38 +616,147 @@ export class MapController {
     this.stationMarkers = [];
   }
 
-  async loadAllStationsMarkers(filterRegion = null) {
+  removeClusteredStationsLayers() {
     if (!this.map) return;
-    this.clearStationMarkers();
+    const clusterLayers = [
+      'stations-cluster-count-layer',
+      'stations-clusters-layer',
+      'stations-unclustered-point-layer'
+    ];
+    clusterLayers.forEach(l => {
+      if (this.map.getLayer(l)) {
+        try { this.map.removeLayer(l); } catch(e) {}
+      }
+    });
+    if (this.map.getSource('stations-cluster-source')) {
+      try { this.map.removeSource('stations-cluster-source'); } catch(e) {}
+    }
+  }
 
+  async getStationsData() {
+    if (this.cachedStations && Array.isArray(this.cachedStations) && this.cachedStations.length > 0) {
+      return this.cachedStations;
+    }
     try {
       const res = await fetch('/api/stations/all');
       const data = await res.json();
-      if (!data.ok || !Array.isArray(data.stations)) return;
-
-      let stationsToRender = data.stations;
-      if (filterRegion && filterRegion !== 'all') {
-        stationsToRender = stationsToRender.filter(s =>
-          s.level === 'national' || s.id === 'st-admin' || (s.name && s.name.includes('Quốc Gia')) ||
-          (s.province || '').toLowerCase().includes(filterRegion.toLowerCase())
-        );
+      if (data.ok && Array.isArray(data.stations)) {
+        this.cachedStations = data.stations;
+        return this.cachedStations;
       }
+    } catch (e) {
+      console.warn('Error loading stations:', e);
+    }
+    return [];
+  }
 
-      stationsToRender.forEach(st => {
-        const isNational = st.level === 'national' || st.id === 'st-admin' || (st.name && st.name.toLowerCase().includes('quốc gia'));
+  renderClusteredStations(stations) {
+    if (!this.map) return;
+    this.clearStationMarkers();
+    this.removeClusteredStationsLayers();
+
+    const geojsonData = {
+      type: 'FeatureCollection',
+      features: stations.map(st => ({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [st.lng, st.lat] },
+        properties: { ...st }
+      }))
+    };
+
+    const sourceId = 'stations-cluster-source';
+    try {
+      this.map.addSource(sourceId, {
+        type: 'geojson',
+        data: geojsonData,
+        cluster: true,
+        clusterMaxZoom: 13,
+        clusterRadius: 45
+      });
+
+      // Layer 1: Cluster Circles (3-tier gradient: blue -> gold -> red)
+      this.map.addLayer({
+        id: 'stations-clusters-layer',
+        type: 'circle',
+        source: sourceId,
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': [
+            'step', ['get', 'point_count'],
+            '#0284c7', 15,
+            '#eab308', 40,
+            '#ef4444'
+          ],
+          'circle-radius': [
+            'step', ['get', 'point_count'],
+            18, 15, 23, 40, 30
+          ],
+          'circle-stroke-width': 3,
+          'circle-stroke-color': '#ffffff',
+          'circle-opacity': 0.92
+        }
+      });
+
+      // Layer 2: Cluster Numbers
+      this.map.addLayer({
+        id: 'stations-cluster-count-layer',
+        type: 'symbol',
+        source: sourceId,
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-size': 13,
+          'text-allow-overlap': true
+        },
+        paint: {
+          'text-color': '#ffffff'
+        }
+      });
+
+      // Layer 3: Unclustered Individual Points (when zoomed in)
+      this.map.addLayer({
+        id: 'stations-unclustered-point-layer',
+        type: 'circle',
+        source: sourceId,
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-color': [
+            'match', ['get', 'agency'],
+            'police', '#0066cc',
+            'csgt', '#eab308',
+            'fire', '#ea580c',
+            'hospital', '#16a34a',
+            '#0284c7'
+          ],
+          'circle-radius': 8,
+          'circle-stroke-width': 2.5,
+          'circle-stroke-color': '#ffffff'
+        }
+      });
+
+      // Click cluster to zoom into that region
+      this.map.on('click', 'stations-clusters-layer', (e) => {
+        const features = this.map.queryRenderedFeatures(e.point, { layers: ['stations-clusters-layer'] });
+        if (!features || !features[0]) return;
+        const clusterId = features[0].properties.cluster_id;
+        this.map.getSource(sourceId).getClusterExpansionZoom(clusterId, (err, zoom) => {
+          if (err) return;
+          this.map.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom: Math.min(zoom + 0.8, 16),
+            duration: 600
+          });
+        });
+      });
+
+      // Click individual unclustered point to show popup
+      this.map.on('click', 'stations-unclustered-point-layer', (e) => {
+        if (!e.features || !e.features[0]) return;
+        const st = e.features[0].properties;
+        const coords = e.features[0].geometry.coordinates.slice();
+        const isNational = st.level === 'national' || st.id === 'st-admin';
         const icon = isNational ? '⭐' : (st.agency === 'police' ? '👮‍♂️' : (st.agency === 'hospital' ? '🏥' : '🚒'));
-        const colorClass = isNational ? 'gold' : (st.agency === 'police' ? 'blue' : (st.agency === 'hospital' ? 'green' : 'orange'));
-
-        const el = document.createElement('div');
-        el.className = 'custom-map-pin station-pin permanent-station' + (isNational ? ' pin-national-hq' : '');
-        el.innerHTML = `
-          <div class="pin-core ${colorClass}" style="${isNational ? 'width: 38px; height: 38px; font-size: 18px; border: 2.5px solid #facc15; box-shadow: 0 0 25px #eab308, 0 8px 20px rgba(0,0,0,0.9); background: radial-gradient(circle at 35% 30%, #fef08a 0%, #b45309 65%, #451a03 100%); animation: pulseHqPin 2.2s infinite ease-in-out;' : 'width: 30px; height: 30px; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.6);'}">
-            <span>${icon}</span>
-          </div>
-          <div class="pin-tooltip" style="font-size: 10px; font-weight: 800; ${isNational ? 'color: #fef08a; border-color: #facc15; background: rgba(15,23,42,0.95);' : ''}">${isNational ? '⭐ ' : ''}${st.name}</div>
-        `;
-
-        const popupContent = `
+        const popupHtml = `
           <div style="font-family: system-ui, sans-serif; padding: 6px; max-width: 220px; color: #0f172a;">
             <div style="font-weight: 800; font-size: 12px; color: ${st.agency === 'police' ? '#0066cc' : (st.agency === 'hospital' ? '#059669' : '#d97706')}; margin-bottom: 3px;">
               ${icon} ${st.name}
@@ -659,33 +768,108 @@ export class MapController {
               ☎️ <b>Trực ban:</b> <a href="tel:${st.phone}" style="color: #0284c7; font-weight: 700; text-decoration: none;">${st.phone}</a>
             </div>
             <div style="display: flex; gap: 4px; margin-top: 6px;">
-              <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=driving" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: #0088ff; color: white; padding: 5px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;" title="Dẫn đường ô tô nhanh nhất">
+              <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=driving" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: #0088ff; color: white; padding: 5px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;" title="Dẫn đường ô tô">
                 🚗 Ô tô
               </a>
-              <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=two_wheeler" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: #059669; color: white; padding: 5px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;" title="Dẫn đường xe máy nhanh nhất">
+              <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=two_wheeler" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: #059669; color: white; padding: 5px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;" title="Dẫn đường xe máy">
                 🛵 Xe máy
               </a>
             </div>
           </div>
         `;
-
-        const popup = new window.maplibregl.Popup({ offset: 20, closeButton: false })
-          .setHTML(popupContent);
-
-        const marker = new window.maplibregl.Marker({ element: el })
-          .setLngLat([st.lng, st.lat])
-          .setPopup(popup)
+        new window.maplibregl.Popup({ offset: 15, closeButton: false })
+          .setLngLat(coords)
+          .setHTML(popupHtml)
           .addTo(this.map);
-
-        this.stationMarkers.push(marker);
       });
-    } catch (e) {
-      console.warn('Could not load station pins:', e);
+
+      this.map.on('mouseenter', 'stations-clusters-layer', () => { this.map.getCanvas().style.cursor = 'pointer'; });
+      this.map.on('mouseleave', 'stations-clusters-layer', () => { this.map.getCanvas().style.cursor = ''; });
+      this.map.on('mouseenter', 'stations-unclustered-point-layer', () => { this.map.getCanvas().style.cursor = 'pointer'; });
+      this.map.on('mouseleave', 'stations-unclustered-point-layer', () => { this.map.getCanvas().style.cursor = ''; });
+    } catch(err) {
+      console.warn('Error adding cluster layer:', err);
     }
   }
 
-  reloadStationsMarkers(region = 'all') {
-    this.loadAllStationsMarkers(region);
+  async loadAllStationsMarkers(filterRegion = null, agency = null, isAdmin = false) {
+    if (!this.map) return;
+
+    const allStations = await this.getStationsData();
+    if (!allStations || allStations.length === 0) return;
+
+    // Cách 2: Clustering gom cụm cho Admin hoặc khi chọn Toàn Quốc
+    const isAll = !filterRegion || filterRegion === 'all' || filterRegion === 'Toàn Quốc' || filterRegion === 'Cấp Quốc Gia';
+    if (isAdmin || isAll) {
+      this.renderClusteredStations(allStations);
+      return;
+    }
+
+    // Cách 1 & 2: Local Unit Mode (Hà Nội, Cần Thơ, TP.HCM, v.v.)
+    this.removeClusteredStationsLayers();
+    this.clearStationMarkers();
+
+    let stationsToRender = allStations.filter(s => {
+      const matchProv = s.level === 'national' || s.id === 'st-admin' || (s.name && s.name.includes('Quốc Gia')) ||
+        (s.province || '').toLowerCase().includes(filterRegion.toLowerCase());
+      if (!matchProv) return false;
+      if (agency && agency !== 'all' && s.level !== 'national' && s.id !== 'st-admin') {
+        if (agency === 'fire') return s.agency === 'fire' || s.agency === 'rescue';
+        return s.agency === agency;
+      }
+      return true;
+    });
+
+    stationsToRender.forEach(st => {
+      const isNational = st.level === 'national' || st.id === 'st-admin' || (st.name && st.name.toLowerCase().includes('quốc gia'));
+      const icon = isNational ? '⭐' : (st.agency === 'police' ? '👮‍♂️' : (st.agency === 'hospital' ? '🏥' : '🚒'));
+      const colorClass = isNational ? 'gold' : (st.agency === 'police' ? 'blue' : (st.agency === 'hospital' ? 'green' : 'orange'));
+
+      const el = document.createElement('div');
+      el.className = 'custom-map-pin station-pin permanent-station' + (isNational ? ' pin-national-hq' : '');
+      el.innerHTML = `
+        <div class="pin-core ${colorClass}" style="${isNational ? 'width: 38px; height: 38px; font-size: 18px; border: 2.5px solid #facc15; box-shadow: 0 0 25px #eab308, 0 8px 20px rgba(0,0,0,0.9); background: radial-gradient(circle at 35% 30%, #fef08a 0%, #b45309 65%, #451a03 100%); animation: pulseHqPin 2.2s infinite ease-in-out;' : 'width: 30px; height: 30px; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.6);'}">
+          <span>${icon}</span>
+        </div>
+        <div class="pin-tooltip" style="font-size: 10px; font-weight: 800; ${isNational ? 'color: #fef08a; border-color: #facc15; background: rgba(15,23,42,0.95);' : ''}">${isNational ? '⭐ ' : ''}${st.name}</div>
+      `;
+
+      const popupContent = `
+        <div style="font-family: system-ui, sans-serif; padding: 6px; max-width: 220px; color: #0f172a;">
+          <div style="font-weight: 800; font-size: 12px; color: ${st.agency === 'police' ? '#0066cc' : (st.agency === 'hospital' ? '#059669' : '#d97706')}; margin-bottom: 3px;">
+            ${icon} ${st.name}
+          </div>
+          <div style="font-size: 11px; color: #475569; margin-bottom: 4px; line-height: 1.4;">
+            📍 <b>Địa chỉ:</b> ${st.address}
+          </div>
+          <div style="font-size: 11px; color: #0f172a; margin-bottom: 6px;">
+            ☎️ <b>Trực ban:</b> <a href="tel:${st.phone}" style="color: #0284c7; font-weight: 700; text-decoration: none;">${st.phone}</a>
+          </div>
+          <div style="display: flex; gap: 4px; margin-top: 6px;">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=driving" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: #0088ff; color: white; padding: 5px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;" title="Dẫn đường ô tô nhanh nhất">
+              🚗 Ô tô
+            </a>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=${st.lat},${st.lng}&travelmode=two_wheeler" target="_blank" rel="noopener" style="flex: 1; text-align: center; background: #059669; color: white; padding: 5px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; text-decoration: none;" title="Dẫn đường xe máy nhanh nhất">
+              🛵 Xe máy
+            </a>
+          </div>
+        </div>
+      `;
+
+      const popup = new window.maplibregl.Popup({ offset: 20, closeButton: false })
+        .setHTML(popupContent);
+
+      const marker = new window.maplibregl.Marker({ element: el })
+        .setLngLat([st.lng, st.lat])
+        .setPopup(popup)
+        .addTo(this.map);
+
+      this.stationMarkers.push(marker);
+    });
+  }
+
+  reloadStationsMarkers(region = 'all', agency = null, isAdmin = false) {
+    this.loadAllStationsMarkers(region, agency, isAdmin);
   }
 
   enableAdminAddStationMode(onCoordsSelected) {
