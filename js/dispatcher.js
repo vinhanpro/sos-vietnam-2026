@@ -1,4 +1,4 @@
-import { MapController } from './map-controller.js';
+import { MapController } from './map-controller.js?v=20260920_ondemand_v1';
 
 const AGENCY_PREVIEWS = {
   congan: {
