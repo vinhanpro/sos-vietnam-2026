@@ -840,6 +840,9 @@ export class MapController {
   }
 
   renderSingleStationPin(st) {
+    if (!st || !st.lat || !st.lng || st.id === 'st-admin' || st.level === 'national') {
+      return;
+    }
     const isNational = st.level === 'national' || st.id === 'st-admin' || (st.name && st.name.toLowerCase().includes('quốc gia'));
     const isPolice = st.agency === 'police' || isNational;
 
@@ -875,7 +878,22 @@ export class MapController {
       el.classList.add('neon-selected');
       this.currentSelectedPinEl = el;
 
-      // Khoanh vùng tô tím địa bàn phường/xã và mở bảng tác chiến dùng chung (Hình 3 & 4)
+      const isProvinceLevel = st.level === 'province' || 
+        (st.name && (st.name.includes('Công An TP.') || st.name.includes('Công An Tỉnh') || st.name.includes('Bộ Chỉ Huy')) && !st.name.includes('Phường') && !st.name.includes('Xã')) ||
+        (st.ward === 'Toàn Thành Phố' || st.ward === 'Toàn Tỉnh');
+
+      if (isProvinceLevel) {
+        // Công an cấp Tỉnh / Thành phố: Khoanh vùng bao trọn TOÀN BỘ thành phố/tỉnh đó!
+        this.clearWardBoundary();
+        this.highlightProvinceBoundary(st.province);
+        if (window.dispatcherApp && typeof window.dispatcherApp.showProvinceHud === 'function') {
+          window.dispatcherApp.showProvinceHud(st);
+        }
+        return;
+      }
+
+      // Công an cấp xã/phường: Xóa viền tỉnh cũ & khoanh vùng địa bàn xã/phường sở tại
+      this.highlightProvinceBoundary(null);
       try {
         const queryParams = new URLSearchParams({
           id: st.wardId || '',
@@ -1016,6 +1034,8 @@ export class MapController {
     const isAll = !filterRegion || filterRegion === 'all' || filterRegion === 'Toàn Quốc' || filterRegion === 'Cấp Quốc Gia' || (filterRegion && filterRegion.includes('Quốc'));
 
     let stationsToRender = allStations.filter(s => {
+      // Bỏ qua trạm chưa có toạ độ hoặc trung tâm chỉ huy quốc gia (để chọn sau)
+      if (!s.lat || !s.lng || s.id === 'st-admin' || s.level === 'national') return false;
       if (isAdmin || isAll) return true;
       const matchProv = s.level === 'national' || s.id === 'st-admin' || (s.name && s.name.includes('Quốc Gia')) ||
         (s.province || '').toLowerCase().includes(filterRegion.toLowerCase());

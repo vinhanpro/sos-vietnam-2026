@@ -8001,6 +8001,69 @@ class DispatcherApp {
     hud.style.display = 'block';
   }
 
+  
+  showProvinceHud(station) {
+    const hud = document.getElementById('tacticalWardGeofenceHud');
+    if (!hud || !station) return;
+
+    const nameEl = document.getElementById('hudWardName');
+    const provEl = document.getElementById('hudWardProvince');
+    const sapNhapEl = document.getElementById('hudWardSapNhap');
+    const adminCenterEl = document.getElementById('hudWardAdminCenter');
+    const dienTichEl = document.getElementById('hudWardDienTich');
+    const danSoEl = document.getElementById('hudWardDanSo');
+    const maDVHCEl = document.getElementById('hudWardMaDVHC');
+    const canCuEl = document.getElementById('hudWardCanCu');
+
+    const polEl = document.getElementById('hudWardPolice');
+    const phEl = document.getElementById('hudWardPhone');
+    const phLink = document.getElementById('hudWardPhoneLink');
+    const smsEl = document.getElementById('hudWardSms');
+    const offEl = document.getElementById('hudWardOfficer');
+
+    const provName = station.province || 'Cần Thơ';
+    const isSpecialCity = ['Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Hải Phòng', 'Cần Thơ', 'Huế'].some(c => provName.includes(c));
+    const title = provName.startsWith('TP.') || provName.startsWith('Thành phố') || provName.startsWith('Tỉnh') || provName.startsWith('Thủ đô')
+      ? provName
+      : (isSpecialCity ? `Thành phố ${provName}` : `Tỉnh ${provName}`);
+
+    if (nameEl) nameEl.textContent = title;
+    if (provEl) provEl.textContent = `(Địa Bàn Toàn ${isSpecialCity ? 'Thành Phố' : 'Tỉnh'})`;
+    if (sapNhapEl) sapNhapEl.textContent = `Toàn bộ các quận/huyện, xã/phường thuộc ${title}`;
+    if (adminCenterEl) adminCenterEl.textContent = station.address || `Trụ sở Bộ Chỉ Huy Công An ${title}`;
+    if (dienTichEl) dienTichEl.textContent = 'Toàn Tỉnh / TP';
+    if (danSoEl) danSoEl.textContent = 'Toàn Địa Bàn';
+    if (maDVHCEl) maDVHCEl.textContent = `CATP-${provName.replace(/\s+/g, '')}`;
+    if (canCuEl) canCuEl.textContent = 'Bộ Công An — Công An Tỉnh / Thành Phố Trực Thuộc Trung Ương';
+
+    const resolvedPolice = station.name || `Công An ${title}`;
+    const resolvedPhone = (station.phone && !station.phone.includes('cập nhật')) ? station.phone : '0292 382 2113';
+    const resolvedSms = (station.sms && !station.sms.includes('cập nhật')) ? station.sms : '0988 113 113';
+    const resolvedOfficer = (station.officer && !station.officer.includes('cập nhật')) ? station.officer : 'Chỉ huy Trực ban CATP';
+
+    if (polEl) polEl.textContent = resolvedPolice;
+    if (phEl) phEl.textContent = resolvedPhone;
+    if (phLink) phLink.href = `tel:${resolvedPhone.replace(/\s+/g, '')}`;
+    if (smsEl) smsEl.textContent = resolvedSms;
+    if (offEl) offEl.textContent = resolvedOfficer;
+
+    const gmapsCarBtn = document.getElementById('hudGmapsBtn');
+    const gmapsMotoBtn = document.getElementById('hudGmapsMotoBtn');
+    const lat = station.lat || station.stationLat;
+    const lng = station.lng || station.stationLng;
+
+    if (lat && lng) {
+      if (gmapsCarBtn) gmapsCarBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+      if (gmapsMotoBtn) gmapsMotoBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=two_wheeler`;
+    } else {
+      const q = encodeURIComponent(resolvedPolice + ' ' + title);
+      if (gmapsCarBtn) gmapsCarBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${q}&travelmode=driving`;
+      if (gmapsMotoBtn) gmapsMotoBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${q}&travelmode=two_wheeler`;
+    }
+
+    hud.style.display = 'block';
+  }
+
   hideWardHud() {
     const hud = document.getElementById('tacticalWardGeofenceHud');
     if (hud) hud.style.display = 'none';
