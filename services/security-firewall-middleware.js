@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 🛡️ National Emergency Security Firewall & RBAC Middleware
  * Features:
  * 1. Layer 7 Anti-AI Crawler WAF & Honeypots
@@ -80,9 +80,12 @@ class SecurityFirewall {
   }
 
   getClientIP(req) {
-    const forwarded = process.env.TRUST_PROXY === 'true' && req.headers['x-forwarded-for'];
+    const forwarded = (process.env.TRUST_PROXY === 'true' || process.env.NODE_ENV === 'production' || Boolean(req.headers['x-forwarded-for'])) && req.headers['x-forwarded-for'];
     if (forwarded) {
       return forwarded.split(',')[0].trim();
+    }
+    if (req.headers['x-real-ip']) {
+      return req.headers['x-real-ip'].trim();
     }
     return req.socket?.remoteAddress || '127.0.0.1';
   }
@@ -109,7 +112,12 @@ class SecurityFirewall {
   }
 
   isLoopback(ip) {
-    return ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1' || ip === 'localhost';
+    if (!ip) return true;
+    const clean = String(ip).replace(/^::ffff:/, '').trim();
+    return clean === '127.0.0.1' || clean === '::1' || clean === 'localhost'
+      || clean.startsWith('192.168.')
+      || clean.startsWith('10.')
+      || /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(clean);
   }
 
   banIP(ip, reason, durationMs = 15 * 60 * 1000) {
@@ -185,16 +193,29 @@ class SecurityFirewall {
    */
   checkRateLimit(req, res, tier = 'general') {
     const ip = this.getClientIP(req);
-    // Allow loopback (localhost) during automated testing and internal operations
+    // Allow loopback (localhost) and internal LAN during operations
     if (this.isLoopback(ip)) {
       return true;
     }
+
+    // Authenticated sessions (Admin, Commander, Officers) are exempt from rate limiting
+    try {
+      const token = this.extractToken(req);
+      if (token && !this.isTokenRevoked(token)) {
+        const session = securityCryptoService.verifySessionToken(token);
+        if (session) {
+          req.user = session;
+          return true;
+        }
+      }
+    } catch (e) {}
+
     const now = Date.now();
 
     const limits = {
-      login: { max: 5, windowMs: 5 * 60 * 1000 },      // 5 attempts per 5 mins
-      sosCreate: { max: 4, windowMs: 60 * 1000 },       // 4 SOS per min per IP
-      general: { max: 180, windowMs: 60 * 1000 }        // 180 reqs per min
+      login: { max: 20, windowMs: 5 * 60 * 1000 },      // 20 attempts per 5 mins
+      sosCreate: { max: 15, windowMs: 60 * 1000 },       // 15 SOS per min per IP
+      general: { max: 600, windowMs: 60 * 1000 }        // 600 reqs per min
     };
 
     const config = limits[tier] || limits.general;
@@ -356,3 +377,5 @@ class SecurityFirewall {
 
 export const securityFirewall = new SecurityFirewall();
 export default securityFirewall;
+
+

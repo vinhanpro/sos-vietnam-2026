@@ -1,4 +1,4 @@
-// Map Controller with CartoDB Dark, Esri Satellite, Google Maps & 34 Provinces System
+﻿// Map Controller with CartoDB Dark, Esri Satellite, Google Maps & 34 Provinces System
 
 export class MapController {
   constructor(containerId, options = {}) {
@@ -950,20 +950,7 @@ export class MapController {
     if (!this.map) return;
     this.clearStationMarkers();
     this.removeClusteredStationsLayers();
-
-    this.clusterableStations = stations;
-    this.updateClusterPins();
-
-    let debounceTimer = null;
-    this._clusterMoveHandler = () => {
-      if (debounceTimer) clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        this.updateClusterPins();
-      }, 120);
-    };
-
-    this.map.on('moveend', this._clusterMoveHandler);
-    this.map.on('zoomend', this._clusterMoveHandler);
+    (stations || []).forEach(st => this.renderSingleStationPin(st));
   }
 
   async loadAllStationsMarkers(filterRegion = null, agency = null, isAdmin = false) {
@@ -972,18 +959,13 @@ export class MapController {
     const allStations = await this.getStationsData();
     if (!allStations || allStations.length === 0) return;
 
-    // Admin / All: Clustered mode with CAND emblem & glowing count badges
-    const isAll = !filterRegion || filterRegion === 'all' || filterRegion === 'Toàn Quốc' || filterRegion === 'Cấp Quốc Gia';
-    if (isAdmin || isAll) {
-      this.renderClusteredStations(allStations);
-      return;
-    }
-
-    // Local Unit Mode (Cần Thơ, Hà Nội, TP.HCM, v.v.)
     this.removeClusteredStationsLayers();
     this.clearStationMarkers();
 
+    const isAll = !filterRegion || filterRegion === 'all' || filterRegion === 'Toàn Quốc' || filterRegion === 'Cấp Quốc Gia' || (filterRegion && filterRegion.includes('Quốc'));
+
     let stationsToRender = allStations.filter(s => {
+      if (isAdmin || isAll) return true;
       const matchProv = s.level === 'national' || s.id === 'st-admin' || (s.name && s.name.includes('Quốc Gia')) ||
         (s.province || '').toLowerCase().includes(filterRegion.toLowerCase());
       if (!matchProv) return false;
@@ -1344,3 +1326,4 @@ export class MapController {
     });
   }
 }
+

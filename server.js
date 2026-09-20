@@ -2126,10 +2126,12 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // 2. Multi-Tier Token Bucket Rate Limiting
-  const rateLimitTier = urlPath.startsWith('/api/auth') ? 'login' : (urlPath.startsWith('/api/sos/create') ? 'sosCreate' : 'general');
-  if (!securityFirewall.checkRateLimit(req, res, rateLimitTier)) {
-    return;
+  // 2. Multi-Tier Token Bucket Rate Limiting (Applied ONLY to /api/ routes, NEVER static assets)
+  if (urlPath.startsWith('/api/')) {
+    const rateLimitTier = urlPath.startsWith('/api/auth') ? 'login' : (urlPath.startsWith('/api/sos/create') ? 'sosCreate' : 'general');
+    if (!securityFirewall.checkRateLimit(req, res, rateLimitTier)) {
+      return;
+    }
   }
 
   // -------------------------------------------------------------
