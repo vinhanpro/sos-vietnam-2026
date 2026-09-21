@@ -2246,6 +2246,7 @@ class DispatcherApp {
 
     // Default to Tab 1 (Accounts & Permissions)
     await this.switchAdminTab('accounts');
+    await this.loadAdminAccounts();
   }
 
 

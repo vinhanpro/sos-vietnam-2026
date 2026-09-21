@@ -2579,6 +2579,16 @@ const server = http.createServer(async (req, res) => {
   // API: Get All Dispatcher & Local Accounts (Admin)
   // -------------------------------------------------------------
   if (urlPath === '/api/admin/accounts' && req.method === 'GET') {
+      try {
+        const seedPath = path.join(__dirname, 'assets', 'agency-accounts.json');
+        if (fs.existsSync(seedPath)) {
+          const diskData = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
+          if (diskData && typeof diskData === 'object' && Object.keys(diskData).length > Object.keys(AGENCY_ACCOUNTS).length) {
+            Object.assign(AGENCY_ACCOUNTS, diskData);
+          }
+        }
+      } catch (e) {}
+
       const list = Object.values(AGENCY_ACCOUNTS).map(acc => ({
         ...toSafeAccountProfile(acc),
         password: getDisplayPasswordForAccount(acc)
