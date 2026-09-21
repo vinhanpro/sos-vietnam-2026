@@ -4141,17 +4141,43 @@ class SOSApp {
 
   speakSosPrompt() {
     try {
-      // 1. First priority: Play natural studio-grade voice by VieNeu-TTS (Thùy Dung)
-      if (!this.sosPromptAudio) {
-        this.sosPromptAudio = new Audio('assets/sounds/sos_prompt_thuy_dung.mp3');
-        this.sosPromptAudio.preload = 'auto';
+      // 1. Determine natural studio-grade voice by VieNeu-TTS
+      let voiceKey = 'thuy_dung'; // Mặc định: Thùy Dung (Nữ · Nam Bộ · Studio 48kHz)
+      try {
+        const saved = localStorage.getItem('sos_voice_config');
+        if (saved) {
+          const cfg = JSON.parse(saved);
+          if (cfg.voiceType === 'female-north') voiceKey = 'mai_anh';
+          else if (cfg.voiceType === 'male-north') voiceKey = 'minh_quan';
+          else if (cfg.voiceType === 'male-south') voiceKey = 'thai_son';
+          else if (cfg.voiceType === 'female-central' || cfg.voiceType === 'male-central') voiceKey = 'quang_son';
+          else if (cfg.voiceType === 'female-north-soft') voiceKey = 'truc_ly';
+          else if (cfg.voiceKey) voiceKey = cfg.voiceKey;
+        }
+      } catch(e) {}
+
+      // Dừng audio cũ nếu đang phát
+      if (this.sosPromptAudio) {
+        try {
+          this.sosPromptAudio.pause();
+          this.sosPromptAudio.currentTime = 0;
+        } catch(e) {}
       }
-      this.sosPromptAudio.currentTime = 0;
+
+      const audioSrc = `assets/sounds/sos_prompt_${voiceKey}.mp3?v=20260921_vieneu_padded`;
+      this.sosPromptAudio = new Audio(audioSrc);
+      this.sosPromptAudio.preload = 'auto';
+
       const playPromise = this.sosPromptAudio.play();
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
-          console.warn('HTML5 Audio playback interrupted, falling back to speech synthesis:', err);
-          this.fallbackSpeechSynthesis();
+          console.warn('HTML5 Audio MP3 interrupted, trying WAV fallback:', err);
+          try {
+            const wavAudio = new Audio(`assets/sounds/sos_prompt_${voiceKey}.wav?v=20260921_vieneu_padded`);
+            wavAudio.play().catch(() => this.fallbackSpeechSynthesis());
+          } catch(e2) {
+            this.fallbackSpeechSynthesis();
+          }
         });
       }
     } catch (e) {
@@ -4165,17 +4191,17 @@ class SOSApp {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
 
-      let voiceConfig = { voiceType: 'female-south', rate: 1.0, pitch: 1.25 };
+      let voiceConfig = { voiceType: 'female-south', rate: 0.88, pitch: 1.1 };
       try {
         const saved = localStorage.getItem('sos_voice_config');
         if (saved) voiceConfig = { ...voiceConfig, ...JSON.parse(saved) };
       } catch (e) {}
 
-      const promptText = "Hãy cho tôi biết sự cố bạn đang gặp phải? Bằng cách chọn các đơn vị mà bạn muốn báo!";
+      const promptText = "Hãy cho tôi biết sự cố bạn đang gặp phải, bằng cách chọn các đơn vị mà bạn muốn báo.";
       const utterance = new SpeechSynthesisUtterance(promptText);
       utterance.lang = 'vi-VN';
       utterance.rate = voiceConfig.rate || 0.88;
-      utterance.pitch = voiceConfig.pitch || (voiceConfig.voiceType?.startsWith('female') ? 1.25 : 0.95);
+      utterance.pitch = voiceConfig.pitch || (voiceConfig.voiceType?.startsWith('female') ? 1.1 : 0.95);
       utterance.volume = 1.0;
 
       const setVoiceAndSpeak = () => {
@@ -4200,12 +4226,12 @@ class SOSApp {
           } else if (vType === 'female-north') {
             matched = viVoices.find(v => {
               const n = v.name.toLowerCase();
-              return n.includes('north') || n.includes('bắc') || n.includes('hanoi') || n.includes('hoaimy') || n.includes('female');
+              return n.includes('north') || n.includes('miền bắc') || n.includes('bắc') || n.includes('maianh') || n.includes('thu');
             }) || viVoices[0];
           } else if (vType === 'male-north') {
             matched = viVoices.find(v => {
               const n = v.name.toLowerCase();
-              return n.includes('namminh') || n.includes('north') || n.includes('bắc') || n.includes('hanoi') || n.includes('male');
+              return n.includes('north') || n.includes('miền bắc') || n.includes('bắc') || n.includes('minhquan');
             }) || viVoices[0];
           }
 
@@ -4228,27 +4254,6 @@ class SOSApp {
     } catch (err) {
       console.warn('Voice AI synthesis error:', err);
     }
-  }
-
-  bindLegalWarningToggle() {
-    const card = document.getElementById('legalWarningHero');
-    if (!card) return;
-    const toggle = () => {
-      const isExpanded = card.classList.toggle('expanded');
-      card.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-    };
-    card.addEventListener('click', (e) => {
-      // Toggle when clicking header or toggle button or when collapsed
-      if (e.target.closest('#legalCardHeader') || e.target.closest('#btnToggleLegal') || !card.classList.contains('expanded')) {
-        toggle();
-      }
-    });
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggle();
-      }
-    });
   }
 
   playSiren() {

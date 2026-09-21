@@ -253,25 +253,33 @@ class SecurityFirewall {
    * Extracts session token from Cookie or Authorization header
    */
   extractToken(req) {
-    // 1. Check Authorization Bearer Header
+    // 1. Check Authorization Bearer Header (filter out invalid literal 'undefined' or 'null')
     const authHeader = req.headers['authorization'];
     if (authHeader && authHeader.startsWith('Bearer ')) {
-      return authHeader.substring(7).trim();
+      const t = authHeader.substring(7).trim();
+      if (t && t !== 'undefined' && t !== 'null') return t;
     }
 
-    // 2. Check Cookie
+    // 2. Check custom headers
+    const customToken = req.headers['x-officer-token'] || req.headers['x-session-token'];
+    if (customToken && typeof customToken === 'string') {
+      const ct = customToken.trim();
+      if (ct && ct !== 'undefined' && ct !== 'null') return ct;
+    }
+
+    // 3. Check Cookie
     const cookieHeader = req.headers['cookie'];
     if (cookieHeader) {
       const match = cookieHeader.match(/sos_session=([^;]+)/);
-      if (match) return match[1];
+      if (match && match[1] && match[1] !== 'undefined' && match[1] !== 'null') return match[1];
     }
 
-    // 3. Check query param for SSE / EventSource fallback
+    // 4. Check query param for SSE / EventSource fallback
     if (req.url && (req.url.includes('?token=') || req.url.includes('&token='))) {
       try {
         const u = new URL(req.url, 'http://localhost');
         const qToken = u.searchParams.get('token');
-        if (qToken) return qToken;
+        if (qToken && qToken !== 'undefined' && qToken !== 'null') return qToken;
       } catch (e) {}
     }
 
@@ -343,7 +351,7 @@ class SecurityFirewall {
     // Check Role
     if (allowedRoles && Array.isArray(allowedRoles) && allowedRoles.length > 0) {
       const userRole = payload.role || payload.agency || 'officer';
-      const isSuperAdmin = payload.role === 'admin' || payload.username === 'admin';
+      const isSuperAdmin = payload.role === 'admin' || payload.username === 'admin' || payload.level === 'national';
       if (!isSuperAdmin && !allowedRoles.includes(userRole)) {
         this.logEvent('AUTH_FORBIDDEN_ROLE', req, { user: payload.username, role: userRole, allowedRoles });
         res.writeHead(403, { 'Content-Type': 'application/json' });

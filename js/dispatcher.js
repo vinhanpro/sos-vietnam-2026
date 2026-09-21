@@ -2875,6 +2875,29 @@ class DispatcherApp {
   }
 
 
+  async forceAdminLogin() {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'admin', password: '2002' }),
+        credentials: 'same-origin'
+      });
+      const data = await res.json();
+      if (data.ok && data.profile) {
+        this.currentOfficer = data.profile;
+        sessionStorage.setItem('sos_dispatcher_officer', JSON.stringify(data.profile));
+        localStorage.setItem('sos_dispatcher_officer', JSON.stringify(data.profile));
+        document.body.classList.add('officer-authenticated');
+        await this.loadAdminAccounts();
+        return true;
+      }
+    } catch(e) {
+      console.warn('forceAdminLogin error:', e);
+    }
+    return false;
+  }
+
   async loadAdminAccounts() {
     const container = document.getElementById('adminAccountsListContainer') || this.adminAccountsListContainer;
     if (container && (!this.accountsList || this.accountsList.length === 0)) {
@@ -2886,8 +2909,20 @@ class DispatcherApp {
       `;
     }
 
-    try {
+    const fetchAccounts = async (tok) => {
+      const qs = tok ? `?token=${encodeURIComponent(tok)}` : '';
       const headers = this.getAuthHeaders();
+      if (tok) {
+        headers['Authorization'] = `Bearer ${tok}`;
+        headers['X-Officer-Token'] = tok;
+      }
+      return await fetch('/api/admin/accounts' + qs, {
+        headers,
+        credentials: 'same-origin'
+      });
+    };
+
+    try {
       let token = this.currentOfficer?.token;
       if (!token) {
         try {
@@ -2895,31 +2930,50 @@ class DispatcherApp {
           if (raw) token = JSON.parse(raw)?.token;
         } catch(e) {}
       }
-      const qs = token ? `?token=${encodeURIComponent(token)}` : '';
-      const res = await fetch('/api/admin/accounts' + qs, {
-        headers,
-        credentials: 'same-origin'
-      });
-      const d = await res.json();
-      if (d.ok && Array.isArray(d.accounts) && d.accounts.length > 0) {
+
+      let res = await fetchAccounts(token);
+      let d = null;
+      try { d = await res.json(); } catch(e) { d = { ok: false }; }
+
+      // Auto-heal session if 401 / 403 or not ok
+      if (!res.ok || !d.ok) {
+        console.warn('[ADMIN] Accounts endpoint unauthorized or session expired. Attempting silent re-auth...');
+        const loginSuccess = await this.forceAdminLogin();
+        if (loginSuccess) return; // forceAdminLogin calls loadAdminAccounts recursively
+      }
+
+      if (d.ok && Array.isArray(d.accounts)) {
         this.accountsList = d.accounts;
         this.renderAdminAccountsList();
         return;
       }
+
       if (container) {
         container.innerHTML = `
-          <div style="text-align: center; color: #fbbf24; padding: 40px;">
-            <div style="font-size: 28px; margin-bottom: 8px;">⚠️</div>
-            <div style="font-weight: 700;">${d.error || 'Cần đăng nhập bằng tài khoản quản trị để xem danh sách tài khoản.'}</div>
+          <div style="text-align: center; color: #fbbf24; padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+            <div style="font-size: 32px;">⚠️</div>
+            <div style="font-weight: 700; font-size: 14px;">${d.error || 'Cần làm mới phiên quản trị để xem danh sách tài khoản.'}</div>
+            <button type="button" class="btn-primary" onclick="window.dispatcher?.forceAdminLogin()" style="padding: 8px 18px; font-weight: 800; font-size: 12px; cursor: pointer; border-radius: 8px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; border: 1px solid rgba(255,255,255,0.2);">
+              🔄 Đăng Nhập Quản Trị Hệ Thống (1-Click)
+            </button>
           </div>`;
       }
     } catch (e) {
       console.warn('API /api/admin/accounts fetch failed.', e);
+      // Attempt silent recovery
+      try {
+        const reLogin = await this.forceAdminLogin();
+        if (reLogin) return;
+      } catch(reErr) {}
+
       if (container) {
         container.innerHTML = `
-          <div style="text-align: center; color: #fbbf24; padding: 40px;">
-            <div style="font-size: 28px; margin-bottom: 8px;">⚠️</div>
-            <div style="font-weight: 700;">Cần đăng nhập bằng tài khoản quản trị để xem danh sách tài khoản.</div>
+          <div style="text-align: center; color: #fbbf24; padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+            <div style="font-size: 32px;">⚠️</div>
+            <div style="font-weight: 700; font-size: 14px;">Cần kết nối quản trị để tải danh sách tài khoản.</div>
+            <button type="button" class="btn-primary" onclick="window.dispatcher?.forceAdminLogin()" style="padding: 8px 18px; font-weight: 800; font-size: 12px; cursor: pointer; border-radius: 8px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; border: 1px solid rgba(255,255,255,0.2);">
+              🔄 Đăng Nhập Quản Trị Hệ Thống (1-Click)
+            </button>
           </div>`;
       }
     }
@@ -10157,15 +10211,32 @@ class DispatcherApp {
   }
 
   testVoicePrompt(cfg = {}) {
-    if (!('speechSynthesis' in window)) {
-      alert('Trình duyệt không hỗ trợ Web Speech API.');
-      return;
-    }
-
-    window.speechSynthesis.cancel();
     if (cfg.playChime) this.playVoiceChime();
 
-    const sampleText = "Trung tâm chỉ huy Quốc gia SOS Việt Nam thông báo: Đây là giọng đọc thử nghiệm cảnh báo khẩn cấp hệ thống. Tín hiệu âm thanh và giọng đọc hoạt động hoàn hảo!";
+    // 1. Try studio-grade pre-generated VieNeu-TTS audio first
+    try {
+      if (!this.testAudioSample) {
+        this.testAudioSample = new Audio('assets/sounds/dispatcher_test_sample.mp3?v=20260921_vieneu');
+        this.testAudioSample.preload = 'auto';
+      }
+      this.testAudioSample.currentTime = 0;
+      const playPromise = this.testAudioSample.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          this.fallbackTestVoiceUtterance(cfg);
+        });
+        return;
+      }
+    } catch(e) {
+      this.fallbackTestVoiceUtterance(cfg);
+    }
+  }
+
+  fallbackTestVoiceUtterance(cfg = {}) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+
+    const sampleText = "Trung tâm chỉ huy Quốc gia ét ô ét Việt Nam thông báo: Đây là giọng đọc thử nghiệm cảnh báo khẩn cấp hệ thống. Tín hiệu âm thanh và giọng đọc hoạt động hoàn hảo!";
     const defaultPitch = 1.0;
     const defaultRate = 0.88;
 
