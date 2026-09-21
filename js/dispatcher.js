@@ -1,4 +1,4 @@
-import { MapController } from './map-controller.js?v=20260921_admin_clean_overview2';
+import { MapController } from './map-controller.js?v=20260921_admin_geodata_progress2';
 
 const AGENCY_PREVIEWS = {
   congan: {
@@ -5337,10 +5337,38 @@ class DispatcherApp {
         return;
       }
 
+      // Helper to update the Login Progress UI
+      const updateLoginProgress = (percent, label, subDetail) => {
+        const box = document.getElementById('adminLoginProgressBox');
+        const bar = document.getElementById('adminLoginProgressBar');
+        const pct = document.getElementById('adminLoginProgressPercent');
+        const lbl = document.getElementById('adminLoginProgressLabel');
+        const sub = document.getElementById('adminLoginSubDetail');
+
+        if (box) box.style.display = 'block';
+        if (bar) bar.style.width = `${percent}%`;
+        if (pct) pct.textContent = `${percent}%`;
+        if (lbl && label) {
+          lbl.innerHTML = `
+            <span class="loading-spin-radar"></span>
+            ${label}
+          `;
+        }
+        if (sub && subDetail) {
+          sub.innerHTML = `<span style="font-size: 11px;">🌐</span> <span>${subDetail}</span>`;
+        }
+      };
+
       if (this.btnSubmitLogin) {
         this.btnSubmitLogin.disabled = true;
-        this.btnSubmitLogin.innerHTML = '<span>⏳</span> Đang đăng nhập...';
+        this.btnSubmitLogin.innerHTML = '<span>⏳</span> Đang xác thực & tải dữ liệu...';
       }
+      if (this.loginUsername) this.loginUsername.disabled = true;
+      if (this.loginPassword) this.loginPassword.disabled = true;
+      if (this.loginErrorMsg) this.loginErrorMsg.style.display = 'none';
+
+      // Step 1: Connecting & validating security
+      updateLoginProgress(24, 'Đang kết nối trung tâm bảo mật Chỉ huy...', 'Mã hóa phiên trực ban an ninh quốc gia SSL/TLS 256-bit...');
 
       let data;
       try {
@@ -5352,19 +5380,30 @@ class DispatcherApp {
         data = await res.json();
       } catch (err) {
         console.error('Fetch login error:', err);
+        const box = document.getElementById('adminLoginProgressBox');
+        if (box) box.style.display = 'none';
+        if (this.loginUsername) this.loginUsername.disabled = false;
+        if (this.loginPassword) this.loginPassword.disabled = false;
+        if (this.btnSubmitLogin) {
+          this.btnSubmitLogin.disabled = false;
+          this.btnSubmitLogin.innerHTML = '<span>🔐</span> ĐĂNG NHẬP TRỰC BAN';
+        }
         if (this.loginErrorMsg) {
           this.loginErrorMsg.textContent = 'Lỗi kết nối máy chủ xác thực. Vui lòng thử lại.';
           this.loginErrorMsg.style.display = 'block';
         }
         return;
-      } finally {
+      }
+
+      if (!data || !data.ok || !data.profile) {
+        const box = document.getElementById('adminLoginProgressBox');
+        if (box) box.style.display = 'none';
+        if (this.loginUsername) this.loginUsername.disabled = false;
+        if (this.loginPassword) this.loginPassword.disabled = false;
         if (this.btnSubmitLogin) {
           this.btnSubmitLogin.disabled = false;
           this.btnSubmitLogin.innerHTML = '<span>🔐</span> ĐĂNG NHẬP TRỰC BAN';
         }
-      }
-
-      if (!data || !data.ok || !data.profile) {
         if (this.loginErrorMsg) {
           this.loginErrorMsg.textContent = (data && data.error) || 'Mật khẩu đơn vị không chính xác!';
           this.loginErrorMsg.style.display = 'block';
@@ -5376,6 +5415,20 @@ class DispatcherApp {
       }
 
       try {
+        // Step 2: Administrative Geodata Sync (34 provinces & 3,321 wards)
+        updateLoginProgress(58, 'Đang tải thông tin địa giới hành chính quốc gia...', 'Đồng bộ ranh giới 34 tỉnh thành & 3.321 xã/phường (bando.com.vn)...');
+        
+        // Trigger pre-warming of ward data in parallel
+        try {
+          if (this.mapController) {
+            fetch('/api/geo/all-wards').catch(() => {});
+          }
+        } catch(e) {}
+        await new Promise(r => setTimeout(r, 280));
+
+        // Step 3: Operational Units & Stations
+        updateLoginProgress(85, 'Đang nạp mạng lưới trụ sở & dữ liệu tác chiến...', 'Đồng bộ danh bạ Công An, CSGT, PCCC & hệ thống cứu hộ...');
+
         this.currentOfficer = data.profile;
         sessionStorage.setItem('sos_dispatcher_officer', JSON.stringify(data.profile));
         localStorage.setItem('sos_dispatcher_officer', JSON.stringify(data.profile));
@@ -5383,27 +5436,6 @@ class DispatcherApp {
         // 1. Immediately mark officer as authenticated to unhide all operational UI
         document.body.classList.add('officer-authenticated');
         this.applyOfficerProfile(data.profile);
-
-        // 2. Immediately hide auth modal & Cosmic Portal
-        if (this.authGateModal) {
-          this.authGateModal.style.display = 'none';
-          this.authGateModal.style.setProperty('display', 'none', 'important');
-        }
-        if (this.loginErrorMsg) this.loginErrorMsg.style.display = 'none';
-        if (this.cosmicPortalView) {
-          this.cosmicPortalView.style.display = 'none';
-          this.cosmicPortalView.style.setProperty('display', 'none', 'important');
-        }
-
-        // 3. Immediately halt 3D/ambient loops to free GPU/CPU
-        try {
-          if (window.tacticalSpace && typeof window.tacticalSpace.stop === 'function') {
-            window.tacticalSpace.stop();
-          }
-          if (window.tacticalCosmic && typeof window.tacticalCosmic.stop === 'function') {
-            window.tacticalCosmic.stop();
-          }
-        } catch(e) {}
 
         // 4. Handle duty shift
         const savedShift = sessionStorage.getItem('sos_duty_shift_' + data.profile.username);
@@ -5432,6 +5464,40 @@ class DispatcherApp {
         this.loadIncidents();
         this.connectLiveStream();
 
+        await new Promise(r => setTimeout(r, 260));
+
+        // Step 4: 100% Ready
+        updateLoginProgress(100, 'Khởi tạo thành công 100%! Đang vào trung tâm chỉ huy...', 'Sẵn sàng giám sát & điều phối an ninh toàn quốc.');
+        await new Promise(r => setTimeout(r, 350));
+
+        // 2. Immediately hide auth modal & Cosmic Portal
+        if (this.authGateModal) {
+          this.authGateModal.style.display = 'none';
+          this.authGateModal.style.setProperty('display', 'none', 'important');
+        }
+        const box = document.getElementById('adminLoginProgressBox');
+        if (box) box.style.display = 'none';
+        if (this.loginUsername) this.loginUsername.disabled = false;
+        if (this.loginPassword) this.loginPassword.disabled = false;
+        if (this.btnSubmitLogin) {
+          this.btnSubmitLogin.disabled = false;
+          this.btnSubmitLogin.innerHTML = '<span>🔐</span> ĐĂNG NHẬP TRỰC BAN';
+        }
+        if (this.loginErrorMsg) this.loginErrorMsg.style.display = 'none';
+        if (this.cosmicPortalView) {
+          this.cosmicPortalView.style.display = 'none';
+          this.cosmicPortalView.style.setProperty('display', 'none', 'important');
+        }
+
+        // 3. Immediately halt 3D/ambient loops to free GPU/CPU
+        try {
+          if (window.tacticalSpace && typeof window.tacticalSpace.stop === 'function') {
+            window.tacticalSpace.stop();
+          }
+          if (window.tacticalCosmic && typeof window.tacticalCosmic.stop === 'function') {
+            window.tacticalCosmic.stop();
+          }
+        } catch(e) {}
         // 6. Resize MapLibre canvas cleanly
         setTimeout(() => {
           if (this.mapController?.map) {

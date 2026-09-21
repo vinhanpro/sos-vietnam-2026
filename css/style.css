@@ -8132,3 +8132,19 @@ video::-webkit-media-controls-mute-button { display: none !important; }
   justify-content: center !important;
   z-index: 1000050 !important;
 }
+
+/* Admin Tactical Login Progress Bar Spinner */
+.loading-spin-radar {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(56, 189, 248, 0.3);
+  border-top-color: #38bdf8;
+  border-radius: 50%;
+  animation: spinRadar 0.8s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spinRadar {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

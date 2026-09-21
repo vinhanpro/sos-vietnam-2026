@@ -11,8 +11,15 @@ export class MapController {
     this.stationMarkers = [];
     this.activeWardStationMarker = null;
     this.currentStyleMode = 'dark'; // 'dark' | 'satellite' | 'streets'
-    // Restore ward visibility from localStorage
-    this.allWardsVisible = localStorage.getItem('allWardsVisible') === 'true';
+    // Mặc định bật sẵn Lưới 3.321 Xã/Phường theo yêu cầu trực ban (người dùng có thể tự tắt)
+    if (localStorage.getItem('sos_wards_default_v2') !== 'true') {
+      this.allWardsVisible = true;
+      localStorage.setItem('allWardsVisible', 'true');
+      localStorage.setItem('sos_wards_default_v2', 'true');
+    } else {
+      const savedWards = localStorage.getItem('allWardsVisible');
+      this.allWardsVisible = savedWards === null ? true : (savedWards === 'true');
+    }
     this.activeStationMarkersMap = new Map();
     this.candidateStations = [];
     this.stationsVisible = true;
@@ -127,7 +134,7 @@ export class MapController {
           type: 'fill',
           source: 'vn-all-wards',
           layout: {
-            visibility: 'none'
+            visibility: this.allWardsVisible ? 'visible' : 'none'
           },
           paint: {
             'fill-color': '#fde047',
@@ -139,7 +146,7 @@ export class MapController {
           type: 'line',
           source: 'vn-all-wards',
           layout: {
-            visibility: 'none'
+            visibility: this.allWardsVisible ? 'visible' : 'none'
           },
           paint: {
             'line-color': '#facc15',
@@ -278,16 +285,7 @@ export class MapController {
     });
   }
 
-  toggleAllWardsLayer(visible) {
-    if (!this.map) return;
-    const layers = ['vn-all-wards-line', 'vn-all-wards-fill'];
-    layers.forEach(id => {
-      if (this.map.getLayer(id)) {
-        this.map.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
-      }
-    });
-    this.allWardsGridVisible = Boolean(visible);
-  }
+
 
   toggleProvinceBoundaries(visible) {
     if (!this.map) return;
