@@ -4163,7 +4163,7 @@ class SOSApp {
   fallbackSpeechSynthesis() {
     try {
       if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel(); // Hủy các lời đọc trước đó nếu có
+      window.speechSynthesis.cancel();
 
       let voiceConfig = { voiceType: 'female-south', rate: 1.0, pitch: 1.25 };
       try {
@@ -4174,7 +4174,7 @@ class SOSApp {
       const promptText = "Hãy cho tôi biết sự cố bạn đang gặp phải? Bằng cách chọn các đơn vị mà bạn muốn báo!";
       const utterance = new SpeechSynthesisUtterance(promptText);
       utterance.lang = 'vi-VN';
-      utterance.rate = voiceConfig.rate || 1.0;
+      utterance.rate = voiceConfig.rate || 0.88;
       utterance.pitch = voiceConfig.pitch || (voiceConfig.voiceType?.startsWith('female') ? 1.25 : 0.95);
       utterance.volume = 1.0;
 
@@ -4211,7 +4211,10 @@ class SOSApp {
 
           if (matched) utterance.voice = matched;
         }
-        window.speechSynthesis.speak(utterance);
+        setTimeout(() => {
+          try { window.speechSynthesis.resume(); } catch(e) {}
+          window.speechSynthesis.speak(utterance);
+        }, 220);
       };
 
       if (window.speechSynthesis.getVoices().length === 0) {

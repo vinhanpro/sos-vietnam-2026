@@ -237,7 +237,7 @@ class DispatcherApp {
     }
 
     // 2. Check Officer Session
-    const raw = sessionStorage.getItem('sos_dispatcher_officer');
+    const raw = sessionStorage.getItem('sos_dispatcher_officer') || localStorage.getItem('sos_dispatcher_officer');
     if (raw) {
       try {
         const profile = JSON.parse(raw);
@@ -1325,8 +1325,16 @@ class DispatcherApp {
 
   getAuthHeaders(extra = {}) {
     const headers = { 'Content-Type': 'application/json', ...extra };
-    if (this.currentOfficer?.token) {
-      headers['Authorization'] = `Bearer ${this.currentOfficer.token}`;
+    let officer = this.currentOfficer;
+    if (!officer) {
+      try {
+        const raw2 = sessionStorage.getItem('sos_dispatcher_officer') || localStorage.getItem('sos_dispatcher_officer');
+        if (raw2) officer = JSON.parse(raw2);
+      } catch(e) {}
+    }
+    if (officer?.token) {
+      headers['Authorization'] = `Bearer ${officer.token}`;
+      if (officer.username) headers['X-Officer-Username'] = officer.username;
     }
     return headers;
   }
@@ -10159,7 +10167,7 @@ class DispatcherApp {
 
     const sampleText = "Trung tâm chỉ huy Quốc gia SOS Việt Nam thông báo: Đây là giọng đọc thử nghiệm cảnh báo khẩn cấp hệ thống. Tín hiệu âm thanh và giọng đọc hoạt động hoàn hảo!";
     const defaultPitch = 1.0;
-    const defaultRate = 1.0;
+    const defaultRate = 0.88;
 
     const utterance = new SpeechSynthesisUtterance(sampleText);
     utterance.lang = 'vi-VN';
@@ -10170,9 +10178,11 @@ class DispatcherApp {
     const matchedVoice = this.getMatchedVoice();
     if (matchedVoice) utterance.voice = matchedVoice;
 
+    const testDelay = cfg.playChime ? 600 : 280;
     setTimeout(() => {
+      try { window.speechSynthesis.resume(); } catch(e) {}
       window.speechSynthesis.speak(utterance);
-    }, cfg.playChime ? 350 : 50);
+    }, testDelay);
   }
 
   stopVoiceAlert() {
@@ -10219,9 +10229,9 @@ class DispatcherApp {
     const ward = incident.jurisdiction ? (incident.jurisdiction.ward || incident.ward || 'địa bàn') : 'địa bàn cơ sở';
     const province = incident.jurisdiction ? (incident.jurisdiction.province || incident.province || '') : '';
     
-    const message = `${prefix} Khẩn cấp! Khẩn cấp! Hệ thống SOS Quốc gia thông báo có sự cố ${tagStr} tại địa chỉ: ${incident.address || 'Vị trí bản đồ'}, thuộc ${ward}, ${province}. Người báo là ${incident.reporterName || 'Người dân'}, số điện thoại: ${incident.reporterPhone || 'Không rõ'}. Kính đề nghị cán bộ trực ban tiếp nhận và điều động lực lượng xử lý ngay lập tức!`;
+    const message = `${prefix} Khẩn cấp! Khẩn cấp! Hệ thống et o et Quốc gia thông báo có sự cố ${tagStr} tại địa chỉ: ${incident.address || 'Vị trí bản đồ'}, thuộc ${ward}, ${province}. Người báo là ${incident.reporterName || 'Người dân'}, số điện thoại: ${incident.reporterPhone || 'Không rõ'}. Kính đề nghị cán bộ trực ban tiếp nhận và điều động lực lượng xử lý ngay lập tức!`;
     const defaultPitch = 1.0;
-    const defaultRate = 1.0;
+    const defaultRate = 0.88;
 
     let currentRepeat = 0;
 
@@ -10265,14 +10275,16 @@ class DispatcherApp {
 
       try {
         window.speechSynthesis.cancel();
-        window.speechSynthesis.resume();
-        window.speechSynthesis.speak(utterance);
+        setTimeout(() => {
+          try { window.speechSynthesis.resume(); } catch(e) {}
+          window.speechSynthesis.speak(utterance);
+        }, 220);
       } catch (err) {
         console.warn('Voice AI speak error:', err);
       }
     };
 
-    setTimeout(playNext, cfg.playChime ? 350 : 50);
+    setTimeout(playNext, cfg.playChime ? 600 : 280);
   }
 
   async handleAcceptSOS() {
