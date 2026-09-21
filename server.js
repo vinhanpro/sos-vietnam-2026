@@ -5967,7 +5967,7 @@ const server = http.createServer(async (req, res) => {
   if (urlPath === '/api/admin/export-accounts-excel' && (req.method === 'POST' || req.method === 'GET')) {
     let body = '';
     req.on('data', chunk => body += chunk);
-    req.on('end', () => {
+    req.on('end', async () => {
       try {
         let exportPayload = {};
         if (body) {
@@ -5989,7 +5989,7 @@ const server = http.createServer(async (req, res) => {
         exportPayload.officerName = exportPayload.officerName || 'Trung Tâm Chỉ Huy Tác Chiến & Điều Phối Quốc Gia';
 
         // Pure Node.js high-speed in-memory Excel generator - 100% crash-proof on local & Render
-        const xlsxBuffer = generateAccountsWorkbookBuffer(exportPayload);
+        const xlsxBuffer = await generateAccountsWorkbookBuffer(exportPayload);
         const filename = `DanhSach_TaiKhoan_PhanQuyen_DonVi_${new Date().toISOString().slice(0, 10)}.xlsx`;
 
         res.writeHead(200, {
