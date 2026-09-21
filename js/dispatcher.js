@@ -1,4 +1,4 @@
-import { MapController } from './map-controller.js?v=20260921_culling_fix1';
+import { MapController } from './map-controller.js?v=20260921_admin_clean_overview2';
 
 const AGENCY_PREVIEWS = {
   congan: {
@@ -1483,8 +1483,39 @@ class DispatcherApp {
     } else {
       this.selectedStationRegion = 'all';
       if (this.mapController) {
-        // Cách 2: Admin loads clustered national stations with 0ms DOM overhead
+        // Clean all overlays, boundaries, pins, routes, and incident markers
+        this.mapController.clearWardBoundary();
+        this.mapController.clearActiveWardPin();
+        this.mapController.clearIncidentMarkers();
+        // Admin loads clustered national stations with 0ms DOM overhead
         this.mapController.loadAllStationsMarkers('all', 'all', true);
+
+        // Position camera to clean national Vietnam overview (no auto-click/zoom)
+        const isMobile = window.innerWidth <= 768;
+        this.mapController.map?.jumpTo({
+          center: [107.0, 16.2],
+          zoom: isMobile ? 4.85 : 5.2,
+          pitch: 0,
+          bearing: 0
+        });
+      }
+
+      // Deselect any incident, prevent auto-selection, and close drawer
+      this.selectedIncidentId = null;
+      this.hasInitialSelected = true;
+      this.isUserClosedDrawer = true;
+      const drawer = this.activeIncidentDrawer || document.getElementById('activeIncidentDrawer');
+      if (drawer) {
+        drawer.classList.add('is-hidden');
+        drawer.style.display = 'none';
+        drawer.style.setProperty('display', 'none', 'important');
+      }
+      this.hideWardHud?.();
+
+      // Remove GPS radar pulse marker from map if present
+      if (this.userGpsMarker) {
+        try { this.userGpsMarker.remove(); } catch (e) {}
+        this.userGpsMarker = null;
       }
     }
 
@@ -2630,42 +2661,52 @@ class DispatcherApp {
       locWidget.title = `📍 Vị trí trực ban: ${wardName ? wardName + ', ' : ''}${provName}\n• Đơn vị: ${displayStation}\n• Tọa độ GPS: ${lat.toFixed(4)}, ${lng.toFixed(4)}\n(Bấm để xem trên bản đồ)`;
     }
 
-    // Update or add GPS pulse marker on map
-    if (this.mapController && this.mapController.map && window.maplibregl) {
-      if (!this.userGpsMarker) {
-        const el = document.createElement('div');
-        el.className = 'dispatcher-gps-marker';
-        el.innerHTML = `
-          <div class="gps-beacon-radar"></div>
-          <div class="gps-beacon-center">📍</div>
-          <div class="gps-beacon-badge">${wardName || 'VỊ TRÍ CỦA BẠN'}</div>
-        `;
-        el.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.mapController.map.flyTo({ center: [lng, lat], zoom: 16, duration: 800 });
-        });
-        this.userGpsMarker = new window.maplibregl.Marker({ element: el })
-          .setLngLat([lng, lat])
-          .addTo(this.mapController.map);
-      } else {
-        this.userGpsMarker.setLngLat([lng, lat]);
-        const badge = this.userGpsMarker.getElement()?.querySelector('.gps-beacon-badge');
-        if (badge) badge.textContent = wardName || 'VỊ TRÍ CỦA BẠN';
+    const isAdmin = Boolean(this.currentOfficer && (this.currentOfficer.username === 'admin' || this.currentOfficer.level === 'national'));
+
+    if (!isAdmin) {
+      // Update or add GPS pulse marker on map for regular officers / unauthenticated
+      if (this.mapController && this.mapController.map && window.maplibregl) {
+        if (!this.userGpsMarker) {
+          const el = document.createElement('div');
+          el.className = 'dispatcher-gps-marker';
+          el.innerHTML = `
+            <div class="gps-beacon-radar"></div>
+            <div class="gps-beacon-center">📍</div>
+            <div class="gps-beacon-badge">${wardName || 'VỊ TRÍ CỦA BẠN'}</div>
+          `;
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.mapController.map.flyTo({ center: [lng, lat], zoom: 16, duration: 800 });
+          });
+          this.userGpsMarker = new window.maplibregl.Marker({ element: el })
+            .setLngLat([lng, lat])
+            .addTo(this.mapController.map);
+        } else {
+          this.userGpsMarker.setLngLat([lng, lat]);
+          const badge = this.userGpsMarker.getElement()?.querySelector('.gps-beacon-badge');
+          if (badge) badge.textContent = wardName || 'VỊ TRÍ CỦA BẠN';
+        }
+
+        if (shouldFly) {
+          this.mapController.map.flyTo({
+            center: [lng, lat],
+            zoom: 15.5,
+            pitch: 25,
+            duration: 1200
+          });
+        }
       }
 
-      if (shouldFly) {
-        this.mapController.map.flyTo({
-          center: [lng, lat],
-          zoom: 15.5,
-          pitch: 25,
-          duration: 1200
-        });
+      // Highlight ward boundary if available (only if user hasn't manually selected another ward)
+      if (d?.boundary && this.mapController && !this.currentSelectedWard) {
+        this.mapController.highlightWardBoundary(d.boundary, { color: '#eab308' });
       }
-    }
-
-    // Highlight ward boundary if available (only if user hasn't manually selected another ward)
-    if (d?.boundary && this.mapController && !this.currentSelectedWard) {
-      this.mapController.highlightWardBoundary(d.boundary, { color: '#eab308' });
+    } else {
+      // Admin: ensure clean national map without GPS radar pulse or ward boundary
+      if (this.userGpsMarker) {
+        try { this.userGpsMarker.remove(); } catch(e) {}
+        this.userGpsMarker = null;
+      }
     }
 
     // Sync bottom dock geofence labels if present (only if user hasn't manually selected another ward)
@@ -7256,7 +7297,10 @@ class DispatcherApp {
 
   initMap() {
     this.mapController = new MapController('dispatcherMap');
-    this.mapController.init([105.775, 10.035], 13.5);
+    const isMobile = window.innerWidth <= 768;
+    const defaultCenter = [107.0, 16.2];
+    const defaultZoom = isMobile ? 4.85 : 5.2;
+    this.mapController.init(defaultCenter, defaultZoom);
     // Sync visibility state from localStorage (MapController already reads it in constructor)
     this.allWardsVisible = this.mapController.allWardsVisible;
 
@@ -8225,11 +8269,19 @@ class DispatcherApp {
           this.incidents.set(inc.id, inc);
         });
 
-        // Chỉ hiển thị marker cho ca đang được chọn (hoặc ca active đầu tiên nếu chưa chọn), không flyTo để cán bộ tự do pan/drag map
-        const targetInc = (this.selectedIncidentId && this.incidents.get(this.selectedIncidentId))
-          || Array.from(this.incidents.values()).find(i => this.isIncidentActive(i));
-        if (targetInc && this.isIncidentActive(targetInc)) {
-          this.addMapPinForIncident(targetInc, false);
+        // Chỉ hiển thị marker nếu cán bộ đã chủ động chọn 1 ca cụ thể (đối với Admin cấp Quốc gia: giữ bản đồ sạch 100%, không auto-click/pin ca nào)
+        const isNationalAdmin = Boolean(this.currentOfficer && (this.currentOfficer.username === 'admin' || this.currentOfficer.level === 'national'));
+        if (!isNationalAdmin) {
+          const targetInc = (this.selectedIncidentId && this.incidents.get(this.selectedIncidentId))
+            || Array.from(this.incidents.values()).find(i => this.isIncidentActive(i));
+          if (targetInc && this.isIncidentActive(targetInc)) {
+            this.addMapPinForIncident(targetInc, false);
+          }
+        } else if (this.selectedIncidentId && this.incidents.has(this.selectedIncidentId)) {
+          const targetInc = this.incidents.get(this.selectedIncidentId);
+          if (targetInc && this.isIncidentActive(targetInc)) {
+            this.addMapPinForIncident(targetInc, false);
+          }
         }
         this.renderQueue();
         this.refreshTerritoryStatsBadges();
@@ -8769,9 +8821,10 @@ class DispatcherApp {
     });
 
     // Auto-select first incident only ONCE on initial page load for DESKTOP (>= 993px)
-    // On mobile (< 993px), keep the clean overview/map/queue view without auto-selecting
+    // On mobile (< 993px) or for Admin, keep the clean overview/map/queue view without auto-selecting
     const isDesktop = window.innerWidth > 992;
-    if (isDesktop && !this.hasInitialSelected && !this.isUserClosedDrawer && !this.selectedIncidentId && activeList.length > 0) {
+    const isNationalAdmin = Boolean(this.currentOfficer && (this.currentOfficer.username === 'admin' || this.currentOfficer.level === 'national'));
+    if (isDesktop && !isNationalAdmin && !this.hasInitialSelected && !this.isUserClosedDrawer && !this.selectedIncidentId && activeList.length > 0) {
       this.hasInitialSelected = true;
       this.selectIncident(activeList[0].id);
     } else if (!this.selectedIncidentId) {

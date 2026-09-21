@@ -614,6 +614,23 @@ export class MapController {
   }
 
 
+  removeRoute() {
+    if (!this.map) return;
+    try {
+      if (this.map.getLayer(this.routeSourceId + '-line')) this.map.removeLayer(this.routeSourceId + '-line');
+      if (this.map.getLayer(this.routeSourceId + '-glow')) this.map.removeLayer(this.routeSourceId + '-glow');
+      if (this.map.getSource(this.routeSourceId)) this.map.removeSource(this.routeSourceId);
+    } catch (e) {}
+  }
+
+  clearIncidentMarkers() {
+    if (this.markers) {
+      this.markers.forEach(m => { try { m.remove(); } catch(e) {} });
+      this.markers.clear();
+    }
+    this.removeRoute();
+  }
+
   clearActiveWardPin() {
     if (this.activeWardStationMarker) {
       try { this.activeWardStationMarker.remove(); } catch(e) {}
