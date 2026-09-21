@@ -1,4 +1,4 @@
-import { MapController } from './map-controller.js?v=20260921_mobile_fix2';
+import { MapController } from './map-controller.js?v=20260921_culling_fix1';
 
 const AGENCY_PREVIEWS = {
   congan: {

@@ -13,6 +13,10 @@ export class MapController {
     this.currentStyleMode = 'dark'; // 'dark' | 'satellite' | 'streets'
     // Restore ward visibility from localStorage
     this.allWardsVisible = localStorage.getItem('allWardsVisible') === 'true';
+    this.activeStationMarkersMap = new Map();
+    this.candidateStations = [];
+    this.stationsVisible = true;
+    this._viewportCullingBound = false;
   }
 
   init(center = [105.8542, 21.0285], zoom = 14) {
@@ -407,12 +411,11 @@ export class MapController {
   }
 
   toggleStationsLayer(visible) {
-    if (this.stationMarkers && Array.isArray(this.stationMarkers)) {
-      this.stationMarkers.forEach(m => {
-        if (m.getElement()) {
-          m.getElement().style.display = visible ? 'block' : 'none';
-        }
-      });
+    this.stationsVisible = Boolean(visible);
+    if (!this.stationsVisible) {
+      this.clearStationMarkers();
+    } else {
+      this.updateVisibleStationPins();
     }
   }
 
@@ -699,15 +702,14 @@ export class MapController {
   }
 
   clearStationMarkers() {
-    if (this._clusterMoveHandler && this.map) {
-      this.map.off('moveend', this._clusterMoveHandler);
-      this.map.off('zoomend', this._clusterMoveHandler);
-      this._clusterMoveHandler = null;
-    }
     if (this.stationMarkers && Array.isArray(this.stationMarkers)) {
-      this.stationMarkers.forEach(m => m.remove());
+      this.stationMarkers.forEach(m => { try { m.remove(); } catch(e) {} });
     }
     this.stationMarkers = [];
+    if (this.activeStationMarkersMap) {
+      this.activeStationMarkersMap.forEach(m => { try { m.remove(); } catch(e) {} });
+      this.activeStationMarkersMap.clear();
+    }
     if (this.currentSelectedPinEl) {
       this.currentSelectedPinEl.classList.remove('neon-selected');
       this.currentSelectedPinEl = null;
@@ -928,9 +930,9 @@ export class MapController {
     this.stationMarkers.push(marker);
   }
 
-  renderSingleStationPin(st) {
+  createStationMarker(st) {
     if (!st || !st.lat || !st.lng || st.id === 'st-admin' || st.level === 'national') {
-      return;
+      return null;
     }
     const isNational = st.level === 'national' || st.id === 'st-admin' || (st.name && st.name.toLowerCase().includes('quốc gia'));
     const isPolice = st.agency === 'police' || isNational;
@@ -945,8 +947,8 @@ export class MapController {
         <div class="congan-pin-label">${isNational ? '★ ' : ''}${st.name}</div>
       `;
     } else {
-      const icon = st.agency === 'hospital' ? '🏥' : '🚒';
-      const colorClass = st.agency === 'hospital' ? 'green' : 'orange';
+      const icon = st.agency === 'hospital' ? '🏥' : (st.agency === 'csgt' ? '🚓' : '🚒');
+      const colorClass = st.agency === 'hospital' ? 'green' : (st.agency === 'csgt' ? 'blue' : 'orange');
       el.className = 'custom-map-pin station-pin permanent-station';
       el.innerHTML = `
         <div class="pin-core ${colorClass}">
@@ -972,7 +974,6 @@ export class MapController {
         (st.ward === 'Toàn Thành Phố' || st.ward === 'Toàn Tỉnh');
 
       if (isProvinceLevel) {
-        // Công an cấp Tỉnh / Thành phố: Khoanh vùng bao trọn TOÀN BỘ thành phố/tỉnh đó!
         this.clearWardBoundary();
         this.highlightProvinceBoundary(st.province);
         if (window.dispatcherApp && typeof window.dispatcherApp.showProvinceHud === 'function') {
@@ -981,7 +982,6 @@ export class MapController {
         return;
       }
 
-      // Công an cấp xã/phường: Xóa viền tỉnh cũ & khoanh vùng địa bàn xã/phường sở tại
       this.highlightProvinceBoundary(null);
       try {
         const queryParams = new URLSearchParams({
@@ -1000,7 +1000,6 @@ export class MapController {
             window.dispatcherApp.showWardHud(data.boundary, st);
           }
         } else {
-          // Fallback if boundary not located via API
           const fallbackFeature = {
             type: 'Feature',
             properties: {
@@ -1027,81 +1026,80 @@ export class MapController {
       .setLngLat([exactLng, exactLat])
       .addTo(this.map);
 
-    this.stationMarkers.push(marker);
+    return marker;
   }
 
-  updateClusterPins() {
-    if (!this.map || !this.clusterableStations || this.clusterableStations.length === 0) return;
-    
-    // Clear existing markers
-    if (this.stationMarkers && Array.isArray(this.stationMarkers)) {
-      this.stationMarkers.forEach(m => m.remove());
+  renderSingleStationPin(st) {
+    const marker = this.createStationMarker(st);
+    if (marker) {
+      this.stationMarkers.push(marker);
+      const id = String(st.id || `${st.name}_${st.lat}_${st.lng}`);
+      if (this.activeStationMarkersMap) {
+        this.activeStationMarkersMap.set(id, marker);
+      }
     }
-    this.stationMarkers = [];
+  }
 
-    const zoom = this.map.getZoom();
-    const bounds = this.map.getBounds();
-    const west = bounds.getWest() - 0.5;
-    const east = bounds.getEast() + 0.5;
-    const south = bounds.getSouth() - 0.5;
-    const north = bounds.getNorth() + 0.5;
-
-    const visible = this.clusterableStations.filter(st =>
-      st.lng >= west && st.lng <= east && st.lat >= south && st.lat <= north
-    );
-
-    // When zoom >= 9.2 (viewing a province, city, or district), show all stations at their exact real coordinates!
-    if (zoom >= 9.2) {
-      visible.forEach(st => this.renderSingleStationPin(st));
+  updateVisibleStationPins() {
+    if (!this.map) return;
+    if (this.stationsVisible === false) {
+      this.clearStationMarkers();
       return;
     }
 
-    // Grid clustering by screen pixels (radius 65px)
-    const clusterRadius = 65;
-    const clusters = [];
-    const assigned = new Set();
+    const zoom = this.map.getZoom();
+    // MIN_STATION_ZOOM: Hide all station icons at national/regional macro view (< 9.8)
+    // to prevent lag, heavy DOM load on mobile, and crowded label mountains.
+    const MIN_STATION_ZOOM = 9.8;
 
-    for (let i = 0; i < visible.length; i++) {
-      if (assigned.has(i)) continue;
-      const stA = visible[i];
-      const ptA = this.map.project([stA.lng, stA.lat]);
-      const group = [stA];
-      assigned.add(i);
-
-      for (let j = i + 1; j < visible.length; j++) {
-        if (assigned.has(j)) continue;
-        const stB = visible[j];
-        const ptB = this.map.project([stB.lng, stB.lat]);
-        const dx = ptA.x - ptB.x;
-        const dy = ptA.y - ptB.y;
-        if (Math.hypot(dx, dy) <= clusterRadius) {
-          group.push(stB);
-          assigned.add(j);
-        }
+    if (zoom < MIN_STATION_ZOOM) {
+      if (this.activeStationMarkersMap && this.activeStationMarkersMap.size > 0) {
+        this.activeStationMarkersMap.forEach(m => { try { m.remove(); } catch(e) {} });
+        this.activeStationMarkersMap.clear();
+        this.stationMarkers = [];
       }
+      return;
+    }
 
-      if (group.length === 1) {
-        clusters.push({ isCluster: false, station: group[0] });
-      } else {
-        const avgLng = group.reduce((sum, s) => sum + s.lng, 0) / group.length;
-        const avgLat = group.reduce((sum, s) => sum + s.lat, 0) / group.length;
-        clusters.push({
-          isCluster: true,
-          lng: avgLng,
-          lat: avgLat,
-          count: group.length,
-          stations: group
-        });
+    if (!this.candidateStations || this.candidateStations.length === 0) return;
+
+    // Viewport Culling: Get current map bounds with 10% outer buffer
+    const bounds = this.map.getBounds();
+    const spanLng = bounds.getEast() - bounds.getWest();
+    const spanLat = bounds.getNorth() - bounds.getSouth();
+    const west = bounds.getWest() - (spanLng * 0.1);
+    const east = bounds.getEast() + (spanLng * 0.1);
+    const south = bounds.getSouth() - (spanLat * 0.1);
+    const north = bounds.getNorth() + (spanLat * 0.1);
+
+    const visibleStations = this.candidateStations.filter(st => {
+      const lng = Number(st.lng || st.stationLng);
+      const lat = Number(st.lat || st.stationLat);
+      return !isNaN(lng) && !isNaN(lat) && lng >= west && lng <= east && lat >= south && lat <= north;
+    });
+
+    const visibleIds = new Set(visibleStations.map(st => String(st.id || `${st.name}_${st.lat}_${st.lng}`)));
+
+    // 1. Unmount markers that have panned out of the viewport
+    for (const [id, marker] of this.activeStationMarkersMap.entries()) {
+      if (!visibleIds.has(id)) {
+        try { marker.remove(); } catch(e) {}
+        this.activeStationMarkersMap.delete(id);
       }
     }
 
-    clusters.forEach(item => {
-      if (item.isCluster) {
-        this.renderClusterPin(item);
-      } else {
-        this.renderSingleStationPin(item.station);
+    // 2. Mount markers that have entered the viewport
+    visibleStations.forEach(st => {
+      const id = String(st.id || `${st.name}_${st.lat}_${st.lng}`);
+      if (!this.activeStationMarkersMap.has(id)) {
+        const marker = this.createStationMarker(st);
+        if (marker) {
+          this.activeStationMarkersMap.set(id, marker);
+        }
       }
     });
+
+    this.stationMarkers = Array.from(this.activeStationMarkersMap.values());
   }
 
   renderClusteredStations(stations) {
@@ -1122,18 +1120,16 @@ export class MapController {
 
     const isAll = !filterRegion || filterRegion === 'all' || filterRegion === 'Toàn Quốc' || filterRegion === 'Cấp Quốc Gia' || (filterRegion && filterRegion.includes('Quốc'));
 
-    let stationsToRender = allStations.filter(s => {
-      // Bỏ qua trạm chưa có toạ độ hoặc trung tâm chỉ huy quốc gia (để chọn sau)
+    this.candidateStations = allStations.filter(s => {
       if (!s.lat || !s.lng || s.id === 'st-admin' || s.level === 'national') return false;
 
-      // KHÔNG vẽ trước các trạm cấp Xã / Phường (tránh đơ lag và rối bản đồ)
+      // Không vẽ trước các trạm cấp Xã / Phường (tránh do lag và rối bản đồ)
       // Các trạm Xã / Phường sẽ xuất hiện khi trực ban click vào ô lưới xã/phường đó!
       const nameLower = (s.name || '').toLowerCase();
       const isWardLevel = s.level === 'ward' || s.level === 'commune' || s.type === 'ward' || s.type === 'commune' ||
         nameLower.startsWith('công an xã') || nameLower.startsWith('công an phường') || nameLower.startsWith('công an thị trấn');
       if (isWardLevel) return false;
 
-      // Đối với các trụ sở cấp Tỉnh / Thành phố hoặc các lực lượng chuyên trách (PCCC, Bệnh viện, CSGT, Cứu hộ):
       if (isAdmin || isAll) return true;
       const matchProv = s.level === 'province' || (s.name && s.name.includes('Quốc Gia')) ||
         (s.province || '').toLowerCase().includes(filterRegion.toLowerCase());
@@ -1145,9 +1141,23 @@ export class MapController {
       return true;
     });
 
-    stationsToRender.forEach(st => {
-      this.renderSingleStationPin(st);
-    });
+    // Attach viewport culling map events (only once)
+    if (!this._viewportCullingBound && this.map) {
+      this._viewportCullingBound = true;
+      let debounceTimer = null;
+      const onMapMove = () => {
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          this.updateVisibleStationPins();
+        }, 70);
+      };
+      this.map.on('move', onMapMove);
+      this.map.on('moveend', () => this.updateVisibleStationPins());
+      this.map.on('zoomend', () => this.updateVisibleStationPins());
+    }
+
+    // Immediately render visible stations based on current zoom & bounds
+    this.updateVisibleStationPins();
   }
 
   reloadStationsMarkers(region = 'all', agency = null, isAdmin = false) {
