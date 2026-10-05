@@ -435,7 +435,59 @@ Sample row 2 action: TAO_MOI (tyt_annghiep_mau)
 PASS: P6-A 4th worksheet successfully verified!
 ```
 
-(P6-B evidence to follow.)
+### `E6-P6B-FD1` - Implementation Gate: Anvien indexing check
+Ran Anvien query on `scripts/import_accounts_excel.py` (File:scripts/import_accounts_excel.py, rank 1, score 211) and `server.js` (`/api/admin/import-accounts-excel` handler at lines 6013-6099). Both files are indexed by Anvien's static graph.
+
+### `E6-P6B-SRC1` - Action-column create gate and skipped-list response diff
+- `scripts/import_accounts_excel.py`: Initialized `skipped_list`. At line ~282, after retrieving existing account record, added `CREATE_ACTIONS` gate (`tao_moi`, `them_moi`, `create`, `add`, `new`). If `username not in existing_accounts` and normalized action is not a recognized create command, the row is recorded in `skipped_list` with exact reason and skipped (`continue`). Existing account updates remain ungated. Returned `skipped` and `skippedCount` in the script's stdout JSON.
+- `server.js`: In `/api/admin/import-accounts-excel` response construction (~line 6088), forwarded `skipped` and `skippedCount` from the Python script's summary output.
+
+### `E6-P6B-SCRIPT1` - Live proof: direct Python script invocation
+Crafted test workbook with 3 rows: existing `admin` without action, new `test_p6b_valid` with `TAO_MOI`, and new `test_p6b_skipped` without action. Executed `python scripts/import_accounts_excel.py`:
+```json
+{
+  "ok": true,
+  "total": 2,
+  "created": 1,
+  "updated": 1,
+  "accountsCount": 2,
+  "newUnits": ["Công An Phường Thử Nghiệm P6B (Cần Thơ)"],
+  "skipped": [{
+    "sheet": "Mẫu Thêm Mới",
+    "row": 8,
+    "username": "test_p6b_skipped",
+    "agencyName": "Trạm Y Tế Bỏ Qua P6B",
+    "action": "",
+    "reason": "Tài khoản mới 'test_p6b_skipped' bị bỏ qua vì cột Thao tác ('để trống') không phải lệnh tạo mới (TAO_MOI)"
+  }],
+  "skippedCount": 1
+}
+```
+Confirmed `out_accounts.json` contains `admin` and `test_p6b_valid`, and does not contain `test_p6b_skipped`.
+
+### `E6-P6B-HTTP1` / `E6-P6B-CLEANUP1` - Live proof: admin HTTP import and cleanup
+Uploaded test workbook via `POST /api/admin/import-accounts-excel` with admin Bearer token:
+```json
+{
+  "ok": true,
+  "message": "Nhập thành công 2 tài khoản từ file Excel!",
+  "total": 2,
+  "created": 1,
+  "updated": 1,
+  "newUnits": ["Công An Phường Live Test P6B (Cần Thơ)"],
+  "skipped": [{
+    "sheet": "Mẫu Thêm Mới",
+    "row": 8,
+    "username": "test_p6b_live_skipped",
+    "agencyName": "Trạm Y Tế Bỏ Qua Live P6B",
+    "action": "",
+    "reason": "Tài khoản mới 'test_p6b_live_skipped' bị bỏ qua vì cột Thao tác ('để trống') không phải lệnh tạo mới (TAO_MOI)"
+  }],
+  "skippedCount": 1,
+  "accountsCount": 454
+}
+```
+Followed by `POST /api/admin/accounts/delete` with `{"username": "test_p6b_live_valid"}`, returning 200 OK (`E6-P6B-CLEANUP1`). Reverted runtime/assets test mutations with `git checkout -- assets/ .runtime-data/`.
 
 ## E7 - P7 Evidence
 

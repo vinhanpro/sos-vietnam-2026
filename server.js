@@ -6088,6 +6088,8 @@ const server = http.createServer(async (req, res) => {
               created: summary.created,
               updated: summary.updated,
               newUnits: summary.newUnits || [],
+              skipped: summary.skipped || [],
+              skippedCount: summary.skippedCount || (summary.skipped ? summary.skipped.length : 0),
               accountsCount: Object.keys(updatedAccounts).length
             }));
           } catch(e) {

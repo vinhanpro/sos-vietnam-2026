@@ -163,6 +163,7 @@ def parse_accounts_excel(excel_path, current_accounts_json_path, output_json_pat
     updated_count = 0
     created_count = 0
     new_units_list = []
+    skipped_list = []
 
     for ws in wb.worksheets:
         sheet_title = ws.title
@@ -280,6 +281,27 @@ def parse_accounts_excel(excel_path, current_accounts_json_path, output_json_pat
             password = raw_password if raw_password else default_pwd
 
             existing = existing_accounts.get(username, {})
+            # P6-B: Gate new account creation by raw_action.
+            # Recognized create actions: TAO_MOI, TAO MOI, THEM_MOI, THEM MOI, CREATE, ADD, NEW.
+            # Existing accounts (update path) are NOT gated by raw_action.
+            CREATE_ACTIONS = {
+                'tao_moi', 'tao moi', 'tạo mới', 'them_moi', 'them moi', 'thêm mới',
+                'create', 'add', 'new'
+            }
+            norm_action = normalize_text(raw_action).strip().lower().replace('-', '_')
+
+            if username not in existing_accounts:
+                if norm_action not in CREATE_ACTIONS:
+                    skipped_list.append({
+                        'sheet': sheet_title,
+                        'row': row_idx,
+                        'username': username,
+                        'agencyName': raw_name or f"Đơn Vị {username.upper()}",
+                        'action': raw_action,
+                        'reason': f"Tài khoản mới '{username}' bị bỏ qua vì cột Thao tác ('{raw_action or 'để trống'}') không phải lệnh tạo mới (TAO_MOI)"
+                    })
+                    continue
+
             agency_name = raw_name or existing.get('agencyName') or f"Đơn Vị {username.upper()}"
             officer_rank = raw_rank or existing.get('officerRank') or ('Đại úy' if agency_code == 'police' else ('Bác sĩ' if agency_code == 'hospital' else 'Chuyên viên'))
             officer_name = raw_officer or existing.get('officerName') or 'Cán Bộ Trực Ban'
@@ -340,7 +362,9 @@ def parse_accounts_excel(excel_path, current_accounts_json_path, output_json_pat
         'created': created_count,
         'updated': updated_count,
         'accountsCount': len(existing_accounts),
-        'newUnits': new_units_list[:10]
+        'newUnits': new_units_list[:10],
+        'skipped': skipped_list,
+        'skippedCount': len(skipped_list)
     }
     print(json.dumps(result, ensure_ascii=False))
 
