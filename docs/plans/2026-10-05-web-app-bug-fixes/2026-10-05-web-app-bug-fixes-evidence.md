@@ -559,6 +559,76 @@ PASS: Citizen signature successfully drawn, submitted, and rendered in UI!
 ### `E8-P8A-FD1` - File detail / Anvien impact
 - Target file `playwright/verify-ui-signature-draw-and-display.cjs`: new test file, no prior graph entry.
 
+### `E8-P8B-SRC1` - Bidirectional signature persistence verification script
+- Created `playwright/test-bidirectional-signature-persistence.cjs`:
+  - Implements full automated test covering all 5 Table 4.4 scenarios:
+    1. Scenario (a): Citizen hand-drawn canvas signature creation and server persistence.
+    2. Scenario (b): Dispatcher electronic signature submission, establishing `isFullySigned === true`.
+    3. Scenario (c): Dispatcher signs on behalf of citizen ("Ký Thay Người Dân") with verified audit trail in `signatureLog` and `signerAccount`.
+    4. Scenario (d): Citizen attempt to write into officer signature slot strictly rejected with HTTP 403.
+    5. Scenario (e): Server process/container restart with re-readback of both incidents, validating all signatures, data URLs, and status flags remain durable and unchanged.
+
+### `E8-P8B-RUN1` - Live 5-scenario Playwright execution output
+Executed `node playwright/test-bidirectional-signature-persistence.cjs http://127.0.0.1:3000 admin 2002`:
+```text
+[P8-B Signature Persistence Test] Starting against http://127.0.0.1:3000
+
+--- Pre-flight: Dispatcher Authentication ---
+   Dispatcher logged in successfully. Token acquired.
+
+--- Scenario (a): Citizen Hand-Drawn Canvas Signature Persists ---
+1. Submitting test SOS incident #1...
+   Incident #1 created: SOS-MUVGYE4W-806 (Citizen token present: true )
+2. Opening signature modal and drawing citizen signature...
+3. Submitting citizen signature to /api/sos/sign...
+   Scenario (a) PASS: Citizen hand-drawn canvas signature confirmed stored.
+
+--- Scenario (b): Dispatcher Electronic Signature Persists ---
+1. Submitting dispatcher signature for Incident #1...
+   Scenario (b) PASS: Dispatcher electronic signature stored; isFullySigned === true.
+
+--- Scenario (c): Dispatcher Signs On Behalf of Citizen ("Ký Thay") ---
+1. Submitting test SOS incident #2 in fresh citizen session...
+   Incident #2 created: SOS-MUVGYPFU-946 (Citizen token present: true )
+2. Dispatcher signing on behalf of citizen via API...
+   Scenario (c) PASS: Dispatcher successfully signed on behalf of citizen with audit trail.
+
+--- Scenario (d): Citizen Attempt to Sign Officer Slot is Blocked (HTTP 403) ---
+   Response Status: 403
+   Response Body: {"ok":false,"error":"Người dân chỉ được ký phần xác nhận của mình"}
+   Scenario (d) PASS: Citizen unauthorized attempt to sign officer slot strictly blocked with HTTP 403.
+
+--- Scenario (e): Server Restart Readback (Durable Persistence) ---
+1. Reading current signature state before restart...
+   Snapshots captured. Incident #1 isFullySigned: true
+2. Triggering server restart...
+   Restarting host server process on port 3000...
+   Terminating server PID 33232...
+   Spawning new node server.js in C:\Users\dienv\Desktop\sos_vietnam_2026_web_hosting\.claude\worktrees\web-app-bug-review-c735b2...
+   Server is back up and healthy.
+3. Re-authenticating dispatcher after restart...
+4. Re-reading incidents after server restart...
+   Scenario (e) PASS: All signatures, roles, timestamps, and full-signed flags survived server restart intact.
+
+======================================================
+ALL 5 SCENARIOS PASSED SUCCESSFULLY:
+  (a) Citizen hand-drawn canvas signature persists: PASS
+  (b) Dispatcher electronic signature persists: PASS
+  (c) Dispatcher signs on behalf of citizen: PASS
+  (d) Citizen 403 block on officer slot: PASS
+  (e) Server restart readback persistence: PASS
+======================================================
+```
+
+### `E8-P8B-CLEANUP1` - Test data cleanup verification
+- Test runs create runtime entries in `.runtime-data/incident-history.json`, `.runtime-data/banned-ips.json`, `.runtime-data/login-history.json`, and `assets/bando-sync-meta.json`.
+- All transient state reverted via `git checkout -- assets/ .runtime-data/` before staging commits, leaving zero residual test artifacts in the working tree.
+
+### `E8-P8B-FD1` - File detail / Anvien impact
+- Target file `playwright/test-bidirectional-signature-persistence.cjs`: new test file, no prior graph entry.
+
+- Target file `playwright/verify-ui-signature-draw-and-display.cjs`: new test file, no prior graph entry.
+
 ## E9 - P9 Evidence
 
 Matching plan item(s): `P9-A`
