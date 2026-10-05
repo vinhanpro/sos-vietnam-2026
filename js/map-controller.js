@@ -543,12 +543,24 @@ export class MapController {
     this.markers.set('vehicle', marker);
   }
 
-  async drawRoute(fromCoords, toCoords) {
+  /**
+   * @param {[number, number]} fromCoords
+   * @param {[number, number]} toCoords
+   * @param {'driving'|'motorbike'} vehicleProfile - which vehicle class is assigned to this
+   *   incident. NOTE: the public OSRM demo server (router.project-osrm.org) only exposes a
+   *   'driving' routing profile; it has no motorcycle/bike profile at all. So regardless of
+   *   vehicleProfile, the street-shape request below always calls OSRM's 'driving' endpoint
+   *   (that's the only real path geometry source available). What DOES change with
+   *   vehicleProfile is the rendered line's color/dash style, so a motorbike-assigned unit's
+   *   route never looks visually identical to a car/ambulance-assigned unit's route.
+   */
+  async drawRoute(fromCoords, toCoords, vehicleProfile = 'driving') {
     if (!this.map) return;
 
+    const isMotorbike = vehicleProfile === 'motorbike';
     let routeCoordinates = [fromCoords, toCoords];
 
-    // Attempt OSRM real street path
+    // Attempt OSRM real street path (driving profile only - see function doc above)
     try {
       const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${fromCoords[0]},${fromCoords[1]};${toCoords[0]},${toCoords[1]}?overview=full&geometries=geojson`;
       const res = await fetch(osrmUrl);
@@ -568,8 +580,22 @@ export class MapController {
       }
     };
 
+    const glowId = this.routeSourceId + '-glow';
+    const lineId = this.routeSourceId + '-line';
+
+    // Motorbike-assigned units render as green/dashed; car/ambulance/truck-class units
+    // keep the original blue/solid style. Honest distinction given OSRM's single profile.
+    const glowColor = isMotorbike ? '#10b981' : '#0088ff';
+    const lineColor = isMotorbike ? '#34d399' : '#00d2ff';
+    const lineDasharray = isMotorbike ? [2, 1.5] : undefined;
+
     if (this.map.getSource(this.routeSourceId)) {
       this.map.getSource(this.routeSourceId).setData(routeGeoJSON);
+      // Layers already exist from a prior call; re-apply paint in case the
+      // vehicle profile differs from whatever it was drawn with last time.
+      this.map.setPaintProperty(glowId, 'line-color', glowColor);
+      this.map.setPaintProperty(lineId, 'line-color', lineColor);
+      this.map.setPaintProperty(lineId, 'line-dasharray', lineDasharray || [1, 0]);
     } else {
       this.map.addSource(this.routeSourceId, {
         type: 'geojson',
@@ -578,12 +604,12 @@ export class MapController {
 
       // Glow casing line
       this.map.addLayer({
-        id: this.routeSourceId + '-glow',
+        id: glowId,
         type: 'line',
         source: this.routeSourceId,
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
-          'line-color': '#0088ff',
+          'line-color': glowColor,
           'line-width': 8,
           'line-opacity': 0.45,
           'line-blur': 3
@@ -592,13 +618,14 @@ export class MapController {
 
       // Core animated pulse line
       this.map.addLayer({
-        id: this.routeSourceId + '-line',
+        id: lineId,
         type: 'line',
         source: this.routeSourceId,
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
-          'line-color': '#00d2ff',
-          'line-width': 4
+          'line-color': lineColor,
+          'line-width': 4,
+          ...(lineDasharray ? { 'line-dasharray': lineDasharray } : {})
         }
       });
     }

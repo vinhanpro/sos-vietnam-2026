@@ -9826,7 +9826,11 @@ class DispatcherApp {
       const unit = inc.dispatchUnit || inc.assignedUnit;
       if (unit && unit.lat && unit.lng) {
         this.mapController.setStationMarker(unit.lat, unit.lng, unit.unitName || unit.name, inc.agency);
-        this.mapController.drawRoute([unit.lng, unit.lat], [inc.lng, inc.lat]);
+        // Motorbike-class units: ward police patrol & traffic-rescue 2-wheel recovery.
+        // Car/truck-class units: hospital/ambulance, fire, CSGT (4-wheel ops).
+        const vehicleProfile = (inc.agency === 'police' || inc.agency === 'traffic-rescue')
+          ? 'motorbike' : 'driving';
+        this.mapController.drawRoute([unit.lng, unit.lat], [inc.lng, inc.lat], vehicleProfile);
       }
 
       // Highlight the commune/ward boundary of the incident (without snapping camera / auto-fitting bounds)

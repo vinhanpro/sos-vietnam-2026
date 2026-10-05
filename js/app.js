@@ -1759,7 +1759,11 @@ class SOSApp {
           assigned.unitName || assigned.name,
           incident.agency
         );
-        this.mapController.drawRoute([assigned.lng, assigned.lat], [incident.lng, incident.lat]);
+        // Motorbike-class units: ward police patrol & traffic-rescue 2-wheel recovery.
+        // Car/truck-class units: hospital/ambulance, fire, CSGT (4-wheel ops).
+        const vehicleProfile = (incident.agency === 'police' || incident.agency === 'traffic-rescue')
+          ? 'motorbike' : 'driving';
+        this.mapController.drawRoute([assigned.lng, assigned.lat], [incident.lng, incident.lat], vehicleProfile);
       }
 
       if (this.mapController.map) {
@@ -2588,7 +2592,11 @@ class SOSApp {
 
       if (this.mapController && assigned.lat && assigned.lng) {
         this.mapController.setStationMarker(assigned.lat, assigned.lng, assigned.unitName || assigned.name, incident.agency);
-        this.mapController.drawRoute([assigned.lng, assigned.lat], [incident.lng, incident.lat]);
+        // Motorbike-class units: ward police patrol & traffic-rescue 2-wheel recovery.
+        // Car/truck-class units: hospital/ambulance, fire, CSGT (4-wheel ops).
+        const vehicleProfile = (incident.agency === 'police' || incident.agency === 'traffic-rescue')
+          ? 'motorbike' : 'driving';
+        this.mapController.drawRoute([assigned.lng, assigned.lat], [incident.lng, incident.lat], vehicleProfile);
       }
     }
 

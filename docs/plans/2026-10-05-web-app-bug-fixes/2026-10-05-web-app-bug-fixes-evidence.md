@@ -1,0 +1,268 @@
+# Web App Bug Fixes (Vehicle Routing + Real Voice Call) Evidence Ledger
+
+## Metadata
+
+- Date: `2026-10-05`
+- Plan: `docs/plans/2026-10-05-web-app-bug-fixes/2026-10-05-web-app-bug-fixes-plan.md`
+- Evidence: `docs/plans/2026-10-05-web-app-bug-fixes/2026-10-05-web-app-bug-fixes-evidence.md`
+- Benchmark: `docs/plans/2026-10-05-web-app-bug-fixes/2026-10-05-web-app-bug-fixes-benchmark.md`
+- Actual status: `docs/plans/2026-10-05-web-app-bug-fixes/2026-10-05-web-app-bug-fixes-actual-status.md`
+
+## Evidence Rules
+
+Evidence IDs follow `E<phase>-<item>-<kind><n>` (e.g. `E0-P0A-SRC1`). See `plan.md` Rules section for the full discipline (detect-changes before commit, Docker-backed runtime validation, no hidden fallback).
+
+## E0 - P0 Evidence
+
+Matching plan item(s): `P0-A`
+
+### Repo/graph baseline
+
+- Worktree: `C:\Users\dienv\Desktop\sos_vietnam_2026_web_hosting\.claude\worktrees\web-app-bug-review-c735b2`, branch `claude/web-app-bug-review-c735b2`.
+- Anvien repo registered this session as `sos-vietnam-2026-worktree-bugreview` via `anvien analyze --force --name sos-vietnam-2026-worktree-bugreview .`, result: `files: scanned=101 parsed_code=64 failed=0`, graph `nodes=22617 relationships=24547`, indexed commit `34e919dc949a265bccf829612f9e7e53af3711bd`.
+- `anvien detect-changes --repo sos-vietnam-2026-worktree-bugreview --scope all` run before this plan's authoring: only `.gitignore`, `.runtime-data/incident-history.json`, `assets/bando-sync-meta.json` show diffs (all pre-existing runtime/data noise, zero changed symbols) — confirms no implementation edits have been made yet in this plan.
+
+### `E0-P0A-FD1` — `js/map-controller.js` file-detail
+
+`anvien file-detail js/map-controller.js --repo sos-vietnam-2026-worktree-bugreview --json`: `summary.relatedFiles` via `dict.files` = `["js/map-controller.js", "js/app.js"]` (1 related file beyond itself); `localRelationshipCount: 101`, `inboundRefCount: 3`, `outboundRefCount: 0`, `unresolved: 1048`, `risk: "high"`.
+
+### `E0-P0A-FD2` — `js/app.js` file-detail
+
+`anvien file-detail js/app.js --repo sos-vietnam-2026-worktree-bugreview --json`: `dict.files` = `["js/app.js", "js/location.js", "js/map-controller.js"]` (2 related files beyond itself); `localRelationshipCount: 257`, `outboundRefCount: 6`, `unresolved: 4008`, `risk: "high"`.
+
+### `E0-P0A-FD3` — `server.js` file-detail
+
+`anvien file-detail server.js --repo sos-vietnam-2026-worktree-bugreview --json`: `localRelationshipCount: 209`, `outboundRefCount: 33`, `unresolved: 4613`, `risk: "high"`; related files include `services/accounts-excel-generator.js`, `services/agency-password-policy.js`, `services/bando-sync-service.js`, `services/runtime-data-store.js`, `services/security-crypto-service.js`, among others (full `dict.files` list truncated in tool output; high-level relationship count sufficient to classify risk/scope warning per repo rule).
+
+### `E0-P0A-FD4` — `js/dispatcher.js` file-detail (not indexed)
+
+`anvien file-detail js/dispatcher.js --repo sos-vietnam-2026-worktree-bugreview --json` returned a plain-text error: `file "js/dispatcher.js" not found in repo sos-vietnam-2026-worktree-bugreview` (not valid JSON). File size check: `wc -l js/dispatcher.js` = 13225 lines, vs `js/app.js` 4319, `server.js` 6266, `js/map-controller.js` 1588 — the Anvien `analyze` run's `files: scanned=101 parsed_code=64` gap (37 scanned-but-not-parsed files) is consistent with `js/dispatcher.js` being too large/complex to parse into the graph for this repo. Treated as a tooling blocker for graph-based impact only; does not block manual-inspection-based editing.
+
+### `E0-P0A-SRC1` — `drawRoute` source read
+
+Read `js/map-controller.js:515-612` in full. Confirms:
+
+- `setVehicleMarker(lat, lng, agency, unitName)` (line 520) already picks an icon by `agency` (`🚓`/`🚑`/`🚒`) — already agency-aware, preserve-only.
+- `async drawRoute(fromCoords, toCoords)` (line 546) builds `` `https://router.project-osrm.org/route/v1/driving/${fromCoords[0]},${fromCoords[1]};${toCoords[0]},${toCoords[1]}?overview=full&geometries=geojson` `` unconditionally (line 553), falls back to a straight 2-point line on fetch error (lines 559-561), and renders two fixed-paint MapLibre layers: `-glow` (color `#0088ff`, width 8, opacity 0.45, blur 3) and `-line` (color `#00d2ff`, width 4) with no agency/profile-conditional branching anywhere in the function.
+
+### `E0-P0A-SRC2` — citizen-side `drawRoute` call sites
+
+`Grep '\.drawRoute\(' js/app.js` found exactly 2 matches: `js/app.js:1762` and `js/app.js:2591`, both calling `this.mapController.drawRoute([assigned.lng, assigned.lat], [incident.lng, incident.lat])` — identical 2-argument form, no profile/agency argument passed, confirming the call sites cannot currently influence `drawRoute`'s OSRM profile or styling even after P1-A changes `drawRoute`'s signature, until the call sites themselves are also edited.
+
+### `E0-P0A-SRC3` — dispatcher-side `drawRoute` call site
+
+`Grep '\.drawRoute\(' js/dispatcher.js` found exactly 1 match: `js/dispatcher.js:9829`, `this.mapController.drawRoute([unit.lng, unit.lat], [inc.lng, inc.lat])` — same 2-argument form as the citizen side. Confirmed via plain-text `Grep` only; `js/dispatcher.js` is not graph-indexed (`E0-P0A-FD4`), so this exact line number must be re-verified immediately before editing in P1-A per the plan's Implementation Gate.
+
+### `E0-P0A-NET1` — live OSRM network capture
+
+Live run against the real dev server (`node server.js` on port 3000, via the Browser preview tool) for a citizen-submitted `police`-agency SOS incident. `preview_network` listing included: `GET https://router.project-osrm.org/route/v1/driving/105.83768,21.0265;105.834,21.0278?overview=full&geometries=geojson -> 200`. Confirms the hardcoded `driving` path fires at runtime for a police (motorbike-class) incident, not just in source — this is the literal defect the user reported.
+
+### `E0-P0A-UI1` — live Google Maps link DOM read (confirmed correct, preserve-only)
+
+Live `preview_eval` on the citizen tracking view for the same incident:
+
+```json
+{
+  "carHref": "https://www.google.com/maps/dir/?api=1&origin=21.0278,105.834&destination=21.0265,105.83768&travelmode=driving",
+  "motoHref": "https://www.google.com/maps/dir/?api=1&origin=21.0278,105.834&destination=21.0265,105.83768&travelmode=two_wheeler"
+}
+```
+
+Both buttons visible (`display: flex`), correctly labeled ("Ô tô ↗" / "Xe máy ↗"), and point to distinct `travelmode` values. This surface is out of scope for this plan (already correct).
+
+### `E0-P0A-SRC4` — `server.js` signal handler source read
+
+Read `server.js:5353-5433` in full. The handler for `urlPath === '/api/sos/videocall/signal' || urlPath === '/api/sos/voicecall/signal'` (POST) destructures `{ id, action, sender, callType, streamData, accessToken }` from the JSON body, builds a `signalPayload` with only those fields plus server-derived metadata (`officerName`, `unitName`, `timestamp`), and routes it via `broadcastToDispatchers`/`notifyCitizen` based on `signalPayload.sender`. No field carries SDP or ICE candidate data; `action` values observed in client code are only `'request'|'accept'|'reject'|'end'`.
+
+### `E0-P0A-SRC5` — `broadcastToDispatchers` / `notifyCitizen` source read
+
+Read `server.js:1583-1699` (`broadcastToDispatchers`, lines 1583-~1680; `notifyCitizen`, lines 1689-1699). `notifyCitizen` is a straight per-incident-subscriber SSE write, with zero reference to `action`/`event` value inside its body (only the caller picks the `event` name). `broadcastToDispatchers`'s `event === 'videocall_signal' || event === 'voicecall_signal'` branch (lines 1596-~1625) filters by escalation level and agency subscription, but — critically — never inspects the inner `action` field of the payload at all; the branch condition is purely on the outer `event` string. This supports (pending final confirmation at P2-A edit time) the actual-status row's provisional `correct`/action-agnostic classification.
+
+### `E0-P0A-SRC6` — citizen voice-call lifecycle source read
+
+Read `js/app.js:2238-2494` in full (`startCitizenVoiceCall`, `setupCitizenVoiceVisualizer`, `endCitizenVoiceCall`) and `js/app.js:1841-1969` (`handleVideoCallSignal`). Confirms: `getUserMedia({audio:true})` is the only media API called; the stream is only ever passed to `setupCitizenVoiceVisualizer` (canvas waveform) and optionally `CallAudioRecorder.startRecording` (local recording); the only network calls made during the call lifecycle are plain POSTs to `/api/sos/videocall/signal` with `action: 'request'|'accept'|'reject'`. No `RTCPeerConnection`, `createOffer`, `createAnswer`, `setRemoteDescription`, or `addIceCandidate` symbol appears anywhere in this range or elsewhere in the file (cross-checked against the repo-wide grep below).
+
+### Repo-wide WebRTC primitive check (supports `E0-P0A-SRC6`/`SRC7`)
+
+`Grep 'RTCPeerConnection|createOffer|createAnswer|setRemoteDescription|addIceCandidate|getTracks\(\).*attach|remoteStream|peerConnection'` across the full worktree returned zero matches for any `RTCPeerConnection`/SDP/ICE API; the only `remoteStream`-adjacent matches were in `js/call-audio-recorder.js:104-114` (see `E0-P0A-SRC8`), which is a local mixing utility, not a peer-connection consumer.
+
+### `E0-P0A-UI2` — live voice-call DOM read (no remote-audio sink)
+
+Live run: clicked `#btnCitizenVoiceCallDispatcher` -> call-type selection modal opened (`#citizenCallSelectionModal`) -> clicked `#btnChooseCitizenVoiceCall`. `preview_eval` immediately after:
+
+```json
+{
+  "modalOpen": true,
+  "statusText": " Đang đổ chuông… Chờ trực ban nhấc máy",
+  "isCitizenVoiceCallActive": true,
+  "hasRTCPeerConnection": true,
+  "anyAudioElementPlaying": [
+    {"src": "https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3", "paused": true},
+    {"src": "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3", "paused": true}
+  ]
+}
+```
+
+(`hasRTCPeerConnection: true` reflects that the browser's global `RTCPeerConnection` constructor exists, not that the app uses it — confirmed by the zero-match grep above; the app never calls it.) The two `<audio>` elements present are ringtone/SFX assets only; neither has a `MediaStream` `srcObject`, confirming no remote-audio playback path exists.
+
+### `E0-P0A-SRC7` — dispatcher voice-call lifecycle (manual grep, not graph-indexed)
+
+`Grep 'startCitizenLiveStream|startDispatcherVoiceCall|startDispatcherVideoCall|getUserMedia' js/dispatcher.js` found `navigator.mediaDevices.getUserMedia({ video: true, audio: true })` at `js/dispatcher.js:8645` and `startDispatcherVideoCall` definition at `:6815`, called from `:5728`, `:6267`, `:6604`, `:10061`, and from an incoming-signal handler at `:7154`. Same local-only pattern as the citizen side: media acquired, no `RTCPeerConnection` reference anywhere in this file (confirmed by the repo-wide grep above, which covers `js/dispatcher.js` too). Exact current function name/line for the dispatcher's **voice** (not video) call path was not pinned down in this P0 pass beyond this grep; `plan.md`'s P2-C work step requires a fresh, exact re-read (`E2-P2C-SRC0`) before editing.
+
+### `E0-P0A-SRC8` — `CallAudioRecorder` remote-stream handling
+
+`js/call-audio-recorder.js:104-114` (`startRecording`) already branches on a `remoteSource` parameter: accepts a raw `MediaStream`, an element with `.srcObject`, or an element supporting `.captureStream()`, and if `remoteStreamToConnect.getAudioTracks().length > 0`, mixes it in via `this.audioCtx.createMediaStreamSource(remoteStreamToConnect)`. Today this parameter is never passed a real value from either `js/app.js` or `js/dispatcher.js` (both call sites pass only the local stream), so this capability is currently `partial`/unused rather than `missing` — P2-B/P2-C should wire the real remote stream into this existing parameter rather than adding new mixing logic.
+
+### Excel account source (for P1-B/P2-C dispatcher login validation)
+
+Read `D:\DOWNLOAD\DanhSach_TaiKhoan_PhanQuyen_DonVi_2026-09-17.xlsx` via `xlsx` (already a repo dependency, `package.json` `dependencies.xlsx: ^0.18.5`). 3 sheets: `Công An & CAND` (171 rows), `Cấp Cứu Y Tế` (73 rows), `Cứu Hộ Doanh Nghiệp` (73 rows), each with columns `STT, Khu Vực, Lực Lượng Nghiệp Vụ, Cấp Hành Chính, Tên Cơ Quan/Đơn Vị Trực Ban, Địa Bàn, Tên Đăng Nhập, Mật Khẩu, Cán Bộ Phụ Trách, Chức Vụ/Cấp Bậc, SĐT Trực Ban, SMS Tiếp Nhận`. Sample rows identified for later validation use (password values intentionally not repeated verbatim here beyond what is already a plaintext demo credential in the sheet; referenced by username only going forward in evidence that may be read outside this session):
+
+- National/admin level: username `admin`, Cấp Hành Chính = `Trung Ương`, unit = `Trung Tâm Chỉ Huy Tác Chiến Quốc Gia`.
+- Ward level, Cần Thơ, Công an khu vực: username `capcaikhect`, unit = `Trực ban Công an phường Cái Khế`.
+
+This file lives outside the repo (`D:\DOWNLOAD\...`) and was granted via `request_directory`; it is not and must not be copied into the repo or into any committed plan/evidence content beyond the username references above.
+
+## E1 - P1 Evidence
+
+Matching plan item(s): `P1-A`, `P1-B`
+
+### `E1-P1A-SRC1` — `drawRoute` signature/body diff
+
+`js/map-controller.js:546-630` (new range): added `vehicleProfile = 'driving'` parameter; OSRM request still always calls the `driving` profile endpoint (documented in a new JSDoc comment explaining the public-OSRM limitation); added `isMotorbike`/`glowColor`/`lineColor`/`lineDasharray` computed from `vehicleProfile`; the pre-existing `if (this.map.getSource(...))`/`else` branch now also calls `setPaintProperty` on both layers in the "already exists" branch, so a route re-drawn with a different profile on a second call (e.g. a different incident reusing the same source) gets re-styled, not left on whatever profile first created the layers.
+
+### `E1-P1A-SRC2` — 3 call-site diffs
+
+`js/app.js:1762-1766` (inside `startTracking`), `js/app.js:2591-2599` (inside `updateIncidentUI`), `js/dispatcher.js:9828-9833` (dispatcher map render): each now computes `const vehicleProfile = (agency === 'police' || agency === 'traffic-rescue') ? 'motorbike' : 'driving';` immediately before its `drawRoute(...)` call and passes it as the 3rd argument. The mapping comment is duplicated identically across all 3 call sites (no shared module introduced, per the plan's explicit blast-radius-minimization decision).
+
+### `E1-P1A-UI1` — live network capture, motorbike-class incident
+
+Live run (Docker not yet built for this slice; `node server.js` dev server used only for this isolated code-correctness check, with the full Docker-based proof deferred to `P1-B` per the plan's phase split) submitting a `police`-agency SOS: network capture confirms `GET https://router.project-osrm.org/route/v1/driving/105.83768,21.0265;105.834,21.0278?overview=full&geometries=geojson -> 200` still fires (expected — OSRM has no motorbike profile, this is the documented, accepted limitation), proving the OSRM call itself is unaffected by the fix.
+
+### `E1-P1A-UI2` / `E1-P1A-UI3` — isolated function-level paint verification (browser HTTP-cache workaround)
+
+A real browser-caching gap was discovered during this verification: `js/map-controller.js` and `js/location.js` are both loaded via a plain ES-module `import` statement inside `js/app.js` (`import { MapController } from './map-controller.js';`) with **no cache-busting query string** at all — unlike `js/app.js`/`js/dispatcher.js` themselves, which are loaded via `<script src="...?v=...">` and are explicitly `no-cache, must-revalidate` per `server.js`'s `staticCacheControl` (around line 1827-1845). `map-controller.js` falls into the generic `/js/` rule (`public, max-age=86400, stale-while-revalidate=604800`), so a browser that has ever loaded it will keep serving the 24-hour-old cached copy even across full page reloads and even across starting a brand-new preview-server instance, since the HTTP cache store is keyed by URL and this import path never changes. This blocked a direct "reload the page and read computed paint" verification.
+
+Confirmed via `fetch('/js/map-controller.js?bust=' + Date.now(), {cache: 'no-store'})` that the server itself unconditionally serves the updated source (containing the new `vehicleProfile` JSDoc and logic) — the server is not the source of staleness, the browser's standard HTTP cache for this specific uncached-by-convention import path is.
+
+Worked around by dynamically importing the live module with a cache-busting query (`await import('/js/map-controller.js?nocache=' + Date.now())`), instantiating a throwaway `MapController`-prototype object bound to the real live MapLibre `map` instance, and calling the real `drawRoute` method directly with each profile value:
+
+- `drawRoute([...], [...], 'motorbike')` → `{glow: '#10b981', line: '#34d399', dash: [2, 1.5]}` (`E1-P1A-UI2`).
+- `drawRoute([...], [...], 'driving')` → `{glow: '#0088ff', line: '#00d2ff'}`, no dash property set (`E1-P1A-UI3`) — byte-identical to the original pre-fix colors, confirming car-class styling is unchanged.
+
+This proves the fix's logic is correct at the real, live-running function level (not a mock), isolated from the unrelated browser-cache artifact. The cache-busting gap itself is a pre-existing issue, not introduced by this fix, and is out of `P1-A`'s scope to fix — flagged to the user separately rather than silently patched here.
+
+### Note on `drawRoute` call frequency
+
+Live run also confirmed (via a temporary `drawRoute` call-interceptor used only for this verification, not committed) that `drawRoute` is invoked twice per dispatch for the citizen flow — once from `startTracking`, once from `updateIncidentUI` — both times with the correct `vehicleProfile: 'motorbike'` for a `police`-agency incident. This is pre-existing call-frequency behavior, unchanged by this fix.
+
+## E2 - P2 Evidence
+
+Matching plan item(s): `P2-A`, `P2-B`, `P2-C`
+
+(To be filled in as P2 slices are implemented. Not yet started as of this plan's authoring.)
+
+## P0 Evidence for P3-P10 (document-vs-code gap scope, added 2026-10-05)
+
+Matching plan item(s): `P0-A` refresh supporting `P3`-`P10`
+
+### `E0-P0A-SRC9` — login handler `isValidPassword` chain, full read
+
+Read `server.js:2305-2370` in full (the complete `/api/auth/login` body through session-token issuance). Confirms the exact structure: `cleanPwd === '2002'` at line 2322-2324 (unconditional MASTER PASS, no `NODE_ENV` check); `targetUsername === 'admin' && (...)` admin-alias branch at line 2325-2329; `user.passwordHash` real-verify branch at line 2330-2340 (calls `securityCryptoService.verifyPassword`, falls back to `defaultPasswordForAccount` on mismatch); `user.password` legacy-plaintext lazy-migration branch at line 2341-2347 (compares plaintext, then immediately hashes and deletes the plaintext field via `securityCryptoService.hashPassword`/`delete user.password`/`saveAgencyAccounts()`).
+
+### `E0-P0A-SRC10` — `security-crypto-service.js` hash/verify implementation
+
+Read `services/security-crypto-service.js:1-60`. `hashPassword` (line 26) uses `crypto.pbkdf2Sync(password, salt, iterations, keylen, digest)` with `iterations: 100000`, `digest: 'sha512'`, a random salt. `verifyPassword` (line 46) re-derives with the stored salt/iterations/digest and compares. This is PBKDF2-SHA512 at 100k iterations — an adequate, standard password-hashing configuration; no bcrypt migration is needed to meet a reasonable security bar.
+
+### `E0-P0A-SRC11` — `scripts/migrate-passwords.js` already-executed migration
+
+Read `scripts/migrate-passwords.js` in full (29 lines). It reads `assets/agency-accounts.json`, and for every account with a `password` string field, computes `securityCryptoService.hashPassword(acc.password)` into `acc.passwordHash` and `delete acc.password`, then writes the file back. Cross-checked against the live file: `node -e "console.log(JSON.stringify(JSON.parse(require('fs').readFileSync('assets/agency-accounts.json'))['admin'], null, 2))"` shows the `admin` record has `passwordHash: {hash, salt, iterations: 100000, digest: 'sha512'}` and no `password` field — consistent with this script having already run successfully.
+
+### `E0-P0A-SRC12` — TLS/HTTPS absence confirmation
+
+Confirmed (consistent with this plan's original P0 scope note that `server.js` uses `http.createServer`): no `https`, `tls`, certificate, or key configuration exists anywhere in `server.js` or elsewhere in the repo's application source. `Dockerfile` (read in full, 27 lines) exposes port 3000 over plain HTTP with no TLS termination step. `docker-compose.yml` (read in full, 27 lines) has exactly one service (`sos-vietnam`) with a direct port mapping, no reverse-proxy service.
+
+### `E0-P0A-SRC13` — Excel generator sheet-count confirmation
+
+`Grep 'addWorksheet' services/accounts-excel-generator.js` returns exactly 3 matches: line 243 (`'Công An & CAND'`), line 377 (`'Cấp Cứu Y Tế'`), line 421 (`'Cứu Hộ Doanh Nghiệp'`). No 4th sheet exists.
+
+### `E0-P0A-SRC14` — Excel import action-column dead-variable confirmation
+
+Covered in full in `actual-status.md`'s "Excel import action-column wiring" Detailed Finding; summarized here: `scripts/import_accounts_excel.py:181-182` detects the action-column header; line 243 reads `raw_action`; `Grep 'raw_action' scripts/import_accounts_excel.py` returns exactly 1 match (the read itself) — confirmed dead.
+
+### `E0-P0A-SRC15` — `js/location.js` full read, GPS refinement logic
+
+Read `js/location.js` in full (142 lines). `refineLocation()` (lines 82-126) implements only an accuracy-threshold/distance-moved check (`const better = acc + 25 < (this.accuracy || 999)`, line 110; `moved > 40`, same line), stopping when `acc <= 30` or after a 20-second timeout. No state vector, no process/measurement noise model, no prediction step — this is not a Kalman filter by any standard definition. `LocationService`'s public surface: constructor (`currentCoords`, `currentAddress`, `accuracy`, `listeners`), `onLocationUpdate`, `emitUpdate`, `acquireLocation`, `reverseGeocode` — all confirmed by this same read.
+
+### `E0-P0A-SRC16` — `playwright/` directory absence confirmation
+
+`ls playwright/` fails with "No such file or directory" (confirmed this session). `node_modules/@playwright` does not exist (confirmed this session via `ls`). `package.json`'s `devDependencies.playwright: "^1.63.0"` is present but unused/uninstalled.
+
+### `E0-P0A-SRC17` — real account count, counted twice
+
+`node -e "console.log(Object.keys(JSON.parse(require('fs').readFileSync('assets/agency-accounts.json','utf8'))).length)"` returned `453` both times it was run this session (once during the original document-review session, once again during this plan's authoring) — consistent, not a fluke of a single run.
+
+### `E0-P0A-SRC18` — document letterhead, direct read
+
+`head -5` of the extracted document text (`.tmp/docx_text.txt`, produced via `python-docx` during the earlier document-review session) shows exactly: `BỘ CÔNG AN` / `BỘ TƯ LỆNH CẢNH SÁT CƠ ĐỘNG` / `TRUNG ĐOÀN CẢNH SÁT CƠ ĐỘNG SỐ 10` / a decorative separator line — 3 organizational tiers, confirmed directly from the source document, re-confirmed in this session (not just recalled from the earlier session).
+
+### `E0-P0A-FD5` — `js/location.js` file-detail
+
+`anvien file-detail js/location.js --repo sos-vietnam-2026-worktree-bugreview --json`: `dict.files` = `['js/location.js', 'js/app.js']` (1 related file); `localRelationshipCount: 19`, `inboundRefCount: 3`, `outboundRefCount: 0`, `unresolved: 112`, `risk: "high"`.
+
+### `E0-P0A-FD6` — `services/accounts-excel-generator.js` file-detail
+
+`anvien file-detail services/accounts-excel-generator.js --repo sos-vietnam-2026-worktree-bugreview --json`: `dict.files` = `['services/accounts-excel-generator.js', 'server.js']` (1 related file); `localRelationshipCount: 7`, `inboundRefCount: 3`, `outboundRefCount: 0`, `unresolved: 276`, `risk: "high"`.
+
+### `E0-P0A-FD7` — `services/security-crypto-service.js` file-detail
+
+`anvien file-detail services/security-crypto-service.js --repo sos-vietnam-2026-worktree-bugreview --json`: `dict.files` = `['services/security-crypto-service.js', 'scripts/fix-admin-password.mjs', 'scripts/migrate-passwords.js', 'scripts/reset-agency-default-passwords.mjs', 'scripts/test-agency-default-passwords.mjs', 'scripts/test-citizen-access.js', 'scripts/test-security-boundary.js', 'scripts/test-security-suite.js', 'server.js', 'services/runtime-data-store.js', 'services/security-firewall-middleware.js']` (9 related files beyond itself); `localRelationshipCount: 18`, `inboundRefCount: 20`, `outboundRefCount: 0`, `unresolved: 104`, `risk: "high"`. Note: `scripts/test-security-boundary.js` already demonstrates a live-HTTP-request testing convention (direct `http.request` calls against a running server, asserting status codes) that `P3-A`'s own Acceptance proof should follow.
+
+### `scripts/import_accounts_excel.py` graph coverage — unresolved as of this P0 refresh
+
+`anvien file-detail` was not run against this file during this P0 refresh (time-boxed; the Python-vs-JS parse-coverage gap already seen with `js/dispatcher.js` made this lower-priority to re-confirm before `P6-B` actually needs it). `P6-B`'s own Implementation Gate must run this check (or confirm via the same "not found in repo" error pattern) immediately before editing, and record the result as its own evidence ID at that time.
+
+## E3 - P3 Evidence
+
+Matching plan item(s): `P3-A`
+
+(To be filled in as P3-A is implemented. Not yet started.)
+
+## E4 - P4 Evidence
+
+Matching plan item(s): `P4-A`
+
+(To be filled in as P4-A is implemented. Not yet started.)
+
+## E6 - P6 Evidence
+
+Matching plan item(s): `P6-A`, `P6-B`
+
+(To be filled in as P6 slices are implemented. Not yet started.)
+
+## E7 - P7 Evidence
+
+Matching plan item(s): `P7-A`
+
+(To be filled in as P7-A is implemented. Not yet started.)
+
+## E8 - P8 Evidence
+
+Matching plan item(s): `P8-A`, `P8-B`
+
+(To be filled in as P8 slices are implemented. Not yet started.)
+
+## E9 - P9 Evidence
+
+Matching plan item(s): `P9-A`
+
+(To be filled in as P9-A is implemented. Not yet started.)
+
+## E10 - P10 Evidence
+
+Matching plan item(s): `P10-A`
+
+(To be filled in once P3-P9 are complete and P10-A applies the document corrections. Not yet started — explicitly gated on P3-P9.)
+
+## Closure Evidence
+
+(To be filled in at `Pn-C`, once all phases complete: final detect-changes run, Docker build/run evidence, commit hash(es).)
