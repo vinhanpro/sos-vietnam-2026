@@ -249,6 +249,23 @@ Using Playwright with `--use-fake-device-for-media-stream`/`--use-fake-ui-for-me
 
 Confirms: a real `RTCPeerConnection` was created, is in `have-local-offer` signaling state (meaning `createOffer`+`setLocalDescription` both actually ran), has exactly 1 local sender (the synthetic microphone track), and the new remote-audio `<audio>` element exists with `autoplay` set. This is `P2-B`'s acceptance bar for the citizen-initiated direction; the dispatcher-initiated direction (`webrtc-answer`/`handleIncomingVoiceOffer`) and the full two-way audio proof are deferred to `P2-C`, which stands up both the citizen and dispatcher sides together and can meaningfully exercise both directions and measure real audio, rather than fabricating a one-sided "fake dispatcher" answer in isolation.
 
+### `E2-P2C-SRC1` - dispatcher-side source diff
+- `js/dispatcher.js`:
+  - `openDispatcherVoiceCall`: converted to an `async` function, creates `RTCPeerConnection`, properly `await`s `navigator.mediaDevices.getUserMedia({ audio: true })` and attaches local audio tracks to the peer connection BEFORE creating and sending the WebRTC SDP offer. Wires `pc.ontrack` to bind the incoming remote audio stream to `#dispatcherRemoteVoiceAudio`, `pc.onicecandidate` to send `webrtc-ice` signals, and `pc.oniceconnectionstatechange` to track connection failures.
+  - `handleCallSignal`: handles `webrtc-offer` (citizen-initiated) by setting remote offer and sending `webrtc-answer`, handles `webrtc-answer` (dispatcher-initiated) by setting remote answer description when in `have-local-offer` state, and handles `webrtc-ice` by adding incoming remote ICE candidates. Added signal deduplication at the top of the handler to prevent duplicate SSE deliveries (`videocall_signal` + `voicecall_signal`) from racing into WebRTC state transitions.
+  - `endDispatcherVoiceCall`: closes `dispatcherVoicePeerConnection`, stops local tracks, and unbinds `#dispatcherRemoteVoiceAudio`.
+- `dispatcher.html`: added `<audio id="dispatcherRemoteVoiceAudio" autoplay style="display: none;"></audio>` inside `dispatcherVoiceCallModal`.
+- `js/app.js`: added matching signal deduplication in `handleVideoCallSignal` and restored `bindLegalWarningToggle` on `SOSApp`.
+
+### `E2-P2C-UI1` - live proof: real two-way WebRTC voice call verified with non-silent audio
+Executed `node playwright/verify-webrtc-voice-call-two-way-audio.cjs http://localhost:3000 admin 2002` using real Chromium contexts with synthetic microphone capture (`--use-fake-device-for-media-stream`). The test submitted a citizen SOS incident, logged into dispatcher, initiated a voice call, accepted on citizen side, and measured bidirectional remote audio levels via Web Audio `AnalyserNode`:
+```
+citizen ICE state: connected | dispatcher ICE state: connected
+citizen remote-audio measurement: {"hasStream":true,"level":54.4052734375}
+dispatcher remote-audio measurement: {"hasStream":true,"level":54.71484375}
+PASS: real two-way WebRTC audio confirmed - both sides connected and received non-silent remote audio.
+```
+
 ## P0 Evidence for P3-P10 (document-vs-code gap scope, added 2026-10-05)
 
 Matching plan item(s): `P0-A` refresh supporting `P3`-`P10`

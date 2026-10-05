@@ -1846,6 +1846,12 @@ class SOSApp {
     if (!signal) return;
     if (signal.sender === 'citizen') return; // Do not process citizen's own outgoing call requests
     if (!this.activeIncident || signal.incidentId !== this.activeIncident.id) return;
+    // Deduplicate signals broadcast over both videocall_signal and voicecall_signal
+    const sigKey = `${signal.action}:${signal.callType}:${signal.sender}:${signal.incidentId}:${signal.timestamp || ''}:${signal.sdp ? signal.sdp.type : ''}:${signal.candidate ? signal.candidate.candidate : ''}`;
+    if (this._recentCitizenSignals && this._recentCitizenSignals.has(sigKey)) return;
+    if (!this._recentCitizenSignals) this._recentCitizenSignals = new Set();
+    this._recentCitizenSignals.add(sigKey);
+    setTimeout(() => this._recentCitizenSignals && this._recentCitizenSignals.delete(sigKey), 2500);
 
     const requestModal = document.getElementById('videoCallCitizenRequestModal');
     const callModalSosId = document.getElementById('callModalSosId');
@@ -1976,8 +1982,11 @@ class SOSApp {
       this.handleIncomingVoiceOffer(signal.sdp);
     } else if (signal.action === 'webrtc-answer' && isVoiceCall) {
       // Citizen-initiated voice call: dispatcher answers our earlier offer.
+      // Same duplicate-SSE-event note as handleIncomingVoiceOffer - guard
+      // with a synchronous flag, not just signalingState.
       const pc = this.citizenVoicePeerConnection;
-      if (pc && signal.sdp) {
+      if (pc && signal.sdp && !this._citizenHandlingVoiceAnswer) {
+        this._citizenHandlingVoiceAnswer = true;
         pc.setRemoteDescription(new RTCSessionDescription(signal.sdp)).catch(err => {
           console.warn('Failed to set remote answer description:', err);
         });
@@ -1999,11 +2008,28 @@ class SOSApp {
    */
   async handleIncomingVoiceOffer(offerSdp) {
     if (!offerSdp || !this.activeIncident) return;
-    const pc = this.citizenVoicePeerConnection;
+    // The dispatcher's offer can arrive over SSE slightly before our own
+    // startCitizenVoiceCall(false) (triggered by the citizen's accept click)
+    // finishes creating citizenVoicePeerConnection - briefly poll for it
+    // rather than dropping a legitimate offer due to this real race.
+    let pc = this.citizenVoicePeerConnection;
+    for (let attempt = 0; !pc && attempt < 20; attempt++) {
+      await new Promise(r => setTimeout(r, 100));
+      pc = this.citizenVoicePeerConnection;
+    }
     if (!pc) {
-      console.warn('Received a WebRTC offer with no active peer connection; ignoring.');
+      console.warn('Received a WebRTC offer with no active peer connection after waiting; ignoring.');
       return;
     }
+    // The server relays the same signal over BOTH the 'videocall_signal' and
+    // 'voicecall_signal' SSE event names (server.js broadcastToDispatchers/
+    // notifyCitizen both fire for every call signal), and this app listens
+    // on both - so the identical offer arrives twice, nearly simultaneously
+    // (before pc.signalingState has transitioned from the first call's own
+    // await). Guard with a synchronous flag set before any await, not just
+    // signalingState, or the second call still races past the check.
+    if (this._citizenHandlingVoiceOffer) return;
+    this._citizenHandlingVoiceOffer = true;
     try {
       await pc.setRemoteDescription(new RTCSessionDescription(offerSdp));
       const answer = await pc.createAnswer();
@@ -2369,6 +2395,8 @@ class SOSApp {
       iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
     });
     this.citizenVoicePeerConnection = pc;
+    this._citizenHandlingVoiceOffer = false;
+    this._citizenHandlingVoiceAnswer = false;
 
     if (this.citizenVoiceStream) {
       this.citizenVoiceStream.getTracks().forEach(track => pc.addTrack(track, this.citizenVoiceStream));
@@ -4415,6 +4443,27 @@ class SOSApp {
   playSiren() {
     this.speakSosPrompt();
   }
+
+  bindLegalWarningToggle() {
+    const card = document.getElementById('legalWarningHero');
+    if (!card) return;
+    const toggle = () => {
+      const isExpanded = card.classList.toggle('expanded');
+      card.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    };
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('#legalCardHeader') || e.target.closest('#btnToggleLegal') || !card.classList.contains('expanded')) {
+        toggle();
+      }
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
+      }
+    });
+  }
+
 }
 
 // Bootstrap
