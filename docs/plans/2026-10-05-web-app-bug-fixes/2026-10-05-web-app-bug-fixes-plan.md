@@ -272,7 +272,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
   - Actual-status Update: update `drawRoute` / 3 call sites rows in Current Status Matrix after this slice.
   - Commit Boundary: commit after this slice when acceptance passes.
 
-- [ ] P1-B: Validate the vehicle-aware route rendering live in both citizen and dispatcher UIs for a motorbike-class and a car-class incident.
+- [x] P1-B: Validate the vehicle-aware route rendering live in both citizen and dispatcher UIs for a motorbike-class and a car-class incident.
   - Goal: close the loop with real browser/Docker evidence that the fix is visible to an actual user, not just unit-level code correctness.
   - Scope Boundary:
     - Editable: none (validation-only slice); may add a temporary Playwright script under `playwright/` per repo convention (reusable location, not a one-off temp file) if deeper automation is useful, but a manual Browser-tool pass is sufficient to satisfy acceptance.

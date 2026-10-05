@@ -126,6 +126,48 @@ This file lives outside the repo (`D:\DOWNLOAD\...`) and was granted via `reques
 
 Matching plan item(s): `P1-A`, `P1-B`
 
+### Pre-existing Dockerfile defect discovered and fixed during `P1-B`
+
+`docker build` with the repo's unmodified `Dockerfile` crashed the container at startup: `Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'exceljs' imported from /app/services/accounts-excel-generator.js`. Root cause: `Dockerfile`'s comment claimed "the runtime has no npm dependencies" and never ran `npm install`/`npm ci`, but `package.json` has real `dependencies: {exceljs, xlsx}` that `services/accounts-excel-generator.js` genuinely imports — this comment/behavior had gone stale relative to the actual dependency list, independent of anything in this plan. This blocked every Docker-based validation requirement in the plan (`P1-B`, `P2-C`, `P4`, `P8`, `P9`, `Pn-C`), so it was fixed as a necessary prerequisite rather than deferred: `Dockerfile` now does `COPY package.json package-lock.json ./` + `RUN npm ci --omit=dev` before `COPY . .`. Rebuilt and confirmed the container starts cleanly afterward (`E1-P1B-DOCKER1`).
+
+Also discovered this worktree's host `node_modules/` did not exist at all (never `npm install`-ed in this worktree) — fixed by running `npm install` directly, which also makes the `playwright` devDependency usable for the first time (needed for this slice and later for `P8`). `npx playwright install chromium` was run to fetch the actual browser binary.
+
+### `E1-P1B-DOCKER1` — Docker build/run
+
+```text
+docker build -t sos-vietnam:p1b-test .   # succeeded after the Dockerfile fix above
+docker volume create sos-p1b-test-data
+docker run -d --name sos-p1b-test -p 3101:3000 \
+  -e NODE_ENV=production \
+  -e SOS_MASTER_SECRET=<disposable test value> \
+  -e SOS_TOKEN_SECRET=<disposable test value> \
+  -e SOS_RUNTIME_DATA_DIR=/var/lib/sos-data \
+  -v sos-p1b-test-data:/var/lib/sos-data \
+  sos-vietnam:p1b-test
+```
+
+Container reported `(healthy)` within a few seconds; `curl -s -o /dev/null -w "%{http_code}" http://localhost:3101/healthz` returned `200`.
+
+### `E1-P1B-UI1` / `E1-P1B-UI2` — live Playwright proof against the Docker container
+
+Wrote `playwright/verify-vehicle-profile-route-styling.cjs` (reusable per `AGENTS.md`'s `playwright/` convention, not a one-off temp file). Running it against the Docker container (`node playwright/verify-vehicle-profile-route-styling.cjs http://localhost:3101`) drives two full citizen SOS submissions (via the real browser-rendered UI, with a realistic desktop-Chrome `User-Agent` to pass the Layer-7 bot WAF) and reads the live MapLibre paint properties:
+
+```json
+{
+  "results": {
+    "police":   { "agency": "police",   "glowColor": "#10b981", "lineColor": "#34d399", "dash": [2, 1.5] },
+    "hospital": { "agency": "hospital", "glowColor": "#0088ff", "lineColor": "#00d2ff", "dash": null }
+  },
+  "failures": []
+}
+```
+
+`police` (motorbike-class) renders green/dashed; `hospital` (car-class) renders the original blue/solid, byte-identical to pre-fix colors — confirmed `PASS` for both scenarios. This is the Docker-based, end-to-end proof required to close `P1-B` (the earlier `E1-P1A-UI2/UI3` function-level proof from `P1-A` is now superseded/corroborated by this real end-to-end run, which did not need the dynamic-import cache workaround since this was a fresh container with no prior browser-cache history).
+
+### Cleanup
+
+`docker rm -f sos-p1b-test`, `docker volume rm sos-p1b-test-data`, `docker rmi sos-vietnam:p1b-test` — all test-only Docker resources removed after the proof. The pre-existing `webapp-sos-vietnam-1` container (unrelated, already running before this session) was left untouched throughout.
+
 ### `E1-P1A-SRC1` — `drawRoute` signature/body diff
 
 `js/map-controller.js:546-630` (new range): added `vehicleProfile = 'driving'` parameter; OSRM request still always calls the `driving` profile endpoint (documented in a new JSDoc comment explaining the public-OSRM limitation); added `isMotorbike`/`glowColor`/`lineColor`/`lineDasharray` computed from `vehicleProfile`; the pre-existing `if (this.map.getSource(...))`/`else` branch now also calls `setPaintProperty` on both layers in the "already exists" branch, so a route re-drawn with a different profile on a second call (e.g. a different incident reusing the same source) gets re-styled, not left on whatever profile first created the layers.

@@ -7,14 +7,18 @@ ENV NODE_ENV=production \
 
 WORKDIR /app
 
-# DOCX/XLSX exports are part of the service contract.  The runtime has no npm
-# dependencies, so avoid an unnecessary package-install step for Node itself.
+# DOCX/XLSX exports are part of the service contract and need both the
+# Python toolchain (python-docx/openpyxl, invoked via child_process) and the
+# real Node dependencies (exceljs/xlsx) declared in package.json.
 RUN apt-get update \
     && apt-get install --no-install-recommends -y python3 python3-pip \
     && pip3 install --break-system-packages --no-cache-dir python-docx openpyxl \
     && ln -sf /usr/bin/python3 /usr/bin/python \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 
 COPY . .
 
