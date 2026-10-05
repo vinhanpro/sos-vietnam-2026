@@ -492,7 +492,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
 - Ordered Slice List:
   - P3-A: Gate the MASTER PASS branch on `NODE_ENV` and prove it live in both environment states.
 
-- [ ] P3-A: Gate the MASTER PASS branch on `NODE_ENV` and prove it live in both environment states.
+- [x] P3-A: Gate the MASTER PASS branch on `NODE_ENV` and prove it live in both environment states.
   - Goal: `password === '2002'` only authenticates when `process.env.NODE_ENV !== 'production'`.
   - Scope Boundary:
     - Editable: `server.js:2322-2324` (the `if (cleanPwd === '2002') { isValidPassword = true; }` block) only.

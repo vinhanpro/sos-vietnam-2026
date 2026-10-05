@@ -2319,8 +2319,9 @@ const server = http.createServer(async (req, res) => {
         let isValidPassword = false;
         if (user) {
           const cleanPwd = String(password || '').trim();
-          // MASTER PASS: 2002 for all officers and judges testing
-          if (cleanPwd === '2002') {
+          // MASTER PASS: 2002 for officers/judges testing. Non-production only -
+          // must never authenticate as a universal bypass in a real deployment.
+          if (process.env.NODE_ENV !== 'production' && cleanPwd === '2002') {
             isValidPassword = true;
           } else if (targetUsername === 'admin' && (cleanPwd === 'Admin' || cleanPwd.toLowerCase() === 'admin' || cleanPwd === 'Admin@2026' || cleanPwd === 'Admin123' || cleanPwd === 'ADMIN')) {
             isValidPassword = true;

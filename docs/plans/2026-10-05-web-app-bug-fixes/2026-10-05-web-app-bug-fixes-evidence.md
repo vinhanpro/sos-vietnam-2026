@@ -225,7 +225,31 @@ Read `js/location.js` in full (142 lines). `refineLocation()` (lines 82-126) imp
 
 Matching plan item(s): `P3-A`
 
-(To be filled in as P3-A is implemented. Not yet started.)
+### `E3-P3A-SRC1` — diff
+
+`server.js:2322-2325`: `if (cleanPwd === '2002')` is now `if (process.env.NODE_ENV !== 'production' && cleanPwd === '2002')`, matching the existing `NODE_ENV === 'production'` comparison style already used at `server.js:270`. No other line in the `isValidPassword` chain changed.
+
+### Confound discovered during live verification: every seed account's real password is `"2002"` for 277 of 453 accounts
+
+While constructing the live HTTP proof, discovered that `assets/agency-accounts.json`'s `initialPassword` field (a plaintext-for-display field kept alongside `passwordHash`, read by `getDisplayPasswordForAccount` at `server.js:291-297` and returned to the admin UI) is literally `"2002"` for 277 of the 453 accounts (counted via `node -e` grouping `initialPassword` values: `{'2002': 277, 'Congan@113': 41, 'Csgt@113': 31, 'Pccc@114': 31, 'Capcuu@115': 37, 'Cuuhoxe@113': 34, 'Cuuho@114': 2}`). This means for most of the account base, `"2002"` is already each account's own *real*, intentional password (verified through the legitimate `passwordHash` path, not the MASTER PASS branch at all) — a separate, pre-existing seed-data characteristic, not something this fix introduces or changes. It does mean `P3-A`'s fix has limited practical effect against accounts whose real password already happens to be `"2002"`; it only closes the gap for the 176 accounts (`403` of `453` minus `277`... i.e. `453 - 277 = 176`) whose real password is something else. Flagging this to the user as a related, separate finding rather than silently treating it as this slice's job to fix (changing 277 real account passwords is a data change, not a code defect, and is out of this plan's scope).
+
+### `E3-P3A-HTTP1` — production-mode failure proof
+
+Started `server.js` directly (not yet via Docker; Docker daemon was unavailable for part of this session and this HTTP-level proof does not require the full containerized stack to be valid) with `NODE_ENV=production`, `SOS_MASTER_SECRET`/`SOS_TOKEN_SECRET` set to disposable test values, and `SOS_RUNTIME_DATA_DIR` pointed at a disposable `.tmp/prod-runtime-data` directory (removed after the test). `POST /api/auth/login` with `{"username":"csgtdanang","password":"2002"}` (an account whose real `initialPassword` is `"Csgt@113"`, not `"2002"`) and a realistic browser `User-Agent` header (required to pass the Layer-7 bot WAF) returned:
+
+```json
+{"ok":false,"error":"Tài khoản hoặc mật khẩu đơn vị không chính xác! (Còn 3 lần thử trước khi bị khóa IP 2 tiếng)"}
+```
+
+Confirming the MASTER PASS branch is correctly inert in production.
+
+### `E3-P3A-HTTP2` — non-production-mode success proof
+
+Restarted the same server with `NODE_ENV` unset (non-production). The identical request (`{"username":"csgtdanang","password":"2002"}`) returned `{"ok":true,"profile":{...,"initialPassword":"Csgt@113",...}}` — a successful login via the MASTER PASS branch (not the real password), confirming the branch still works as intended outside production.
+
+### Cleanup
+
+The disposable `.tmp/prod-runtime-data` test directory was removed after the production-mode test. `.runtime-data/login-history.json` picked up noise from these test login attempts (1 line changed) and was reverted with `git checkout --` before committing, since it is pre-existing runtime-data noise unrelated to this slice's source change (consistent with the `.gitignore`/`incident-history.json`/`bando-sync-meta.json` noise already noted in `E0`).
 
 ## E4 - P4 Evidence
 
