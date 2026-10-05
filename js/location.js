@@ -1,11 +1,81 @@
 // Location and Geocoding Service for SOS Vietnam
 
+/**
+ * Linear 1D/2-axis Kalman Filter for GPS coordinate smoothing.
+ * Fuses successive GPS readings with measurement noise derived from
+ * position.coords.accuracy and an empirical process-noise model.
+ */
+export class GPSKalmanFilter {
+  constructor(initialLat, initialLng, initialAccuracy = 30) {
+    this.init(initialLat, initialLng, initialAccuracy);
+  }
+
+  init(lat, lng, accuracy = 30) {
+    const latMetersPerDeg = 111320;
+    const rad = lat * Math.PI / 180;
+    const lngMetersPerDeg = 111320 * Math.max(Math.cos(rad), 0.1);
+    const acc = Math.max(accuracy, 1);
+
+    this.lat = lat;
+    this.lng = lng;
+    this.varianceLat = (acc / latMetersPerDeg) ** 2;
+    this.varianceLng = (acc / lngMetersPerDeg) ** 2;
+    this.lastTimestamp = Date.now();
+  }
+
+  update(fix) {
+    const now = fix.timestamp || Date.now();
+    const dt = Math.max((now - this.lastTimestamp) / 1000, 0.1);
+    this.lastTimestamp = now;
+
+    const latMetersPerDeg = 111320;
+    const rad = fix.lat * Math.PI / 180;
+    const lngMetersPerDeg = 111320 * Math.max(Math.cos(rad), 0.1);
+
+    // Process noise Q (walking/motion uncertainty ~ 1.5 m/s)
+    const speed = 1.5;
+    const qMeters = (speed * dt) ** 2;
+    const qLat = qMeters / (latMetersPerDeg ** 2);
+    const qLng = qMeters / (lngMetersPerDeg ** 2);
+
+    // Predict step: prior variance increases with process noise
+    const predVarLat = this.varianceLat + qLat;
+    const predVarLng = this.varianceLng + qLng;
+
+    // Measurement noise R from GPS accuracy reading (1-sigma)
+    const rAcc = Math.max(fix.accuracy || 20, 2);
+    const rLat = (rAcc / latMetersPerDeg) ** 2;
+    const rLng = (rAcc / lngMetersPerDeg) ** 2;
+
+    // Kalman gain K = P_pred / (P_pred + R)
+    const kLat = predVarLat / (predVarLat + rLat);
+    const kLng = predVarLng / (predVarLng + rLng);
+
+    // Update state estimate with new measurement
+    this.lat = this.lat + kLat * (fix.lat - this.lat);
+    this.lng = this.lng + kLng * (fix.lng - this.lng);
+
+    // Update posterior error variance P = (1 - K) * P_pred
+    this.varianceLat = (1 - kLat) * predVarLat;
+    this.varianceLng = (1 - kLng) * predVarLng;
+
+    const postAccMeters = Math.sqrt(this.varianceLat) * latMetersPerDeg;
+
+    return {
+      lat: Number(this.lat.toFixed(7)),
+      lng: Number(this.lng.toFixed(7)),
+      accuracy: Math.max(Math.round(postAccMeters), 3)
+    };
+  }
+}
+
 export class LocationService {
   constructor() {
     this.currentCoords = { lat: 21.0285, lng: 105.8542 }; // Default Hanoi Center
     this.currentAddress = 'Đang lấy vị trí GPS...';
     this.accuracy = 10;
     this.listeners = [];
+    this.kalmanFilter = null;
   }
 
   onLocationUpdate(callback) {
@@ -38,13 +108,13 @@ export class LocationService {
             lng: position.coords.longitude
           };
           this.accuracy = Math.round(position.coords.accuracy || 10);
+          this.kalmanFilter = new GPSKalmanFilter(this.currentCoords.lat, this.currentCoords.lng, this.accuracy);
           console.log('📍 GPS acquired:', this.currentCoords, 'Accuracy:', this.accuracy, 'm');
 
           // Reverse geocode
           await this.reverseGeocode(this.currentCoords.lat, this.currentCoords.lng);
           this.emitUpdate();
-          // Tinh chỉnh: bản định vị đầu tiên thường sai vài trăm mét (wifi/cell),
-          // theo dõi thêm để lấy toạ độ chính xác hơn rồi cập nhật lại.
+          // Tinh chỉnh bằng Kalman Filter qua watchPosition
           this.refineLocation();
           resolve(this.currentCoords);
         },
@@ -75,9 +145,8 @@ export class LocationService {
   }
 
   /**
-   * Theo dõi GPS thêm tối đa 20s để lấy bản định vị chính xác hơn.
-   * Chỉ cập nhật khi sai số giảm đáng kể (>25m) hoặc lệch vị trí > 40m,
-   * dừng ngay khi đạt sai số <= 30m để tiết kiệm pin.
+   * Theo dõi GPS và áp dụng 1D/2-axis Kalman Filter để lọc nhiễu,
+   * tăng độ ổn định và giảm phương sai sai số của tọa độ theo thời gian.
    */
   refineLocation() {
     if (!navigator.geolocation || this._refining) return;
@@ -92,30 +161,31 @@ export class LocationService {
     };
     const timer = setTimeout(stop, 20000);
 
-    const distanceM = (a, b) => {
-      const R = 6371000;
-      const dLat = (b.lat - a.lat) * Math.PI / 180;
-      const dLng = (b.lng - a.lng) * Math.PI / 180;
-      const lat1 = a.lat * Math.PI / 180;
-      const lat2 = b.lat * Math.PI / 180;
-      const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
-      return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
-    };
-
     watchId = navigator.geolocation.watchPosition(
       async (position) => {
-        const acc = Math.round(position.coords.accuracy || 999);
-        const next = { lat: position.coords.latitude, lng: position.coords.longitude };
-        const moved = distanceM(this.currentCoords, next);
-        const better = acc + 25 < (this.accuracy || 999);
-        if (better || moved > 40) {
-          this.currentCoords = next;
-          this.accuracy = acc;
-          console.log('📍 GPS refined:', next, 'Accuracy:', acc, 'm');
-          await this.reverseGeocode(next.lat, next.lng);
-          this.emitUpdate();
+        const rawLat = position.coords.latitude;
+        const rawLng = position.coords.longitude;
+        const rawAcc = Math.round(position.coords.accuracy || 30);
+
+        if (!this.kalmanFilter) {
+          this.kalmanFilter = new GPSKalmanFilter(rawLat, rawLng, rawAcc);
         }
-        if (acc <= 30) {
+
+        const filtered = this.kalmanFilter.update({
+          lat: rawLat,
+          lng: rawLng,
+          accuracy: rawAcc,
+          timestamp: position.timestamp || Date.now()
+        });
+
+        this.currentCoords = { lat: filtered.lat, lng: filtered.lng };
+        this.accuracy = filtered.accuracy;
+        console.log('📍 GPS Kalman refined:', this.currentCoords, 'Accuracy:', this.accuracy, 'm');
+
+        await this.reverseGeocode(this.currentCoords.lat, this.currentCoords.lng);
+        this.emitUpdate();
+
+        if (this.accuracy <= 15) {
           clearTimeout(timer);
           stop();
         }

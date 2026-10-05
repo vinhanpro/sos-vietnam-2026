@@ -493,7 +493,23 @@ Followed by `POST /api/admin/accounts/delete` with `{"username": "test_p6b_live_
 
 Matching plan item(s): `P7-A`
 
-(To be filled in as P7-A is implemented. Not yet started.)
+### `E7-P7A-FD1` - Implementation Gate: Anvien indexing check
+Ran Anvien impact analysis on symbol `refineLocation` in `js/location.js` (repo `sos-vietnam-2026-worktree-bugreview`). Checked upstream call sites in `js/app.js` (`acquireLocation`, `currentCoords`, `accuracy`, `currentAddress`, `onLocationUpdate`). Confirmed all public property shapes and method contracts remain preserved.
+
+### `E7-P7A-SRC1` - 1D/2-axis GPS Kalman filter source diff
+- `js/location.js`: Added `GPSKalmanFilter` class implementing linear Kalman filter state equations (state: `lat`, `lng`; error variance: `varianceLat`, `varianceLng`; process noise $Q$ modeling motion uncertainty with $\Delta t$; measurement noise $R$ derived from GPS fix `accuracy` in meters converted to degree variance).
+- Replaced threshold check (`better || moved > 40`) in `LocationService.refineLocation()` with continuous Kalman filter update step (`this.kalmanFilter.update(...)`), updating `this.currentCoords` and `this.accuracy` with posterior estimates before emitting update and reverse-geocoding. Public class API and method signatures remain unchanged.
+
+### `E7-P7A-TEST1` - Live proof: statistical variance reduction on noisy GPS sequence
+Executed `node playwright/verify-gps-kalman-filter.cjs` with 100 synthetic GPS fixes around ground truth (`lat=10.0452, lng=105.7469`) injected with Gaussian jitter ($\\sigma = 25\\text{m}$):
+```text
+Raw GPS Fixes:       Mean Error = 30.62m | MSE (Variance) = 1163.50 m²
+Kalman Filtered Fix: Mean Error = 7.36m  | MSE (Variance) = 90.15 m²
+Variance Reduction:  92.25%
+Final Filtered Estimate: lat=10.0452041, lng=105.7469637, estimated accuracy=±6m
+
+PASS: 1D/2-axis Kalman Filter significantly reduced GPS measurement variance!
+```
 
 ## E8 - P8 Evidence
 
