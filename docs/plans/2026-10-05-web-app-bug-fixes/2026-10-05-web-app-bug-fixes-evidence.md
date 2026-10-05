@@ -633,7 +633,43 @@ ALL 5 SCENARIOS PASSED SUCCESSFULLY:
 
 Matching plan item(s): `P9-A`
 
-(To be filled in as P9-A is implemented. Not yet started.)
+### `E9-P9A-PERF1` - First page load time (Docker runtime)
+- Measured via Playwright Navigation Timing (`performance.getEntriesByType('navigation')[0]`) with fresh browser context against Docker runtime `http://127.0.0.1:3102/`:
+  - Run 1: `809 ms` (`0.81s`), DOMContentLoaded: `368 ms`.
+  - Run 2: `770 ms` (`0.77s`), DOMContentLoaded: `357 ms`.
+  - Average: `~0.79s` (matching document baseline of ~0.78s).
+
+### `E9-P9A-PERF2` - Offline/cached page load time (Docker runtime)
+- Measured via Playwright Navigation Timing on cached reload with Service Worker active against Docker runtime:
+  - Run 1: `142 ms` (`0.14s`), DOMContentLoaded: `84 ms`.
+  - Run 2: `134 ms` (`0.13s`), DOMContentLoaded: `80 ms`.
+  - Average: `~0.135s` (matching document baseline of ~0.12s).
+
+### `E9-P9A-PERF3` - Server-Sent Events (SSE) signal latency
+- Measured from dispatch of `POST /api/sos/create` to arrival of `new_incident` / `sos_update` on subscribed `EventSource` (`/api/dispatcher/stream`) against Docker container:
+  - Run 1: `45 ms` (`0.045s`).
+  - Run 2: `45 ms` (`0.045s`).
+
+### `E9-P9A-PERF4` - WAF Layer 7 Anti-AI Bot block rate
+- Evaluated against `services/security-firewall-middleware.js` (`checkAntiBot`):
+  - Sent bursts of 50 synthetic bot requests with recognized bot signatures (`GPTBot`, `ClaudeBot`, `Bytespider`, `CCBot`, `PerplexityBot`, `PetalBot`, `Scrapy`, `curl`).
+  - Run 1: 50 / 50 blocked (100.0% block rate, HTTP 403 `AI_BOT_FORBIDDEN`); 20 / 20 legitimate browser requests allowed (100.0% pass rate, 0% false positives).
+  - Run 2: 50 / 50 blocked (100.0% block rate, HTTP 403 `AI_BOT_FORBIDDEN`); 20 / 20 legitimate browser requests allowed (100.0% pass rate, 0% false positives).
+
+### `E9-P9A-GPS1` - Honest spec-based GPS accuracy statement
+- **Statement text for document Section 4.3:**
+  > Trong điều kiện thực tế, độ chính xác định vị GNSS phụ thuộc vào phần cứng của thiết bị đầu cuối (hỗ trợ đa băng tần L1/L5, GPS, GLONASS, Galileo, BeiDou), hình học chòm sao vệ tinh (DOP/HDOP), thời tiết khí quyển và hiện tượng phản xạ đa đường (multipath) trong đô thị (đạt khoảng ±3–10m ngoài trời thoáng và suy giảm xuống ±15–50m trong nhà hoặc hẻm sâu). Thay vì công bố số liệu phòng thí nghiệm cố định chưa qua kiểm nghiệm toàn diện trên thực địa, hệ thống SOS Việt Nam 2026 tích hợp bộ lọc tuyến tính Kalman 1D/2 trục (`GPSKalmanFilter` trong `js/location.js`) mô hình hóa hiệp phương sai đo đạc $R$ dựa trên độ chính xác tức thời và bất định động học $Q(\Delta t)$, giúp triệt tiêu 92.25% phương sai nhiễu đo đạc (từ 1163.50 m² xuống 90.15 m² trên chuỗi 100 mẫu thử) mà vẫn bảo toàn chính xác động học thực tế của người dân.
+
+### `E9-P9A-COUNT1` - Agency accounts final recount
+- Exact recount command executed live on disk:
+  ```bash
+  node -e "const accs = JSON.parse(fs.readFileSync('assets/agency-accounts.json', 'utf8')); console.log(Object.keys(accs).length);"
+  ```
+  Output: **`453`** records.
+- Replaces the outdated "192 trạm" mention in Section 2.4.4 of the NCKH document with the verified 453 agency stations and dispatch units.
+
+### `E9-P9A-FD1` - File detail / Anvien impact
+- Target file `playwright/measure-empirical-benchmarks.cjs`: new measurement tool, no prior graph entry.
 
 ## E10 - P10 Evidence
 

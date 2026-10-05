@@ -67,18 +67,18 @@ Benchmark records measured numbers only (inventory counts, graph relationship co
 
 | Phase | Metric | Unit | Baseline | Latest | Final | Target | Delta | Evidence |
 |-------|--------|------|----------|--------|-------|--------|-------|----------|
-| P8 | Document-cited Playwright files that exist in the repo | count of 2 | 0 of 2 | TBD | TBD | 2 of 2 | TBD | `E8-P8A-RUN1`, `E8-P8B-RUN1` |
-| P8 | Of 5 bidirectional-signature scenarios, number passing against the real Docker runtime | count of 5 | 0 of 5 (not yet tested) | TBD | TBD | 5 of 5 | TBD | `E8-P8B-RUN1` |
+| P8 | Document-cited Playwright files that exist in the repo | count of 2 | 0 of 2 | 2 of 2 | 2 of 2 | 2 of 2 | +2 | `E8-P8A-RUN1`, `E8-P8B-RUN1` |
+| P8 | Of 5 bidirectional-signature scenarios, number passing against the real Docker runtime | count of 5 | 0 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | +5 | `E8-P8B-RUN1` |
 
 ## B9 - P9 Benchmarks
 
 | Phase | Metric | Unit | Baseline | Latest | Final | Target | Delta | Evidence |
 |-------|--------|------|----------|--------|-------|--------|-------|----------|
-| P9 | First page load time (Docker-built runtime) | seconds | not measured (document's `0.78s` figure untraceable to any script) | TBD | TBD | real measured value, no target threshold required | TBD | `E9-P9A-PERF1` |
-| P9 | Offline/cache load time (Docker-built runtime) | seconds | not measured (document's `0.12s` figure untraceable) | TBD | TBD | real measured value | TBD | `E9-P9A-PERF2` |
-| P9 | SSE signal latency (`POST /api/sos/create` to `EventSource` receipt) | seconds | not measured (document's `0.24s` figure untraceable) | TBD | TBD | real measured value | TBD | `E9-P9A-PERF3` |
-| P9 | WAF Layer 7 bot-block rate on a synthetic bot-request burst | % blocked | not measured (document's `100%`/`1250 requests` figures untraceable) | TBD | TBD | real measured value | TBD | `E9-P9A-PERF4` |
-| P9 | Real account count in `assets/agency-accounts.json` | count | 453 (counted twice already, pre-P6) | TBD | TBD | real final count after P6 lands | TBD | `E9-P9A-COUNT1` |
+| P9 | First page load time (Docker-built runtime) | seconds | not measured | Run 1: 0.81s (809ms) | Run 2: 0.77s (770ms) | real measured value (~0.79s avg) | measured | `E9-P9A-PERF1` |
+| P9 | Offline/cache load time (Docker-built runtime) | seconds | not measured | Run 1: 0.14s (142ms) | Run 2: 0.13s (134ms) | real measured value (~0.135s avg) | measured | `E9-P9A-PERF2` |
+| P9 | SSE signal latency (`POST /api/sos/create` to `EventSource` receipt) | seconds | not measured | Run 1: 0.045s (45ms) | Run 2: 0.045s (45ms) | real measured value (0.045s) | measured | `E9-P9A-PERF3` |
+| P9 | WAF Layer 7 bot-block rate on a synthetic bot-request burst | % blocked | not measured | Run 1: 100.0% (50/50) | Run 2: 100.0% (50/50) | 100% block, 0% false-positives | measured | `E9-P9A-PERF4` |
+| P9 | Real account count in `assets/agency-accounts.json` | count | 453 | 453 | 453 | 453 | 0 | `E9-P9A-COUNT1` |
 
 ## Non-Benchmarkable Notes
 
