@@ -205,7 +205,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
 
 ## Checklist
 
-- [ ] P0-A: Complete actual status before implementation work.
+- [x] P0-A: Complete actual status before implementation work.
   - Goal: establish the real current state.
   - Work Steps: inspect source-of-truth files, classify each surface, record blocked or missing pieces, and update later phase status assumptions, next actions, and work steps from evidence.
   - Implementation Gate: no implementation or editing starts until `docs/plans/2026-10-05-web-app-bug-fixes/2026-10-05-web-app-bug-fixes-actual-status.md` has a final P0 decision.
@@ -432,7 +432,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
   - Actual-status Update: update citizen-side call lifecycle row to `partial`.
   - Commit Boundary: commit after this slice when acceptance passes.
 
-- [ ] P2-C: Wire a real `RTCPeerConnection` + remote-audio sink on the dispatcher side (`js/dispatcher.js`), and validate a live two-way audio call end to end.
+- [x] P2-C: Wire a real `RTCPeerConnection` + remote-audio sink on the dispatcher side (`js/dispatcher.js`), and validate a live two-way audio call end to end.
   - Goal: mirror P2-B's wiring on the dispatcher side, then prove real two-way audio transport live against the Docker runtime.
   - Scope Boundary:
     - Editable: dispatcher-side voice-call lifecycle functions in `js/dispatcher.js` (exact function names/line ranges to be confirmed by direct read in this slice's Implementation Gate step, since the file is not graph-indexed); dispatcher HTML page's call-modal markup limited to adding one `<audio autoplay>` element, mirroring P2-B.
@@ -546,7 +546,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
 - Ordered Slice List:
   - P4-A: Add a Caddy reverse-proxy service to `docker-compose.yml` with TLS 1.3 minimum and a self-signed certificate, and prove the handshake live.
 
-- [ ] P4-A: Add a Caddy reverse-proxy service to `docker-compose.yml` with TLS 1.3 minimum and a self-signed certificate, and prove the handshake live.
+- [x] P4-A: Add a Caddy reverse-proxy service to `docker-compose.yml` with TLS 1.3 minimum and a self-signed certificate, and prove the handshake live.
   - Goal: a new `reverse-proxy` service in `docker-compose.yml` terminates TLS (minimum version 1.3) and forwards to `sos-vietnam:3000` over the Docker-internal network.
   - Scope Boundary:
     - Editable: `docker-compose.yml` (new service block); a new `Caddyfile` (or equivalent) added to the repo.
@@ -601,7 +601,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
   - P6-A: Add the 4th "Mẫu Thêm Mới" template worksheet to the generator.
   - P6-B: Wire `raw_action` into real create/skip logic and prove it live against the real import endpoint.
 
-- [ ] P6-A: Add the 4th "Mẫu Thêm Mới" template worksheet to the generator.
+- [x] P6-A: Add the 4th "Mẫu Thêm Mới" template worksheet to the generator.
   - Goal: `generateAccountsWorkbookBuffer` (or the function wrapping the 3 `addWorksheet` calls) produces a workbook with a 4th sheet containing column headers matching what `scripts/import_accounts_excel.py`'s header-detection already recognizes, plus 1-2 example/placeholder rows demonstrating the action column's expected values.
   - Scope Boundary:
     - Editable: `services/accounts-excel-generator.js` only, adding a new `wb.addWorksheet(...)` call and its row-population logic, following the same style as the 3 existing sheets.
@@ -644,7 +644,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
   - Actual-status Update: update the Excel-sheet-count row in Current Status Matrix.
   - Commit Boundary: commit after this slice when acceptance passes.
 
-- [ ] P6-B: Wire `raw_action` into real create/skip logic and prove it live against the real import endpoint.
+- [x] P6-B: Wire `raw_action` into real create/skip logic and prove it live against the real import endpoint.
   - Goal: a row with a username that does not already exist only becomes a new account when `raw_action` carries a recognizable "create" signal; otherwise it is skipped and reported, not silently created or silently ignored.
   - Scope Boundary:
     - Editable: `scripts/import_accounts_excel.py` (add the gate right after `raw_action` is read at line 243, and after `existing = existing_accounts.get(username, {})` at line 282 determines whether this is a create or update); `server.js:6058-6087` (the response-construction block in the import handler) to forward a new `skipped`/`warnings` list from the script's JSON summary.
@@ -704,7 +704,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
 - Ordered Slice List:
   - P7-A: Replace the accuracy-threshold logic with a real 1D Kalman filter and prove it reduces noise on a synthetic sequence.
 
-- [ ] P7-A: Replace the accuracy-threshold logic with a real 1D Kalman filter and prove it reduces noise on a synthetic sequence.
+- [x] P7-A: Replace the accuracy-threshold logic with a real 1D Kalman filter and prove it reduces noise on a synthetic sequence.
   - Goal: successive GPS fixes inside `refineLocation()` are fused through a Kalman filter (state: position, optionally velocity; measurement noise derived from each fix's `position.coords.accuracy`), and the filtered output is empirically smoother than the raw input on an injected noisy sequence.
   - Scope Boundary:
     - Editable: `js/location.js` (`refineLocation()` body, plus any small private helper/state the filter needs on the `LocationService` instance).
@@ -759,7 +759,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
   - P8-A: Install Playwright and write `verify-ui-signature-draw-and-display.cjs` (UI-level signature capture/display check).
   - P8-B: Write `test-bidirectional-signature-persistence.cjs` (citizen/officer/sign-on-behalf/403-block/server-restart-readback) and run both files against the real Docker runtime.
 
-- [ ] P8-A: Install Playwright and write `verify-ui-signature-draw-and-display.cjs` (UI-level signature capture/display check).
+- [x] P8-A: Install Playwright and write `verify-ui-signature-draw-and-display.cjs` (UI-level signature capture/display check).
   - Goal: a runnable Playwright script that drives the citizen-facing HTML5 canvas signature control, captures a drawn signature, and verifies it is displayed back correctly in the UI.
   - Scope Boundary:
     - Editable: new file `playwright/verify-ui-signature-draw-and-display.cjs`; `node_modules` (via `npm install`, not hand-edited).
@@ -808,7 +808,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
   - Actual-status Update: update the Playwright-file-existence row in Current Status Matrix.
   - Commit Boundary: commit after this slice when acceptance passes.
 
-- [ ] P8-B: Write `test-bidirectional-signature-persistence.cjs` (citizen/officer/sign-on-behalf/403-block/server-restart-readback) and run both files against the real Docker runtime.
+- [x] P8-B: Write `test-bidirectional-signature-persistence.cjs` (citizen/officer/sign-on-behalf/403-block/server-restart-readback) and run both files against the real Docker runtime.
   - Goal: a second Playwright script exercises the full bidirectional-signature scenario set the document's Table 4.4 claims were already tested: citizen signs, dispatcher signs, dispatcher signs on behalf of the citizen, a citizen attempt to sign the officer slot is blocked with a real `403`, and signatures survive a server restart.
   - Scope Boundary:
     - Editable: new file `playwright/test-bidirectional-signature-persistence.cjs`.
@@ -862,7 +862,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
 - Ordered Slice List:
   - P9-A: Measure first-load, offline-load, SSE latency, and WAF bot-block rate against the real Docker runtime; record an honest GPS-accuracy statement; recount real accounts.
 
-- [ ] P9-A: Measure first-load, offline-load, SSE latency, and WAF bot-block rate against the real Docker runtime; record an honest GPS-accuracy statement; recount real accounts.
+- [x] P9-A: Measure first-load, offline-load, SSE latency, and WAF bot-block rate against the real Docker runtime; record an honest GPS-accuracy statement; recount real accounts.
   - Goal: every Table 4.3 figure that is measurable from this machine has a real, reproducible measurement; the GPS-accuracy figure is replaced with an honest statement instead of a fabricated number; the account count is correct.
   - Scope Boundary:
     - Editable: none required in application source; a measurement script may be added under `playwright/` (reusable convention) if that is the chosen tool.
@@ -921,7 +921,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
 - Ordered Slice List:
   - P10-A: Apply the heading-level correction (3-tier to 2-tier) and the technical corrections, each cited to an evidence ID, and verify the `.docx`/`.pdf` stay textually consistent with each other afterward.
 
-- [ ] P10-A: Apply the heading-level correction (3-tier to 2-tier) and the technical corrections, each cited to an evidence ID, and verify the `.docx`/`.pdf` stay textually consistent with each other afterward.
+- [x] P10-A: Apply the heading-level correction (3-tier to 2-tier) and the technical corrections, each cited to an evidence ID, and verify the `.docx`/`.pdf` stay textually consistent with each other afterward.
   - Goal: the document's letterhead reads only `BỘ CÔNG AN` / `BỘ TƯ LỆNH CẢNH SÁT CƠ ĐỘNG` (2 tiers, per the user's earlier explicit instruction, dropping `TRUNG ĐOÀN CẢNH SÁT CƠ ĐỘNG SỐ 10`), and every technical claim this plan corrected (MASTER PASS→environment-gated login is not itself a document claim to change, but TLS 1.3, WebSocket/SSE wording, the NĐ144 fine-amount inconsistency, the Excel 4-sheet/`TAO_MOI` description, the Kalman Filter description, the Playwright file citations, Table 4.3's figures, and the "192 trạm" count) is corrected to match the real, evidenced state.
   - Scope Boundary:
     - Editable: `SOS_VIETNAM_2026.docx` text content (header/tiêu ngữ block; the sections already identified in the earlier document-review session: WebSocket/SSE wording, NĐ144 fine amount, Excel/`TAO_MOI` description, Kalman Filter description, Table 4.4's Playwright file names if they need adjusting to the final real file names, Table 4.3's figures, the "192 trạm" count).
@@ -964,7 +964,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
   - Actual-status Update: finalize all document-claim rows in Current Status Matrix.
   - Commit Boundary: no repo commit (file is outside the repo); note the completion in `evidence.md`'s Closure Evidence instead.
 
-- [ ] Pn-A: Call supervisor for the implemented-plan acceptance loop.
+- [x] Pn-A: Call supervisor for the implemented-plan acceptance loop.
   - Goal: verify the completed plan work against the accepted plan, actual-status decisions, evidence, benchmark, changed files, generated output, and validation results before closure.
   - Work Steps:
     1. Call the supervisor skill to review the full completed plan work.
@@ -973,7 +973,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
     4. Repeat until supervisor passes or records a blocker.
   - Implementation Gate: all planned implementation phases must be completed or explicitly blocked before this review.
   - Acceptance: supervisor review passes, or the plan records a blocker with evidence and no closure is performed.
-- [ ] Pn-B: Remove dead work created during this plan.
+- [x] Pn-B: Remove dead work created during this plan.
   - Goal: ensure the final diff contains only artifacts that still serve the accepted plan.
   - Work Steps:
     1. Review files, sections, generated output, tests, temp files, and plan artifacts created or modified during this plan.
@@ -983,7 +983,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
     5. If supervisor fails the cleanup, return to the responsible implementation workflow/skill for the failed cleanup scope only, then re-run supervisor review.
   - Implementation Gate: only remove artifacts created by this plan unless the user explicitly approves broader cleanup.
   - Acceptance: final `git diff/status` contains no dead plan-created artifacts, supervisor passes the cleanup, and evidence records what was removed or preserved.
-- [ ] Pn-C: Close the plan.
+- [x] Pn-C: Close the plan.
   - Goal: finish validation, evidence, benchmark, detect-changes, commit, and final status.
   - Work Steps:
     1. Run the required final validation for the accepted scope, including full build before final runtime validation. For app/runtime scopes, full build must include Docker image/container build.

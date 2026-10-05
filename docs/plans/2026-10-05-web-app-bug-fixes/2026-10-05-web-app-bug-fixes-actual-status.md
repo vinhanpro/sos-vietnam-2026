@@ -331,8 +331,8 @@ Do not change the update-path logic for already-known usernames; do not invent a
 - [x] Blockers are recorded (`js/dispatcher.js` graph-coverage gap) with a non-blocking manual-verification workaround.
 - [x] Next phase status assumptions, next action, and work steps have been updated from this status file when needed (reflected directly in `plan.md`'s P1/P2 slices).
 - [x] Status Refresh Log has an R0 baseline row.
-- [ ] If implementation has started, affected Current Status Matrix rows have been refreshed from latest evidence. (N/A at P0 — implementation has not started.)
-- [ ] If refreshed statuses changed next work, only the stale next-phase status assumptions, next action, or work steps have been updated before the next phase. (N/A at P0.)
+- [x] If implementation has started, affected Current Status Matrix rows have been refreshed from latest evidence.
+- [x] If refreshed statuses changed next work, only the stale next-phase status assumptions, next action, or work steps have been updated before the next phase.
 
 ## Final P0 Decision
 
@@ -343,3 +343,15 @@ Decision note:
 P0 is complete. All target units are classified with evidence. Two next-phase adjustments are already folded into `plan.md`: (1) P1-A and P2-C must manually re-`Grep` exact `js/dispatcher.js` line/function references immediately before editing, since this file is not covered by the Anvien graph for this repo; (2) P2-A's first work step must directly re-confirm that `broadcastToDispatchers`'s routing rules are agnostic to the `action` field value before relying on that assumption for the new WebRTC actions. No blockers prevent starting P1-A.
 
 **2026-10-05 update (R1):** this actual-status file was refreshed to add `P3`-`P10`'s target scope, following a separate document-review session that compared `SOS_VIETNAM_2026.docx`'s technical claims against this repo's real code. The most consequential new finding is that the originally-assumed "plaintext password" defect was wrong: the real account store already uses PBKDF2-SHA512 (an adequate standard), and the real defect is a narrower, more severe universal-bypass password (`'2002'`) with no environment gating — `P3`'s scope was corrected accordingly (no bcrypt migration; a 3-line `NODE_ENV` guard instead). All of `P3`-`P9` can proceed independently and in any order; `P10` (the document correction itself) is explicitly gated on `P3`-`P9` completing or being explicitly blocked first, since every document edit must cite a real evidence ID produced by one of those phases. No blockers prevent starting any of `P3`, `P4`, `P6-A`, `P7-A`, `P8-A`, or `P9-A`; `P6-B` has one open item (confirm `scripts/import_accounts_excel.py`'s Anvien graph coverage) to resolve at its own Implementation Gate rather than at P0.
+
+
+## Final Plan Closure Decision
+
+- [x] All plan phases (P0 through P10) complete.
+- [x] All implementation claims independently verified against source code, live Docker container, and regenerated Word/PDF documents.
+- [x] Dead work sweep (Pn-B) completed across all 7 playwright scripts; zero dead/orphaned files found.
+- [x] Fresh Anvien detect-changes (Pn-C) executed; low risk level, 0 affected processes.
+
+Decision note:
+
+The plan reached full closure on 2026-10-06 following the supervisor review (`rp_supervisor_261006_000831_by_claude-sonnet-5-5_p1-p10-closure.md`). All target units across vehicle routing, WebRTC voice calling, password security, TLS 1.3 reverse proxy, 4-sheet Excel sync with create-gating, 1D/2-axis Kalman GPS filtering, Playwright signature persistence test suites, empirical Docker performance benchmarks, and NCKH document/PDF synchronization are classified as `correct` with verified evidence.

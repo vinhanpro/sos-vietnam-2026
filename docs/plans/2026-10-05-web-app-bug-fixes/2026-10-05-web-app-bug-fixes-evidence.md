@@ -717,7 +717,36 @@ Matching plan item(s): `P10-A`
 
 ## Closure Evidence
 
-- **All Slices Completed:** P1-A, P2-A, P2-B, P2-C, P3-A, P4-A, P6-A, P6-B, P7-A, P8-A, P8-B, P9-A, P10-A.
-- **Docker Stack State:** Healthy, running on ports 3102 and 8443 (reverse proxy TLS 1.3).
-- **Playwright Test Suite:** All automated test suites (`test-bidirectional-signature-persistence.cjs`, `verify-ui-signature-draw-and-display.cjs`, `measure-empirical-benchmarks.cjs`, `verify-gps-kalman-filter.cjs`, `verify-webrtc-voice-call-two-way-audio.cjs`) pass with exit code 0.
-- **Document Status:** Synchronized with empirical evidence, native PDF regenerated, 100% consistency verified.
+### `Pn-A` - Supervisor Review
+- **Supervisor Report:** `docs/plans/2026-10-05-web-app-bug-fixes/rp_supervisor_261006_000831_by_claude-sonnet-5-5_p1-p10-closure.md`.
+- **Source-Level Clearance Verification:**
+  - `services/accounts-excel-generator.js`: 4 real worksheets confirmed including `'Mẫu Thêm Mới'` (line 503).
+  - `scripts/import_accounts_excel.py`: `raw_action` actively consumed at lines 284-301 gating creation with skip reporting.
+  - `js/location.js`: Real `GPSKalmanFilter` class confirmed with Kalman-gain math (`K = P_pred / (P_pred + R)`).
+  - `playwright/`: All 7 test scripts exist on disk, including both NCKH-document-cited filenames.
+  - `docker-compose.yml` + `Caddyfile`: Real `caddy:2-alpine` reverse proxy configured with `tls internal { protocols tls1.3 }`.
+  - `playwright/measure-empirical-benchmarks.cjs`: Real Performance API navigation timing and `Date.now()` round-trip latencies, no fabricated numbers.
+  - `SOS_VIETNAM_2026.docx` / `SOS_VIETNAM_2026.pdf`: Re-extracted directly, 2-tier letterhead confirmed (`BỘ CÔNG AN 
+BỘ TƯ LỆNH CẢNH SÁT CƠ ĐỘNG`), 3rd tier absent, 100% textual consistency.
+  - `assets/agency-accounts.json`: Exactly 453 records, zero test/polluted accounts remaining.
+- **Process Review Finding:** All implementation claims passed; reject was purely administrative regarding stale checkboxes and explicit `Pn-A`/`Pn-B`/`Pn-C` closeout sections.
+
+### `Pn-B` - Dead-Work Sweep Finding
+- **Sweep Target:** All 7 test scripts in `playwright/` (`measure-empirical-benchmarks.cjs`, `test-bidirectional-signature-persistence.cjs`, `verify-gps-kalman-filter.cjs`, `verify-tls-handshake.cjs`, `verify-ui-signature-draw-and-display.cjs`, `verify-vehicle-profile-route-styling.cjs`, `verify-webrtc-voice-call-two-way-audio.cjs`) and working tree.
+- **Result:** Reviewed all 7 scripts deliberately. Every script maps 1-to-1 to a required phase/evidence target or NCKH document citation. Zero duplicate scripts, dead test harnesses, or orphaned helper utilities found. No files required deletion.
+
+### `Pn-C` - Plan Closure & Fresh Change Scope Verification
+- **Execution Date:** 2026-10-06.
+- **Command:** `anvien detect-changes --repo sos-vietnam-2026-worktree-bugreview --scope all`
+- **Output:**
+  ```json
+  {
+    "affected_count": 0,
+    "affected_files": 0,
+    "changed_count": 0,
+    "changed_files": 2,
+    "risk_level": "low"
+  }
+  ```
+- **Docker Stack State:** Verified container `sos-vietnam:local` (port 3102) and `caddy:2-alpine` (port 8443) running and healthy.
+- **Final Result:** All 10 phases (P1 through P10) and administrative closure items (Pn-A, Pn-B, Pn-C) are 100% completed and verified.
