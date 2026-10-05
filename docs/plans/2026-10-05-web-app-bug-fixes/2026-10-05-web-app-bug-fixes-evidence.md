@@ -221,6 +221,34 @@ Both the SSE connection and the `curl`/HTTP test client needed a realistic deskt
 
 The test server instance, test incident, and all test scripts (kept under a disposable `.tmp/` scratch path inside the repo per the iron rule that temp directories must live inside the repo, never directly on `C:\`) were removed after this proof. No `.tmp/` content was committed.
 
+### `E2-P2B-SRC1` — citizen-side source diff
+
+`js/app.js` `startCitizenVoiceCall` (now spanning roughly `:2242-2375`, grew from adding the WebRTC block): creates/replaces `this.citizenVoicePeerConnection` (closing any prior one first), attaches local mic tracks via `pc.addTrack`, wires `pc.ontrack` to bind the remote stream to the new `#citizenRemoteVoiceAudio` element and record the stream reference on `this.citizenVoiceRemoteStream` (read later by the record button's own handler, since `CallAudioRecorder.startRecording(localStream, remoteSource, canvas)` only accepts the remote source as a constructor-time argument, not a post-hoc setter — confirmed by reading `js/call-audio-recorder.js` in full this slice, no `setRemoteSource` method exists), wires `pc.onicecandidate` to POST `webrtc-ice`, wires `pc.oniceconnectionstatechange` to show a visible failure state (not a silent fake-connected UI) on `failed`/`disconnected`, and — only on the citizen-initiated path (`notifyDispatcher === true`) — creates a real SDP offer and POSTs it as `webrtc-offer`.
+
+`endCitizenVoiceCall` (now roughly `:2451-2505`): added `pc.close()` + nulling `citizenVoicePeerConnection`/`citizenVoiceRemoteStream`/the audio element's `srcObject`.
+
+`handleVideoCallSignal` (now roughly `:1845-2030`): added `else if` branches for `webrtc-offer` (dispatcher-initiated direction — delegates to a new `handleIncomingVoiceOffer` helper), `webrtc-answer` (citizen-initiated direction — sets the remote description on the existing peer connection), and `webrtc-ice` (adds the remote ICE candidate on whichever peer connection already exists). New helper method `handleIncomingVoiceOffer(offerSdp)`: sets the remote offer, creates and sends a real answer.
+
+`index.html`: added one `<audio id="citizenRemoteVoiceAudio" autoplay style="display: none;">` element inside the existing `citizenVoiceCallModal` markup, immediately after the existing visualizer canvas block — no other markup changed.
+
+### `E2-P2B-UI1` — live proof: real `RTCPeerConnection` + SDP offer + local track + remote-audio sink
+
+Using Playwright with `--use-fake-device-for-media-stream`/`--use-fake-ui-for-media-stream` launch args and a granted `microphone` permission (so `getUserMedia` succeeds with a synthetic audio track instead of needing a real microphone), drove a real citizen SOS submission, then called `window.app.startCitizenVoiceCall(true)` directly (equivalent to the real UI trigger) against a real running server. Result:
+
+```json
+{
+  "hasPeerConnection": true,
+  "signalingState": "have-local-offer",
+  "hasLocalDescription": true,
+  "localDescriptionType": "offer",
+  "senderCount": 1,
+  "audioElExists": true,
+  "audioElAutoplay": true
+}
+```
+
+Confirms: a real `RTCPeerConnection` was created, is in `have-local-offer` signaling state (meaning `createOffer`+`setLocalDescription` both actually ran), has exactly 1 local sender (the synthetic microphone track), and the new remote-audio `<audio>` element exists with `autoplay` set. This is `P2-B`'s acceptance bar for the citizen-initiated direction; the dispatcher-initiated direction (`webrtc-answer`/`handleIncomingVoiceOffer`) and the full two-way audio proof are deferred to `P2-C`, which stands up both the citizen and dispatcher sides together and can meaningfully exercise both directions and measure real audio, rather than fabricating a one-sided "fake dispatcher" answer in isolation.
+
 ## P0 Evidence for P3-P10 (document-vs-code gap scope, added 2026-10-05)
 
 Matching plan item(s): `P0-A` refresh supporting `P3`-`P10`

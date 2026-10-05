@@ -383,7 +383,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
   - Actual-status Update: update signal-handler row to `partial`.
   - Commit Boundary: commit after this slice when acceptance passes.
 
-- [ ] P2-B: Wire a real `RTCPeerConnection` + remote-audio sink on the citizen side (`js/app.js`).
+- [x] P2-B: Wire a real `RTCPeerConnection` + remote-audio sink on the citizen side (`js/app.js`).
   - Goal: `startCitizenVoiceCall` creates a real `RTCPeerConnection`, exchanges SDP/ICE over the P2-A channel, and plays the dispatcher's remote audio through a real `<audio autoplay>` element, while keeping all existing call UI (timer, visualizer, mute, recorder) working unchanged.
   - Scope Boundary:
     - Editable: `startCitizenVoiceCall`, `endCitizenVoiceCall`, `handleVideoCallSignal` (voice branch only) in `js/app.js`; `index.html` call modal markup limited to adding one `<audio id="citizenRemoteVoiceAudio" autoplay>` element inside the existing `citizenVoiceCallModal` block (no layout/visual redesign).

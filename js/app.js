@@ -1954,7 +1954,7 @@ class SOSApp {
       }
       this.showToast?.('Cán bộ trực ban đang bận xử lý ca khác hoặc đã từ chối cuộc gọi.', 'warning');
       if (isVoiceCall) {
-        this.endCitizenVoiceCall(false);
+        this.endCitizenVoiceCall(false); // also closes citizenVoicePeerConnection if one was created
       } else {
         this.endCitizenLiveStream(false);
       }
@@ -1969,6 +1969,59 @@ class SOSApp {
       } else {
         this.endCitizenLiveStream(false);
       }
+    } else if (signal.action === 'webrtc-offer' && isVoiceCall) {
+      // Dispatcher-initiated voice call: dispatcher sends the offer once the
+      // citizen has accepted (startCitizenVoiceCall(false) already created
+      // the RTCPeerConnection by the time this normally arrives).
+      this.handleIncomingVoiceOffer(signal.sdp);
+    } else if (signal.action === 'webrtc-answer' && isVoiceCall) {
+      // Citizen-initiated voice call: dispatcher answers our earlier offer.
+      const pc = this.citizenVoicePeerConnection;
+      if (pc && signal.sdp) {
+        pc.setRemoteDescription(new RTCSessionDescription(signal.sdp)).catch(err => {
+          console.warn('Failed to set remote answer description:', err);
+        });
+      }
+    } else if (signal.action === 'webrtc-ice' && isVoiceCall) {
+      const pc = this.citizenVoicePeerConnection;
+      if (pc && signal.candidate) {
+        pc.addIceCandidate(new RTCIceCandidate(signal.candidate)).catch(err => {
+          console.warn('Failed to add remote ICE candidate:', err);
+        });
+      }
+    }
+  }
+
+  /**
+   * Dispatcher-initiated voice call: receive the dispatcher's SDP offer,
+   * create our own RTCPeerConnection (if startCitizenVoiceCall(false) has
+   * not already created one), answer it, and send the answer back.
+   */
+  async handleIncomingVoiceOffer(offerSdp) {
+    if (!offerSdp || !this.activeIncident) return;
+    const pc = this.citizenVoicePeerConnection;
+    if (!pc) {
+      console.warn('Received a WebRTC offer with no active peer connection; ignoring.');
+      return;
+    }
+    try {
+      await pc.setRemoteDescription(new RTCSessionDescription(offerSdp));
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      fetch('/api/sos/videocall/signal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...this.citizenAccessHeaders() },
+        body: JSON.stringify({
+          id: this.activeIncident.id,
+          action: 'webrtc-answer',
+          sender: 'citizen',
+          callType: 'voice',
+          accessToken: this.citizenAccessToken,
+          sdp: answer
+        })
+      }).catch(e => console.warn('WebRTC answer signal error:', e));
+    } catch (err) {
+      console.warn('Failed to answer incoming WebRTC offer:', err);
     }
   }
 
@@ -2282,11 +2335,13 @@ class SOSApp {
     }
 
     // Acquire Citizen Microphone Stream
+    let micError = null;
     try {
       this.citizenVoiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       this.citizenVoiceCallStream = this.citizenVoiceStream;
     } catch (err) {
       console.warn('Microphone access fallback on voice call:', err);
+      micError = err;
     }
     this.isCitizenVoiceCallActive = true;
 
@@ -2303,7 +2358,71 @@ class SOSApp {
     // Setup Visualizer Canvas
     this.setupCitizenVoiceVisualizer(canvas);
 
-    // Notify Dispatcher if initiated by citizen
+    // --- Real WebRTC peer connection setup ---
+    // Any previous connection for a prior call on this incident must be
+    // closed first, so repeated calls never leak an open RTCPeerConnection.
+    this.citizenVoicePeerConnection = this.citizenVoicePeerConnection || null;
+    if (this.citizenVoicePeerConnection) {
+      try { this.citizenVoicePeerConnection.close(); } catch (e) {}
+    }
+    const pc = new RTCPeerConnection({
+      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+    });
+    this.citizenVoicePeerConnection = pc;
+
+    if (this.citizenVoiceStream) {
+      this.citizenVoiceStream.getTracks().forEach(track => pc.addTrack(track, this.citizenVoiceStream));
+    }
+
+    pc.ontrack = (event) => {
+      const remoteStream = event.streams[0];
+      this.citizenVoiceRemoteStream = remoteStream;
+      const remoteAudioEl = document.getElementById('citizenRemoteVoiceAudio');
+      if (remoteAudioEl) {
+        remoteAudioEl.srcObject = remoteStream;
+        remoteAudioEl.play().catch(() => {});
+      }
+      // CallAudioRecorder.startRecording(localStream, remoteSource, canvas)
+      // only accepts the remote source as a constructor-time argument, not a
+      // post-hoc setter - citizenVoiceRemoteStream is read by the recording
+      // button's own click handler below once this track has arrived.
+    };
+
+    pc.onicecandidate = (event) => {
+      if (event.candidate && this.activeIncident) {
+        fetch('/api/sos/videocall/signal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...this.citizenAccessHeaders() },
+          body: JSON.stringify({
+            id: this.activeIncident.id,
+            action: 'webrtc-ice',
+            sender: 'citizen',
+            callType: 'voice',
+            accessToken: this.citizenAccessToken,
+            candidate: event.candidate.toJSON()
+          })
+        }).catch(() => {});
+      }
+    };
+
+    const showCallFailure = (reason) => {
+      if (statusTextEl) {
+        statusTextEl.innerHTML = '<span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #ef4444;"></span> '
+          + 'Kết nối thất bại: ' + reason + '. Vui lòng thử gọi lại hoặc gọi trực tiếp số điện thoại trực ban.';
+      }
+    };
+
+    pc.oniceconnectionstatechange = () => {
+      if (pc.iceConnectionState === 'failed' || pc.iceConnectionState === 'disconnected') {
+        showCallFailure('Mất kết nối mạng với trực ban');
+      }
+    };
+
+    if (micError) {
+      showCallFailure('Không truy cập được microphone (' + micError.message + ')');
+    }
+
+    // Notify Dispatcher if initiated by citizen, and send a real SDP offer.
     if (notifyDispatcher && this.activeIncident) {
       fetch('/api/sos/videocall/signal', {
         method: 'POST',
@@ -2316,6 +2435,26 @@ class SOSApp {
           accessToken: this.citizenAccessToken
         })
       }).catch(e => console.warn('Voice call signal error:', e));
+
+      try {
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        fetch('/api/sos/videocall/signal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...this.citizenAccessHeaders() },
+          body: JSON.stringify({
+            id: this.activeIncident.id,
+            action: 'webrtc-offer',
+            sender: 'citizen',
+            callType: 'voice',
+            accessToken: this.citizenAccessToken,
+            sdp: offer
+          })
+        }).catch(e => console.warn('WebRTC offer signal error:', e));
+      } catch (err) {
+        console.warn('Failed to create WebRTC offer:', err);
+        showCallFailure('Không khởi tạo được kênh kết nối thoại');
+      }
     }
 
     // End call button
@@ -2353,7 +2492,7 @@ class SOSApp {
 
         if (!this.citizenVoiceRecorder.isRecording) {
           try {
-            await this.citizenVoiceRecorder.startRecording(this.citizenVoiceStream);
+            await this.citizenVoiceRecorder.startRecording(this.citizenVoiceStream, this.citizenVoiceRemoteStream || null);
             if (recDot) recDot.style.animation = 'pulse 1s infinite';
             if (recText) recText.textContent = '⏹️ Dừng (00:00)';
             btnRec.style.background = 'rgba(239, 68, 68, 0.45)';
@@ -2451,6 +2590,15 @@ class SOSApp {
   endCitizenVoiceCall(notifyDispatcher = true) {
     this.isCitizenVoiceCallActive = false;
     this.citizenVoiceCallStream = null;
+
+    if (this.citizenVoicePeerConnection) {
+      try { this.citizenVoicePeerConnection.close(); } catch (e) {}
+      this.citizenVoicePeerConnection = null;
+    }
+    this.citizenVoiceRemoteStream = null;
+    const remoteAudioEl = document.getElementById('citizenRemoteVoiceAudio');
+    if (remoteAudioEl) remoteAudioEl.srcObject = null;
+
     const modal = document.getElementById('citizenVoiceCallModal');
     if (modal) {
       modal.classList.remove('is-open');
