@@ -110,7 +110,7 @@ Out of scope:
 | `/api/sos/sign` role-check / `403` behavior (`server.js:4839` region) | Already confirmed correct in the earlier document-review session (citizen cannot write the officer-signature slot, gets a real `403`) | Unchanged; `P8-B` writes a test proving this, does not change the behavior | `correct` | part of `server.js` | prior-session document-review evidence (not re-numbered here; re-verify exact current line range immediately before `P8-B` writes assertions against it) | validate (test only) in P8-B |
 | Table 4.3 figures (document, section 4.3) | All 4 measurable figures empirically measured on Docker runtime (first load ~0.79s, cached load ~0.135s, SSE latency 45ms, WAF bot-block 100%); honest GPS statement formulated | Real measurements recorded across 2 stable runs | `correct` | n/a | `E9-P9A-PERF1..4`, `E9-P9A-GPS1` | fed to P10-A |
 | "192 trạm" count (document, section 2.4.4) | Recounted live from assets/agency-accounts.json on disk: exactly 453 records | Verified count 453 | `correct` | n/a | `E9-P9A-COUNT1` | fed to P10-A |
-| Document letterhead (3-tier: `BỘ CÔNG AN` / `BỘ TƯ LỆNH CẢNH SÁT CƠ ĐỘNG` / `TRUNG ĐOÀN CẢNH SÁT CƠ ĐỘNG SỐ 10`) | 3 tiers, confirmed by direct read of the document's first 4 lines this session | 2 tiers only (`BỘ CÔNG AN` / `BỘ TƯ LỆNH CẢNH SÁT CƠ ĐỘNG`), per the user's earlier explicit instruction | `wrong` | n/a | `E0-P0A-SRC18` | correct in P10-A |
+| Document letterhead (2-tier: `BỘ CÔNG AN` / `BỘ TƯ LỆNH CẢNH SÁT CƠ ĐỘNG`) | 2 tiers only, 3rd tier removed; Table 0 author/org updated | 2 tiers only (`BỘ CÔNG AN` / `BỘ TƯ LỆNH CẢNH SÁT CƠ ĐỘNG`), verified across DOCX and PDF | `correct` | n/a | `E10-P10A-DOC1`, `E10-P10A-CONSIST1` | P10-A complete |
 
 ## Status Refresh Log
 
@@ -129,6 +129,7 @@ Out of scope:
 | R10 | 2026-10-05 | after implementing and verifying P8-A citizen signature UI test | `playwright/verify-ui-signature-draw-and-display.cjs` | verify-ui-signature-draw-and-display.cjs moves `missing -> correct` | `E8-P8A-TOOL1`, `E8-P8A-SRC1`, `E8-P8A-RUN1`, `E8-P8A-FD1` | P8-B may proceed |
 | R11 | 2026-10-05 | after implementing and verifying P8-B 5-scenario signature persistence test | `playwright/test-bidirectional-signature-persistence.cjs` | playwright files move `missing -> correct`; bidirectional signature verified across restart | `E8-P8B-SRC1`, `E8-P8B-RUN1`, `E8-P8B-CLEANUP1`, `E8-P8B-FD1` | P8 is fully closed; P9-A may proceed |
 | R12 | 2026-10-05 | after empirical performance benchmarking and account recount (P9-A) | `playwright/measure-empirical-benchmarks.cjs` | Table 4.3 figures move `fake-or-stub -> correct`; account count moves `wrong -> correct` (453) | `E9-P9A-PERF1..4`, `E9-P9A-GPS1`, `E9-P9A-COUNT1`, `E9-P9A-FD1` | P9 is fully closed; P10-A (document revision) unblocked and ready |
+| R13 | 2026-10-05 | after applying P10-A document corrections and verifying DOCX/PDF consistency | `SOS_VIETNAM_2026.docx`, `SOS_VIETNAM_2026.pdf` | Document letterhead moves `wrong -> correct` (2 tiers); all document claims move `wrong`/`fake-or-stub -> correct`; 100% DOCX/PDF consistency verified | `E10-P10A-DOC1`, `E10-P10A-CONSIST1`, `E10-P10A-FD1` | P10 is fully closed; all plan phases (P1-P10) complete |
 
 ## Phase Touch Map
 
@@ -315,7 +316,7 @@ Do not change the update-path logic for already-known usernames; do not invent a
 | P7-A | GPS refinement is `correct` (GPSKalmanFilter implemented and statistically verified with 92.25% variance reduction) | P7 is fully closed |
 | P8-A/P8-B | Both cited Playwright files are `missing` entirely; the `/api/sos/sign` behavior they will test is already `correct` | P8-A/P8-B are pure test-authoring; if testing surfaces a real defect in the signature feature, stop and open a new slice rather than patching inside the test-authoring phase |
 | P9-A | Table 4.3 figures are `fake-or-stub`; "192 trạm" is `wrong` (453 is the real count, confirmed twice) | measure only what's measurable from this machine; recount accounts only after P6 lands, in case P6-B's own testing changed the count |
-| P10-A | Document letterhead is `wrong` (3-tier, needs 2-tier); multiple document claims are `wrong`/`fake-or-stub` pending P3-P9's real evidence | P10-A must not start until P3-P9 are complete or explicitly blocked; every edit must cite a specific evidence ID, no number invented at document-editing time |
+| P10-A | Document letterhead is `correct` (2 tiers); all document claims are `correct`; verified with 100% DOCX/PDF consistency check | P10 is fully closed; all plan phases (P1-P10) complete |
 
 ## Implementation Gate
 

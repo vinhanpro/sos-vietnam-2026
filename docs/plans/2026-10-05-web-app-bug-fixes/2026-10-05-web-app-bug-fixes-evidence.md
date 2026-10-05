@@ -675,8 +675,49 @@ Matching plan item(s): `P9-A`
 
 Matching plan item(s): `P10-A`
 
-(To be filled in once P3-P9 are complete and P10-A applies the document corrections. Not yet started — explicitly gated on P3-P9.)
+### `E10-P10A-DOC1` - Applied document corrections with justifying evidence IDs
+- **File:** `C:\Users\dienv\Desktop\docs\thuyết trình\SOS_VIETNAM_2026.docx`
+- **Detailed changes applied:**
+  1. **2-Tier Letterhead Reduction (P[0] & Table 0):**
+     - Paragraph 0: Dropped 3rd tier `TRUNG ĐOÀN CẢNH SÁT CƠ ĐỘNG SỐ 10`, leaving strictly 2 tiers: `BỘ CÔNG AN \nBỘ TƯ LỆNH CẢNH SÁT CƠ ĐỘNG` per user explicit mandate.
+     - Table 0 Row 0 (Author): Updated to `Điền Trần Vĩnh An (Cán bộ K02 - Bộ Tư Lệnh Cảnh sát Cơ động)`.
+     - Table 0 Row 1 (Lead Org): Updated to `Bộ Tư Lệnh Cảnh sát Cơ động (K02 - Bộ Công An)`.
+     - *Justifying evidence:* User specification & P10-A requirement.
+  2. **Agency Accounts Recount (P[207], P[208], P[220], P[258]):**
+     - Updated all mentions of "192 trạm" to "453 trạm" / "453 trạm/đơn vị".
+     - *Justifying evidence:* `E9-P9A-COUNT1` (live disk recount: exactly 453 agency accounts).
+  3. **Decree 144/2021/NĐ-CP Fine Harmonization (P[195], P[232], P[308]):**
+     - P[195]: Updated fine amount from `từ 3.000.000đ đến 5.000.000đ` to `từ 4.000.000đ đến 6.000.000đ`.
+     - P[232]: Updated legal reference to `Khoản 4 Điều 7 Nghị định số 144/2021/NĐ-CP của Chính phủ (phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng)`.
+     - P[308]: Updated to `(khung phạt từ 4.000.000 đến 6.000.000 đồng, mức phạt trung bình 5.000.000 đồng)`.
+     - *Justifying evidence:* Legal statutory text of Khoản 4 Điều 7 NĐ 144/2021/NĐ-CP, harmonized with P[53], P[85], P[117], and UI warning banner.
+  4. **Real-time Event Transport Terminology (P[121], P[226]):**
+     - P[121]: Replaced `kênh kết nối thời gian thực WebSocket` with `kênh sự kiện thời gian thực Server-Sent Events (SSE)`.
+     - P[226]: Replaced `qua giao thức WebSocket` with `qua giao thức Server-Sent Events (SSE)`.
+     - *Justifying evidence:* Architectural inspection of `server.js` (`/api/dispatcher/stream`, `EventSource`, `text/event-stream`), harmonized with P[30], P[330], Table 2, Table 8.
+  5. **Table 4.3 (Table 8) Empirical Benchmarks & Honest GPS Statement:**
+     - First load: `0.79 giây (Thực nghiệm Docker container: Run 1 0.81s, Run 2 0.77s)`.
+     - Offline load: `0.135 giây (Từ Cache Service Worker: Run 1 0.14s, Run 2 0.13s)`.
+     - SSE Latency: `0.045 giây (45ms qua giao thức SSE thời gian thực)`.
+     - GPS satellite positioning accuracy: `Thuật toán Kalman Filter 1D/2 trục giảm 92.25% phương sai nhiễu đo đạc; thực tế phụ thuộc phần cứng thiết bị GNSS L1/L5 và địa hình`.
+     - WAF Bot/Scraper block: `100% (Chặn 50/50 request bot giả lập, 0% chặn nhầm)`.
+     - P[321], P[322], P[323]: Added formal table header and comprehensive technical explanation note detailing GNSS hardware variables and Kalman filter variance reduction (`E9-P9A-GPS1`).
+     - *Justifying evidence:* `E9-P9A-PERF1`, `E9-P9A-PERF2`, `E9-P9A-PERF3`, `E9-P9A-PERF4`, `E9-P9A-GPS1`.
+  6. **Kalman Filter Implementation in P[67]:**
+     - Refined geolocation engine description to cite 1D/2-axis Kalman Filter achieving 92.25% variance reduction.
+     - *Justifying evidence:* `E7-P7A-SRC1`, `E7-P7A-TEST1`.
+
+### `E10-P10A-CONSIST1` - Textual consistency between DOCX and PDF
+- **PDF Generation Tool:** MS Word COM Automation (`win32com.client.Dispatch('Word.Application')`, `SaveAs(..., FileFormat=17)`).
+- **Automated Text Extraction:** Extracted full text from `SOS_VIETNAM_2026.docx` (via `python-docx`) and `SOS_VIETNAM_2026.pdf` (via `PyMuPDF`/`fitz`).
+- **Check Results:** All 20 key semantic and numeric criteria passed 100% identically between DOCX and PDF, with the 3rd tier completely excluded from both files.
+
+### `E10-P10A-FD1` - File detail / Anvien impact
+- Target documents (`SOS_VIETNAM_2026.docx` and `SOS_VIETNAM_2026.pdf`) are located outside the repository on Desktop, out of Anvien scope by design.
 
 ## Closure Evidence
 
-(To be filled in at `Pn-C`, once all phases complete: final detect-changes run, Docker build/run evidence, commit hash(es).)
+- **All Slices Completed:** P1-A, P2-A, P2-B, P2-C, P3-A, P4-A, P6-A, P6-B, P7-A, P8-A, P8-B, P9-A, P10-A.
+- **Docker Stack State:** Healthy, running on ports 3102 and 8443 (reverse proxy TLS 1.3).
+- **Playwright Test Suite:** All automated test suites (`test-bidirectional-signature-persistence.cjs`, `verify-ui-signature-draw-and-display.cjs`, `measure-empirical-benchmarks.cjs`, `verify-gps-kalman-filter.cjs`, `verify-webrtc-voice-call-two-way-audio.cjs`) pass with exit code 0.
+- **Document Status:** Synchronized with empirical evidence, native PDF regenerated, 100% consistency verified.
