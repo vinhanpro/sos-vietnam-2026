@@ -334,7 +334,7 @@ Fix two confirmed, user-reported defects in the SOS Vietnam web app (P1, P2), th
   - P2-B: Wire a real `RTCPeerConnection` + remote-audio sink on the citizen side (`js/app.js`).
   - P2-C: Wire a real `RTCPeerConnection` + remote-audio sink on the dispatcher side (`js/dispatcher.js`), and validate a live two-way audio call end to end.
 
-- [ ] P2-A: Extend `server.js` signal relay to carry WebRTC SDP/ICE payloads end to end.
+- [x] P2-A: Extend `server.js` signal relay to carry WebRTC SDP/ICE payloads end to end.
   - Goal: `/api/sos/videocall/signal` and `/api/sos/voicecall/signal` accept and relay new `action` values (`webrtc-offer`, `webrtc-answer`, `webrtc-ice`) with an opaque `sdp`/`candidate` payload, routed with the exact same citizen<->dispatcher direction and escalation-level rules already enforced for `request`/`accept`/`reject`/`end`.
   - Scope Boundary:
     - Editable: the signal POST handler body (around `server.js:5353-5402`) only to widen the accepted/forwarded payload shape; no change to `broadcastToDispatchers`/`notifyCitizen` routing-rule logic itself (reuse as-is).

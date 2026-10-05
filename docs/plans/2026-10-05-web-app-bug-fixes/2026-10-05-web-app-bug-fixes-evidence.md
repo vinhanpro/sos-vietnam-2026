@@ -201,7 +201,25 @@ Live run also confirmed (via a temporary `drawRoute` call-interceptor used only 
 
 Matching plan item(s): `P2-A`, `P2-B`, `P2-C`
 
-(To be filled in as P2 slices are implemented. Not yet started as of this plan's authoring.)
+### `E2-P2A-SRC1` — signal handler diff
+
+`server.js:5359-5378`: destructure now also reads `sdp`, `candidate` from the request body; `signalPayload` now includes `sdp`/`candidate` fields (opaque passthrough, `undefined` when not supplied by the caller, matching the existing optional-field style already used for `streamData`). The `action` comment is updated to list `webrtc-offer`/`webrtc-answer`/`webrtc-ice` alongside the existing values. No other line changed.
+
+### `E2-P2A-SRC2` — `broadcastToDispatchers` action-agnostic confirmation
+
+Re-read `server.js:1583-1687` in full. Confirmed: the `if (event === 'videocall_signal' || event === 'voicecall_signal')` branch (line 1596) and its escalation/ward/province filtering (lines 1597-1640) only ever inspect the outer `event` string parameter and fields like `inc.status`, `incWard`, `incProvince`, `incAgency` derived from the incident — never the inner `data.action` value. This confirms the 3 new WebRTC actions inherit the exact same authorization/routing behavior automatically, with no additional code change needed.
+
+### `E2-P2A-HTTP1` — live HTTP+SSE round-trip proof
+
+Using a real incident created via `POST /api/sos/create` (agency `police`, so it is not yet escalated — exercising the non-escalated/ward+national routing path) and a real dispatcher session token obtained via `POST /api/auth/login` (the `admin` account, `national` level, so it qualifies for the "national level always receives" branch at line 1617-1618), a disposable test script opened a real SSE connection to `GET /api/dispatcher/stream?level=national&agency=all` (with the dispatcher's `Authorization: Bearer <token>` header — required because `/api/dispatcher/*` is gated by `securityFirewall.authenticate()` at the top-level router, `server.js:2133-2154`, which `/api/dispatcher/stream`'s own handler does not separately duplicate) and then issued `POST /api/sos/videocall/signal` with `{action: 'webrtc-offer', sdp: {type: 'offer', sdp: 'v=0...TEST_SDP_MARKER_12345...'}}` using the incident's real `citizenAccessToken`.
+
+Result: the SSE connection received `event: videocall_signal` with a `data:` payload whose `action` was exactly `'webrtc-offer'` and whose `sdp.sdp` string contained `TEST_SDP_MARKER_12345` unchanged — proving the new action/payload fields relay end to end through the real server, real SSE transport, and real authorization/routing path, not a mock.
+
+Both the SSE connection and the `curl`/HTTP test client needed a realistic desktop-Chrome `User-Agent` header to pass the Layer-7 Anti-AI-Bot WAF (`server.js` around line 2108) — a plain default `curl`/Node `http` User-Agent is correctly rejected by the WAF as a bot, which is expected, working WAF behavior, not a defect.
+
+### Cleanup
+
+The test server instance, test incident, and all test scripts (kept under a disposable `.tmp/` scratch path inside the repo per the iron rule that temp directories must live inside the repo, never directly on `C:\`) were removed after this proof. No `.tmp/` content was committed.
 
 ## P0 Evidence for P3-P10 (document-vs-code gap scope, added 2026-10-05)
 

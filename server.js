@@ -5356,7 +5356,7 @@ const server = http.createServer(async (req, res) => {
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
       try {
-        const { id, action, sender, callType, streamData, accessToken } = JSON.parse(body || '{}');
+        const { id, action, sender, callType, streamData, accessToken, sdp, candidate } = JSON.parse(body || '{}');
         const cleanId = String(id || '').replace(/^[#\s]+/, '').trim();
         const incident = incidents.get(cleanId) || incidents.get(id);
         const actor = requireIncidentActor(req, res, urlObj, incident, { accessToken });
@@ -5367,11 +5367,15 @@ const server = http.createServer(async (req, res) => {
 
         const signalPayload = {
           incidentId: targetId,
-          action, // 'request', 'accept', 'reject', 'end', 'frame'
+          // 'request', 'accept', 'reject', 'end', 'frame',
+          // 'webrtc-offer', 'webrtc-answer', 'webrtc-ice' (opaque SDP/ICE relay, ephemeral - never persisted)
+          action,
           callType: resolvedCallType, // 'voice' | 'video'
           agency: incident.agency,
           sender: actor.kind === 'citizen' ? 'citizen' : (sender === 'citizen' ? 'citizen' : 'dispatcher'),
           streamData,
+          sdp, // RTCSessionDescriptionInit, only present for webrtc-offer/webrtc-answer
+          candidate, // RTCIceCandidateInit, only present for webrtc-ice
           officerName: incident.dispatchUnit?.officerFullTitle || incident.assignedUnit?.officerName || 'Cán bộ trực ban',
           unitName: incident.dispatchUnit?.unitName || incident.assignedUnit?.name || 'Trực ban tác chiến',
           timestamp: new Date().toISOString()
