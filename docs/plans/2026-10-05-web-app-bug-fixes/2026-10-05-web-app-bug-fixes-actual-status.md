@@ -126,6 +126,7 @@ Out of scope:
 | R7 | 2026-10-05 | after implementing and live-testing `P6-A` 4th Excel template sheet | `services/accounts-excel-generator.js` | Excel generator sheet count moves `partial -> correct`; 4 worksheets generated including 'Mẫu Thêm Mới' with 13 columns | `E6-P6A-SRC1`, `E6-P6A-GEN1`, `E6-P6A-FD1` | P6-B may proceed |
 | R8 | 2026-10-05 | after implementing and live-testing `P6-B` action-column create gate | `scripts/import_accounts_excel.py`, `server.js` | Excel import action column moves `fake-or-stub -> correct`; new accounts require TAO_MOI to create, un-commanded rows skipped with report | `E6-P6B-SRC1`, `E6-P6B-SCRIPT1`, `E6-P6B-HTTP1`, `E6-P6B-CLEANUP1`, `E6-P6B-FD1` | P6 is fully closed |
 | R9 | 2026-10-05 | after implementing and statistically verifying `P7-A` GPS Kalman filter | `js/location.js`, `playwright/verify-gps-kalman-filter.cjs` | GPS Kalman filter moves `fake-or-stub -> correct`; 92.25% variance reduction confirmed on 100-sample noisy GPS sequence | `E7-P7A-SRC1`, `E7-P7A-TEST1`, `E7-P7A-FD1` | P7 is fully closed |
+| R10 | 2026-10-05 | after implementing and verifying P8-A citizen signature UI test | `playwright/verify-ui-signature-draw-and-display.cjs` | verify-ui-signature-draw-and-display.cjs moves `missing -> correct` | `E8-P8A-TOOL1`, `E8-P8A-SRC1`, `E8-P8A-RUN1`, `E8-P8A-FD1` | P8-B may proceed |
 
 ## Phase Touch Map
 

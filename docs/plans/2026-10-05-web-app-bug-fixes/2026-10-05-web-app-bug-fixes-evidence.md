@@ -515,7 +515,49 @@ PASS: 1D/2-axis Kalman Filter significantly reduced GPS measurement variance!
 
 Matching plan item(s): `P8-A`, `P8-B`
 
-(To be filled in as P8 slices are implemented. Not yet started.)
+### `E8-P8A-TOOL1` - Playwright dependency verification
+- `playwright` package confirmed present in `package.json` (`devDependencies.playwright: "^1.63.0"`) and installed under `node_modules`.
+
+### `E8-P8A-SRC1` - Reusable UI signature draw and display verification script
+- Created `playwright/verify-ui-signature-draw-and-display.cjs`:
+  - Drives full citizen workflow: opens `/`, clicks `#btnMasterSOS`, confirms incident creation via `#sosDetailModal.is-open` -> "XÁC NHẬN PHÁT TÍN HIỆU".
+  - Opens `#incidentReportDocxModal` via `app.openReportModal(app.activeIncident)`.
+  - Triggers citizen signature modal `#signaturePadModal.is-open` via `#btnOpenCitizenSignPad`.
+  - Simulates smooth mouse strokes across `#sigCanvas`, detecting active drawing.
+  - Submits signature via `#btnSubmitSignature` to `/api/sos/sign`.
+  - Validates live DOM update: `#citizenSigImg` display `block` with `data:image/png` data URL, `#citizenSigPlaceholder` hidden, `#docCitizenSignTime` populated, and `activeIncident.signatures.citizen.signed === true`.
+
+### `E8-P8A-RUN1` - Live Playwright execution output
+Executed `node playwright/verify-ui-signature-draw-and-display.cjs http://127.0.0.1:3000`:
+```text
+[P8-A Signature Test] Connecting to http://127.0.0.1:3000...
+1. Submitting test SOS incident as citizen...
+   Incident created successfully: SOS-MUVGN2TS-430
+2. Opening incident report modal (#incidentReportDocxModal)...
+   Report modal displayed.
+3. Opening citizen signature pad modal (#signaturePadModal)...
+   Signature pad modal is open.
+4. Drawing on signature canvas (#sigCanvas)...
+   Canvas drawing detected: true
+5. Submitting signature (#btnSubmitSignature)...
+  [Browser Dialog]: ✅ Đã lưu và đồng bộ chữ ký của Người dân thành công!
+6. Asserting signature display on document view...
+   Evaluation result: {
+  "imgSrc": "data:image/png;base64,...",
+  "imgVisible": true,
+  "placeholderHidden": true,
+  "btnText": "🟢 Đã Ký Điện Tử",
+  "timeText": "Đã ký lúc: 23:24:48 5/10/2026",
+  "incidentSigned": true,
+  "signatureType": "draw",
+  "signatureDataLength": 6994
+}
+
+PASS: Citizen signature successfully drawn, submitted, and rendered in UI!
+```
+
+### `E8-P8A-FD1` - File detail / Anvien impact
+- Target file `playwright/verify-ui-signature-draw-and-display.cjs`: new test file, no prior graph entry.
 
 ## E9 - P9 Evidence
 
