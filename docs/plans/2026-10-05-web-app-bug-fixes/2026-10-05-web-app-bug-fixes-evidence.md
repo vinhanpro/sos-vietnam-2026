@@ -360,7 +360,50 @@ The disposable `.tmp/prod-runtime-data` test directory was removed after the pro
 
 Matching plan item(s): `P4-A`
 
-(To be filled in as P4-A is implemented. Not yet started.)
+### `E4-P4A-FD1` - Implementation Gate: Anvien indexing check
+`docker-compose.yml` and `Caddyfile` are infrastructure configuration files, not JavaScript/Python application source. Anvien's static graph does not index them (consistent with `actual-status.md`'s pre-flight finding). No application code symbols were modified in this slice (`server.js` diff is completely empty).
+
+### `E4-P4A-SRC1` - Reverse proxy service and Caddy configuration diff
+- `docker-compose.yml`: Added `reverse-proxy` service using official image `caddy:2-alpine`, exposing `${SOS_TLS_BIND_ADDRESS:-127.0.0.1}:${SOS_TLS_PORT:-8443}:8443`, mounting `./Caddyfile:/etc/caddy/Caddyfile:ro` and persistent `caddy-data` / `caddy-config` volumes, with `depends_on: sos-vietnam (condition: service_healthy)`.
+- `Caddyfile`: Configured site block `https://localhost:8443, https://127.0.0.1:8443` with `tls internal { protocols tls1.3 }` and `reverse_proxy sos-vietnam:3000`. Global options set `admin off` and `auto_https disable_redirects`.
+- No key material committed to repository: Caddy generates in-memory / container-local self-signed certificates dynamically via internal PKI authority.
+
+### `E4-P4A-TLS1` - Live proof: TLS 1.3 handshake, TLS 1.2 client rejection, and proxied HTTPS
+Executed `node playwright/verify-tls-handshake.cjs 8443` against the live Docker Compose stack:
+```json
+1. Testing TLS 1.3 handshake...
+TLS 1.3 handshake result: {
+  "success": true,
+  "protocol": "TLSv1.3",
+  "cipher": {
+    "name": "TLS_AES_128_GCM_SHA256",
+    "standardName": "TLS_AES_128_GCM_SHA256",
+    "version": "TLSv1.3"
+  },
+  "issuer": {
+    "CN": "Caddy Local Authority - ECC Intermediate"
+  },
+  "subject": {}
+}
+2. Testing TLS 1.2 client rejection (enforcing TLS 1.3 minimum)...
+TLS 1.2 rejection result: {
+  "rejected": true,
+  "error": "SSL routines:ssl3_read_bytes:tlsv1 alert protocol version (SSL alert number 70)",
+  "code": "ERR_SSL_TLSV1_ALERT_PROTOCOL_VERSION"
+}
+3. Testing HTTPS request proxied through Caddy to sos-vietnam /healthz...
+HTTPS proxied response: {
+  "statusCode": 200,
+  "headers": {
+    "via": "1.1 Caddy",
+    "alt-svc": "h3=\":8443\"; ma=2592000",
+    "content-type": "application/json; charset=utf-8"
+  },
+  "body": "{\"ok\":true,\"service\":\"sos-vietnam\"}"
+}
+
+PASS: Caddy TLS 1.3 reverse proxy successfully verified!
+```
 
 ## E6 - P6 Evidence
 
