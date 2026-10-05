@@ -73,6 +73,22 @@ const COLUMNS = [
   { header: 'SMS Tiếp Nhận', width: 16 }
 ];
 
+const TEMPLATE_COLUMNS = [
+  { header: 'STT', width: 6 },
+  { header: 'Thao Tác (Action)', width: 18 },
+  { header: 'Khu Vực (Tỉnh/TP)', width: 18 },
+  { header: 'Lực Lượng Nghiệp Vụ', width: 22 },
+  { header: 'Cấp Hành Chính', width: 18 },
+  { header: 'Tên Cơ Quan / Đơn Vị Trực Ban', width: 40 },
+  { header: 'Địa Bàn (Xã/Phường)', width: 24 },
+  { header: 'Tên Đăng Nhập', width: 18 },
+  { header: 'Mật Khẩu', width: 16 },
+  { header: 'Cán Bộ Phụ Trách', width: 22 },
+  { header: 'Chức Vụ / Cấp Bậc', width: 18 },
+  { header: 'SĐT Trực Ban', width: 16 },
+  { header: 'SMS Tiếp Nhận', width: 16 }
+];
+
 export async function generateAccountsWorkbookBuffer(exportPayload = {}) {
   let accounts = [];
   if (Array.isArray(exportPayload.accounts)) {
@@ -231,6 +247,33 @@ export async function generateAccountsWorkbookBuffer(exportPayload = {}) {
 
       let hAlign = 'left';
       if (c === 1 || c === 4 || c === 7 || c === 8 || c === 10 || c === 11 || c === 12) {
+        hAlign = 'center';
+      }
+      cell.alignment = { horizontal: hAlign, vertical: 'middle' };
+    }
+  }
+
+  function writeTemplateDataRow(ws, rowIdx, sttVal, rowData) {
+    const isEven = (sttVal % 2 === 0);
+    const rowBg = isEven ? 'FFF8FAFC' : 'FFFFFFFF';
+    ws.getRow(rowIdx).height = 20;
+
+    for (let c = 1; c <= rowData.length; c++) {
+      const cell = ws.getCell(rowIdx, c);
+      cell.value = rowData[c - 1];
+      const isAction = (c === 2);
+      const isCredential = (c === 8 || c === 9);
+      cell.font = {
+        name: (isCredential || isAction) ? 'Courier New' : 'Arial',
+        size: (isCredential || isAction) ? 9.5 : 9,
+        bold: (isCredential || isAction),
+        color: { argb: isAction ? 'FF047857' : (isCredential ? 'FF6D28D9' : 'FF0F172A') }
+      };
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: rowBg } };
+      cell.border = THIN_BORDER;
+
+      let hAlign = 'left';
+      if (c === 1 || c === 2 || c === 5 || c === 8 || c === 9 || c === 11 || c === 12 || c === 13) {
         hAlign = 'center';
       }
       cell.alignment = { horizontal: hAlign, vertical: 'middle' };
@@ -453,6 +496,103 @@ export async function generateAccountsWorkbookBuffer(exportPayload = {}) {
       sttRescue++;
     });
   });
+
+  // ==========================================
+  // SHEET 4: Mẫu Thêm Mới
+  // ==========================================
+  const wsTemplate = wb.addWorksheet('Mẫu Thêm Mới');
+  wsTemplate.views = [{ showGridLines: true }];
+
+  TEMPLATE_COLUMNS.forEach((col, idx) => {
+    wsTemplate.getColumn(idx + 1).width = col.width;
+  });
+
+  // Row 1: Banner xanh đậm
+  wsTemplate.mergeCells('A1:M1');
+  const ct1 = wsTemplate.getCell('A1');
+  ct1.value = 'HỆ THỐNG CỨU HỘ & CẢNH BÁO SOS KHẨN CẤP QUỐC GIA (34 TỈNH THÀNH)';
+  ct1.font = { name: 'Arial', size: 10.5, bold: true, color: { argb: 'FFFFFFFF' } };
+  ct1.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A8A' } };
+  ct1.alignment = { horizontal: 'center', vertical: 'middle' };
+  wsTemplate.getRow(1).height = 22;
+
+  // Row 2: Tiêu đề danh sách
+  wsTemplate.mergeCells('A2:M2');
+  const ct2 = wsTemplate.getCell('A2');
+  ct2.value = 'BIỂU MẪU ĐIỀN THÊM MỚI TÀI KHOẢN ĐƠN VỊ VÀ ĐIỀU PHỐI (IMPORT EXCEL)';
+  ct2.font = { name: 'Arial', size: 13, bold: true, color: { argb: 'FF1E3A8A' } };
+  ct2.alignment = { horizontal: 'center', vertical: 'middle' };
+  wsTemplate.getRow(2).height = 24;
+
+  // Row 3: Metadata thông tin xuất
+  wsTemplate.mergeCells('A3:M3');
+  const ct3 = wsTemplate.getCell('A3');
+  ct3.value = `Thời điểm xuất: ${generatedAt}  ·  Đơn vị: ${officerName}  ·  Hướng dẫn: Nhập TAO_MOI vào cột Thao Tác`;
+  ct3.font = { name: 'Arial', size: 9.5, bold: true, italic: true, color: { argb: 'FF475569' } };
+  ct3.alignment = { horizontal: 'center', vertical: 'middle' };
+  wsTemplate.getRow(3).height = 18;
+
+  // Row 4: Dòng đệm
+  wsTemplate.getRow(4).height = 6;
+
+  // Row 5: Header bảng dữ liệu
+  wsTemplate.getRow(5).height = 26;
+  for (let c = 1; c <= 13; c++) {
+    const cell = wsTemplate.getCell(5, c);
+    cell.value = TEMPLATE_COLUMNS[c - 1].header;
+    cell.font = { name: 'Arial', size: 9.5, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4338CA' } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+    cell.border = THIN_BORDER;
+  }
+
+  // Row 6: Section header
+  wsTemplate.mergeCells('A6:M6');
+  for (let c = 1; c <= 13; c++) {
+    const cell = wsTemplate.getCell(6, c);
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE0E7FF' } };
+    cell.border = THIN_BORDER;
+  }
+  const sHeaderCell = wsTemplate.getCell(6, 1);
+  sHeaderCell.value = '📋 DÒNG MẪU HƯỚNG DẪN (HỆ THỐNG NHẬN DIỆN THAO TÁC TAO_MOI)';
+  sHeaderCell.font = { name: 'Arial', size: 10.5, bold: true, color: { argb: 'FF0F172A' } };
+  sHeaderCell.alignment = { horizontal: 'left', vertical: 'middle', indent: 1 };
+  wsTemplate.getRow(6).height = 22;
+
+  // Sample rows
+  const sampleRow1 = [
+    1,
+    'TAO_MOI',
+    'Cần Thơ',
+    'Công an',
+    'Cấp Xã/Phường/Huyện',
+    'Công An Phường An Cư (Mẫu)',
+    'Phường An Cư',
+    'cap_ancu_mau',
+    '2002',
+    'Nguyễn Văn A',
+    'Đại úy',
+    '0292 382 1133',
+    '0292 382 1133'
+  ];
+  writeTemplateDataRow(wsTemplate, 7, 1, sampleRow1);
+
+  const sampleRow2 = [
+    2,
+    'TAO_MOI',
+    'Cần Thơ',
+    'Cấp cứu y tế',
+    'Cấp Xã/Phường/Huyện',
+    'Trạm Y Tế Phường An Nghiệp (Mẫu)',
+    'Phường An Nghiệp',
+    'tyt_annghiep_mau',
+    '2002',
+    'Trần Thị B',
+    'Bác sĩ',
+    '0292 383 1115',
+    '0292 383 1115'
+  ];
+  writeTemplateDataRow(wsTemplate, 8, 2, sampleRow2);
 
   const rawBuffer = await wb.xlsx.writeBuffer();
   return Buffer.from(rawBuffer);

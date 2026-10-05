@@ -409,7 +409,33 @@ PASS: Caddy TLS 1.3 reverse proxy successfully verified!
 
 Matching plan item(s): `P6-A`, `P6-B`
 
-(To be filled in as P6 slices are implemented. Not yet started.)
+### `E6-P6A-FD1` - Implementation Gate: Anvien indexing check
+Ran Anvien query on `services/accounts-excel-generator.js` in repo `sos-vietnam-2026-worktree-bugreview`. File is indexed (rank 1, score 211, File:services/accounts-excel-generator.js). Function `generateAccountsWorkbookBuffer` confirmed exported and called from `server.js:5967` (`/api/admin/export-accounts-excel`).
+
+### `E6-P6A-SRC1` - 4th template worksheet source diff
+- `services/accounts-excel-generator.js`: Added `TEMPLATE_COLUMNS` with 13 columns (including column 2 `Thao Tác (Action)`), added helper `writeTemplateDataRow` supporting 13 columns and styling action/credential cells, and added SHEET 4 (`Mẫu Thêm Mới`) with header banner, section title, and 2 sample rows demonstrating valid `TAO_MOI` action rows. The existing 3 worksheets (`Công An & CAND`, `Cấp Cứu Y Tế`, `Cứu Hộ Doanh Nghiệp`) remain byte-for-byte unchanged in structure.
+
+### `E6-P6A-GEN1` - Live proof: 4-sheet generation and column structure verification
+Direct execution of `generateAccountsWorkbookBuffer` with 453 seed accounts:
+```text
+Worksheet count: 4
+Worksheet names: [
+  'Công An & CAND',
+  'Cấp Cứu Y Tế',
+  'Cứu Hộ Doanh Nghiệp',
+  'Mẫu Thêm Mới'
+]
+Sheet "Công An & CAND": row count = 417, header col count = 12
+Sheet "Cấp Cứu Y Tế": row count = 78, header col count = 12
+Sheet "Cứu Hộ Doanh Nghiệp": row count = 77, header col count = 12
+Sheet "Mẫu Thêm Mới": row count = 8, header col count = 13
+Headers: STT, Thao Tác (Action), Khu Vực (Tỉnh/TP), Lực Lượng Nghiệp Vụ, Cấp Hành Chính, Tên Cơ Quan / Đơn Vị Trực Ban, Địa Bàn (Xã/Phường), Tên Đăng Nhập, Mật Khẩu, Cán Bộ Phụ Trách, Chức Vụ / Cấp Bậc, SĐT Trực Ban, SMS Tiếp Nhận
+Sample row 1 action: TAO_MOI (cap_ancu_mau)
+Sample row 2 action: TAO_MOI (tyt_annghiep_mau)
+PASS: P6-A 4th worksheet successfully verified!
+```
+
+(P6-B evidence to follow.)
 
 ## E7 - P7 Evidence
 
