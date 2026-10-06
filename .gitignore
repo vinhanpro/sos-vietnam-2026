@@ -41,3 +41,6 @@ test_*.wav
 test_*.png
 preview_*.png
 sample_*.png
+
+# hide env
+.env.example
