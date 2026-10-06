@@ -1,0 +1,2139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1960 2250" width="1960" height="2250" style="background:#0f172a; font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <defs>
+    <marker id="marker-arrow-solid" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" /></marker>
+    <marker id="marker-arrow-error" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ef4444" /></marker>
+    <marker id="marker-arrow-handoff" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b" /></marker>
+    <marker id="marker-arrow-sync" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#38bdf8" /></marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.5" /></filter>
+  </defs>
+  <!-- Header Title -->
+  <rect x="40" y="20" width="1880" height="90" rx="12" fill="#1e293b" stroke="#334155" stroke-width="2" />
+  <text x="60" y="55" fill="#f8fafc" font-size="22" font-weight="bold">BẢN ĐỒ PHÂN HÓA CẤP BẬC VÀ QUYỀN HẠN CÁC ROLE HỆ THỐNG SOS VIETNAM 2026</text>
+  <text x="60" y="85" fill="#94a3b8" font-size="14">Kiến trúc Đa Tầng: Công Dân (Ẩn danh SHA-256) ➔ L7 WAF Shield ➔ Xã/Phường (273 Đơn vị) ➔ Tuyến Tỉnh (141 Đơn vị) ➔ Cứu Hộ Giao Thông (38 Đơn vị) ➔ Hiện Trường ➔ Chỉ Huy Quốc Gia (SuperAdmin)</text>
+  <!-- Swimlanes Bands -->
+  <g id="lane-citizen-public" data-type="lane" data-lane-name="1. CITIZEN_PUBLIC (Công Dân &amp; Thiết Bị Báo Nạn)"><rect x="40" y="140" width="1880" height="220" rx="10" fill="#1e293b" fill-opacity="0.35" stroke="#0ea5e9" stroke-opacity="0.3" stroke-width="1.5" /><rect x="40" y="140" width="220" height="220" rx="10" fill="#0ea5e9" fill-opacity="0.12" stroke="#0ea5e9" stroke-opacity="0.5" stroke-width="1.5" /><text x="55" y="175" fill="#0ea5e9" font-size="14" font-weight="bold">1. CITIZEN_PUBLIC</text><text x="55" y="200" fill="#94a3b8" font-size="11">Công Dân &amp; Thiết Bị Báo Nạn</text></g>
+  <g id="lane-security-rbac-waf" data-type="lane" data-lane-name="2. SECURITY_RBAC_WAF (Tường Lửa L7 &amp; Kiểm Soát Zero-Trust)"><rect x="40" y="380" width="1880" height="240" rx="10" fill="#1e293b" fill-opacity="0.35" stroke="#8b5cf6" stroke-opacity="0.3" stroke-width="1.5" /><rect x="40" y="380" width="220" height="240" rx="10" fill="#8b5cf6" fill-opacity="0.12" stroke="#8b5cf6" stroke-opacity="0.5" stroke-width="1.5" /><text x="55" y="415" fill="#8b5cf6" font-size="14" font-weight="bold">2. SECURITY_RBAC_WAF</text><text x="55" y="440" fill="#94a3b8" font-size="11">Tường Lửa L7 &amp; Kiểm Soát Zero-Trust</text></g>
+  <g id="lane-ward-dispatcher" data-type="lane" data-lane-name="3. WARD_DISPATCHER (Trực Ban Cơ Sở Cấp Xã / Phường - 273 Đơn Vị)"><rect x="40" y="640" width="1880" height="250" rx="10" fill="#1e293b" fill-opacity="0.35" stroke="#10b981" stroke-opacity="0.3" stroke-width="1.5" /><rect x="40" y="640" width="220" height="250" rx="10" fill="#10b981" fill-opacity="0.12" stroke="#10b981" stroke-opacity="0.5" stroke-width="1.5" /><text x="55" y="675" fill="#10b981" font-size="14" font-weight="bold">3. WARD_DISPATCHER</text><text x="55" y="700" fill="#94a3b8" font-size="11">Trực Ban Cơ Sở Cấp Xã / Phường - 273 Đơn Vị</text></g>
+  <g id="lane-province-dispatcher" data-type="lane" data-lane-name="4. PROVINCE_DISPATCHER (Điều Phối Tuyến Tỉnh / TP - 141 Đơn Vị CA/CSGT/PCCC/115)"><rect x="40" y="910" width="1880" height="260" rx="10" fill="#1e293b" fill-opacity="0.35" stroke="#3b82f6" stroke-opacity="0.3" stroke-width="1.5" /><rect x="40" y="910" width="220" height="260" rx="10" fill="#3b82f6" fill-opacity="0.12" stroke="#3b82f6" stroke-opacity="0.5" stroke-width="1.5" /><text x="55" y="945" fill="#3b82f6" font-size="14" font-weight="bold">4. PROVINCE_DISPATCHER</text><text x="55" y="970" fill="#94a3b8" font-size="11">Điều Phối Tuyến Tỉnh / TP - 141 Đơn Vị CA/CSGT/PCCC/115</text></g>
+  <g id="lane-enterprise-partner" data-type="lane" data-lane-name="5. ENTERPRISE_PARTNER (Cứu Hộ Giao Thông &amp; Đối Tác Cơ Giới - 38 Đơn Vị)"><rect x="40" y="1190" width="1880" height="230" rx="10" fill="#1e293b" fill-opacity="0.35" stroke="#f59e0b" stroke-opacity="0.3" stroke-width="1.5" /><rect x="40" y="1190" width="220" height="230" rx="10" fill="#f59e0b" fill-opacity="0.12" stroke="#f59e0b" stroke-opacity="0.5" stroke-width="1.5" /><text x="55" y="1225" fill="#f59e0b" font-size="14" font-weight="bold">5. ENTERPRISE_PARTNER</text><text x="55" y="1250" fill="#94a3b8" font-size="11">Cứu Hộ Giao Thông &amp; Đối Tác Cơ Giới - 38 Đơn Vị</text></g>
+  <g id="lane-field-responder" data-type="lane" data-lane-name="6. FIELD_RESPONDER (Lực Lượng Tác Chiến Cơ Động Hiện Trường)"><rect x="40" y="1440" width="1880" height="240" rx="10" fill="#1e293b" fill-opacity="0.35" stroke="#06b6d4" stroke-opacity="0.3" stroke-width="1.5" /><rect x="40" y="1440" width="220" height="240" rx="10" fill="#06b6d4" fill-opacity="0.12" stroke="#06b6d4" stroke-opacity="0.5" stroke-width="1.5" /><text x="55" y="1475" fill="#06b6d4" font-size="14" font-weight="bold">6. FIELD_RESPONDER</text><text x="55" y="1500" fill="#94a3b8" font-size="11">Lực Lượng Tác Chiến Cơ Động Hiện Trường</text></g>
+  <g id="lane-national-command" data-type="lane" data-lane-name="7. NATIONAL_COMMAND (Trung Tâm Chỉ Huy Tác Chiến Quốc Gia - SuperAdmin)"><rect x="40" y="1700" width="1880" height="260" rx="10" fill="#1e293b" fill-opacity="0.35" stroke="#dc2626" stroke-opacity="0.3" stroke-width="1.5" /><rect x="40" y="1700" width="220" height="260" rx="10" fill="#dc2626" fill-opacity="0.12" stroke="#dc2626" stroke-opacity="0.5" stroke-width="1.5" /><text x="55" y="1735" fill="#dc2626" font-size="14" font-weight="bold">7. NATIONAL_COMMAND</text><text x="55" y="1760" fill="#94a3b8" font-size="11">Trung Tâm Chỉ Huy Tác Chiến Quốc Gia - SuperAdmin</text></g>
+  <!-- Edges Flow Group -->
+  <g id="edge-citizen-start-to-report" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-citizen-start" data-to="node-citizen-action-report" data-condition="always" data-flow="FLOW_CITIZEN_ACCESS" data-source-ref="server.js#L3822-3845">
+    <title>node-citizen-start ➔ node-citizen-action-report</title>
+    <desc>Mở cổng báo nạn (Condition: always)</desc>
+    <path d="M340,240 L420,240" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-citizen-report-to-token" data-type="edge" data-edge-type="DATA_FLOW" data-from="node-citizen-action-report" data-to="node-citizen-token-issued" data-condition="incident_created" data-flow="FLOW_CITIZEN_ACCESS" data-source-ref="server.js#L1701-1715">
+    <title>node-citizen-action-report ➔ node-citizen-token-issued</title>
+    <desc>Cấp token SHA-256 (Condition: incident_created)</desc>
+    <path d="M600,240 L680,240" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-citizen-token-to-call" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-citizen-token-issued" data-to="node-citizen-call-init" data-condition="citizen_call_button_pressed" data-flow="FLOW_CITIZEN_ACCESS" data-source-ref="server.js#L1596-1615">
+    <title>node-citizen-token-issued ➔ node-citizen-call-init</title>
+    <desc>Gọi thoại/video (Condition: citizen_call_button_pressed)</desc>
+    <path d="M860,240 L940,240" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-citizen-report-to-junc-waf" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-citizen-action-report" data-to="node-junc-citizen-to-waf" data-condition="http_post_received" data-flow="FLOW_CITIZEN_ACCESS" data-source-ref="server.js#L3822">
+    <title>node-citizen-action-report ➔ node-junc-citizen-to-waf</title>
+    <desc>Gửi tới API (Condition: http_post_received)</desc>
+    <path d="M510,290 L510,420 L525,435" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-junc-waf-to-inspect" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-junc-citizen-to-waf" data-to="node-waf-inspect-request" data-condition="always" data-flow="FLOW_SECURITY_RBAC" data-source-ref="services/security-firewall-middleware.js#L158">
+    <title>node-junc-citizen-to-waf ➔ node-waf-inspect-request</title>
+    <desc>Kiểm tra L7 WAF (Condition: always)</desc>
+    <path d="M540,435 L600,485" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-waf-inspect-to-bot-decision" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-waf-inspect-request" data-to="node-waf-decision-bot" data-condition="always" data-flow="FLOW_SECURITY_RBAC" data-source-ref="services/security-firewall-middleware.js#L162">
+    <title>node-waf-inspect-request ➔ node-waf-decision-bot</title>
+    <desc>Thẩm tra Bot/IP (Condition: always)</desc>
+    <path d="M780,485 L860,485" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-waf-bot-yes-to-denied" data-type="edge" data-edge-type="ERROR_FLOW" data-from="node-waf-decision-bot" data-to="node-waf-bot-denied" data-condition="is_bot_or_banned == true" data-flow="FLOW_SECURITY_RBAC" data-source-ref="services/security-firewall-middleware.js#L165-176">
+    <title>node-waf-decision-bot ➔ node-waf-bot-denied</title>
+    <desc>Khớp Bot AI/Banned (Condition: is_bot_or_banned == true)</desc>
+    <path d="M925,535 L925,560" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#marker-arrow-error)" />
+  </g>
+  <g id="edge-waf-bot-no-to-rbac" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-waf-decision-bot" data-to="node-waf-rbac-guard" data-condition="is_bot_or_banned == false" data-flow="FLOW_SECURITY_RBAC" data-source-ref="services/security-firewall-middleware.js#L327">
+    <title>node-waf-decision-bot ➔ node-waf-rbac-guard</title>
+    <desc>Hợp lệ -&gt; Kiểm tra Auth (Condition: is_bot_or_banned == false)</desc>
+    <path d="M990,485 L1070,485" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-waf-rbac-to-rate-limit" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-waf-rbac-guard" data-to="node-waf-rate-limit-check" data-condition="token_valid_or_public" data-flow="FLOW_SECURITY_RBAC" data-source-ref="services/security-firewall-middleware.js#L215">
+    <title>node-waf-rbac-guard ➔ node-waf-rate-limit-check</title>
+    <desc>Kiểm tra Tần suất (Condition: token_valid_or_public)</desc>
+    <path d="M1260,485 L1340,485" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-waf-rbac-to-revoked" data-type="edge" data-edge-type="ERROR_FLOW" data-from="node-waf-rbac-guard" data-to="node-waf-token-revoked" data-condition="token_is_revoked == true" data-flow="FLOW_SECURITY_RBAC" data-source-ref="services/security-firewall-middleware.js#L336-341">
+    <title>node-waf-rbac-guard ➔ node-waf-token-revoked</title>
+    <desc>Token bị thu hồi (Condition: token_is_revoked == true)</desc>
+    <path d="M1165,530 L1165,560" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#marker-arrow-error)" />
+  </g>
+  <g id="edge-waf-rate-limit-yes-to-denied" data-type="edge" data-edge-type="ERROR_FLOW" data-from="node-waf-rate-limit-check" data-to="node-waf-rate-limit-denied" data-condition="count &gt; max_limit" data-flow="FLOW_SECURITY_RBAC" data-source-ref="services/security-firewall-middleware.js#L234-246">
+    <title>node-waf-rate-limit-check ➔ node-waf-rate-limit-denied</title>
+    <desc>Vượt ngưỡng giới hạn (Condition: count &gt; max_limit)</desc>
+    <path d="M1405,535 L1405,560" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#marker-arrow-error)" />
+  </g>
+  <g id="edge-waf-rate-limit-pass-to-junc-ward" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-waf-rate-limit-check" data-to="node-junc-waf-to-ward" data-condition="count &lt;= max_limit" data-flow="FLOW_SECURITY_RBAC" data-source-ref="services/security-firewall-middleware.js#L249">
+    <title>node-waf-rate-limit-check ➔ node-junc-waf-to-ward</title>
+    <desc>Chuyển tiếp tác chiến (Condition: count &lt;= max_limit)</desc>
+    <path d="M1470,485 L1520,485 L1520,620 L395,620 L395,700" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-junc-ward-to-intake" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-junc-waf-to-ward" data-to="node-ward-intake-event" data-condition="always" data-flow="FLOW_WARD_DISPATCH" data-source-ref="server.js#L1624-1629">
+    <title>node-junc-waf-to-ward ➔ node-ward-intake-event</title>
+    <desc>SSE sos_new tới xã (Condition: always)</desc>
+    <path d="M410,715 L470,725" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-ward-intake-to-capacity" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-ward-intake-event" data-to="node-ward-decision-capacity" data-condition="incident_in_officer_ward == true" data-flow="FLOW_WARD_DISPATCH" data-source-ref="server.js#L1625-1629">
+    <title>node-ward-intake-event ➔ node-ward-decision-capacity</title>
+    <desc>Khớp địa bàn xã (Condition: incident_in_officer_ward == true)</desc>
+    <path d="M660,725 L730,725" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-ward-capacity-yes-to-local" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-ward-decision-capacity" data-to="node-ward-assign-local" data-condition="can_handle_locally == true" data-flow="FLOW_WARD_DISPATCH" data-source-ref="server.js#L3853-3857">
+    <title>node-ward-decision-capacity ➔ node-ward-assign-local</title>
+    <desc>Cơ sở tự xử lý (Condition: can_handle_locally == true)</desc>
+    <path d="M860,725 L930,725" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-ward-capacity-no-to-escalate" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-ward-decision-capacity" data-to="node-ward-escalate-action" data-condition="can_handle_locally == false" data-flow="FLOW_ESCALATION" data-source-ref="server.js#L1599-1614">
+    <title>node-ward-decision-capacity ➔ node-ward-escalate-action</title>
+    <desc>Vượt thẩm quyền (Condition: can_handle_locally == false)</desc>
+    <path d="M795,775 L795,800" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-ward-escalate-to-junc-prov" data-type="edge" data-edge-type="HANDOFF" data-from="node-ward-escalate-action" data-to="node-junc-escalation-to-prov" data-condition="escalated_to_province" data-flow="FLOW_ESCALATION" data-source-ref="server.js#L1605-1613">
+    <title>node-ward-escalate-action ➔ node-junc-escalation-to-prov</title>
+    <desc>Bàn giao quyền cho Tỉnh (Condition: escalated_to_province)</desc>
+    <path d="M700,835 L395,835 L395,960" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#marker-arrow-handoff)" />
+  </g>
+  <g id="edge-ward-local-to-resolved" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-ward-assign-local" data-to="node-ward-resolved" data-condition="local_response_successful" data-flow="FLOW_WARD_DISPATCH" data-source-ref="server.js#L3855-3857">
+    <title>node-ward-assign-local ➔ node-ward-resolved</title>
+    <desc>Xử lý thành công tại xã (Condition: local_response_successful)</desc>
+    <path d="M1120,725 L1430,725" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-ward-local-to-fake" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-ward-assign-local" data-to="node-ward-fake-flag" data-condition="scene_is_fake_hoax" data-flow="FLOW_WARD_DISPATCH" data-source-ref="js/dispatcher.js#L12850-12875">
+    <title>node-ward-assign-local ➔ node-ward-fake-flag</title>
+    <desc>Phát hiện báo khống (Condition: scene_is_fake_hoax)</desc>
+    <path d="M1120,705 L1180,705" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-ward-fake-to-junc-blacklist" data-type="edge" data-edge-type="DATA_FLOW" data-from="node-ward-fake-flag" data-to="node-junc-fake-to-blacklist" data-condition="flagged_as_fake == true" data-flow="FLOW_WARD_DISPATCH" data-source-ref="js/dispatcher.js#L12870">
+    <title>node-ward-fake-flag ➔ node-junc-fake-to-blacklist</title>
+    <desc>Gửi hồ sơ số sang Blacklist (Condition: flagged_as_fake == true)</desc>
+    <path d="M1360,725 L1595,725 L1595,1650" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-junc-prov-to-intake" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-junc-escalation-to-prov" data-to="node-prov-intake-event" data-condition="always" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L1606-1613">
+    <title>node-junc-escalation-to-prov ➔ node-prov-intake-event</title>
+    <desc>Tỉnh tiếp nhận chỉ huy (Condition: always)</desc>
+    <path d="M410,975 L470,985" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-prov-intake-to-agency-decision" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-prov-intake-event" data-to="node-prov-decision-agency" data-condition="always" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L276-280">
+    <title>node-prov-intake-event ➔ node-prov-decision-agency</title>
+    <desc>Phân chia chuyên ngành (Condition: always)</desc>
+    <path d="M660,985 L730,985" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-prov-decision-to-police" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-prov-decision-agency" data-to="node-prov-dispatch-police" data-condition="agency == 'police'" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L276">
+    <title>node-prov-decision-agency ➔ node-prov-dispatch-police</title>
+    <desc>An ninh / 113 (Condition: agency == 'police')</desc>
+    <path d="M860,985 L895,985 L895,905 L930,905" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-prov-decision-to-traffic" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-prov-decision-agency" data-to="node-prov-dispatch-traffic" data-condition="agency == 'csgt'" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L277">
+    <title>node-prov-decision-agency ➔ node-prov-dispatch-traffic</title>
+    <desc>Giao thông / CSGT (Condition: agency == 'csgt')</desc>
+    <path d="M860,985 L930,965" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-prov-decision-to-fire" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-prov-decision-agency" data-to="node-prov-dispatch-fire" data-condition="agency == 'fire'" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L278">
+    <title>node-prov-decision-agency ➔ node-prov-dispatch-fire</title>
+    <desc>Cháy nổ / 114 (Condition: agency == 'fire')</desc>
+    <path d="M860,985 L930,1025" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-prov-decision-to-med" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-prov-decision-agency" data-to="node-prov-dispatch-med" data-condition="agency == 'hospital'" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L279">
+    <title>node-prov-decision-agency ➔ node-prov-dispatch-med</title>
+    <desc>Cấp cứu / 115 (Condition: agency == 'hospital')</desc>
+    <path d="M860,985 L895,985 L895,1085 L930,1085" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-prov-branches-to-inter-agency" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-prov-dispatch-fire" data-to="node-prov-inter-agency" data-condition="requires_inter_agency_support" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L1605-1613">
+    <title>node-prov-dispatch-fire ➔ node-prov-inter-agency</title>
+    <desc>Hiệp đồng lực lượng (Condition: requires_inter_agency_support)</desc>
+    <path d="M1100,1025 L1140,1025 L1140,985 L1180,985" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-prov-inter-agency-to-junc-field" data-type="edge" data-edge-type="HANDOFF" data-from="node-prov-inter-agency" data-to="node-junc-prov-to-field" data-condition="dispatch_order_issued" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L3860">
+    <title>node-prov-inter-agency ➔ node-junc-prov-to-field</title>
+    <desc>Lệnh xuất quân thực địa (Condition: dispatch_order_issued)</desc>
+    <path d="M1275,1030 L1275,1380 L395,1380 L395,1490" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#marker-arrow-handoff)" />
+  </g>
+  <g id="edge-prov-traffic-to-ent-intake" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-prov-dispatch-traffic" data-to="node-ent-intake-event" data-condition="vehicle_tow_required == true" data-flow="FLOW_ENTERPRISE_RESCUE" data-source-ref="server.js#L280">
+    <title>node-prov-dispatch-traffic ➔ node-ent-intake-event</title>
+    <desc>Huy động cứu hộ xe (Condition: vehicle_tow_required == true)</desc>
+    <path d="M1015,990 L1015,1150 L565,1150 L565,1230" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-ent-intake-to-decision-type" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-ent-intake-event" data-to="node-ent-decision-type" data-condition="always" data-flow="FLOW_ENTERPRISE_RESCUE" data-source-ref="server.js#L340-350">
+    <title>node-ent-intake-event ➔ node-ent-decision-type</title>
+    <desc>Đánh giá sự cố cơ giới (Condition: always)</desc>
+    <path d="M660,1272 L730,1272" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-ent-decision-to-tow" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-ent-decision-type" data-to="node-ent-dispatch-tow" data-condition="is_standard_tow == true" data-flow="FLOW_ENTERPRISE_RESCUE" data-source-ref="server.js#L280">
+    <title>node-ent-decision-type ➔ node-ent-dispatch-tow</title>
+    <desc>Điều xe sàn trượt / cẩu (Condition: is_standard_tow == true)</desc>
+    <path d="M860,1272 L895,1272 L895,1240 L930,1240" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-ent-decision-to-collab" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-ent-decision-type" data-to="node-ent-collab-police" data-condition="traffic_blocked == true" data-flow="FLOW_ENTERPRISE_RESCUE" data-source-ref="server.js#L1620-1623">
+    <title>node-ent-decision-type ➔ node-ent-collab-police</title>
+    <desc>Ách tắc -&gt; Báo CSGT (Condition: traffic_blocked == true)</desc>
+    <path d="M860,1272 L895,1272 L895,1310 L930,1310" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-junc-field-to-receive" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-junc-prov-to-field" data-to="node-field-receive-dispatch" data-condition="always" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L3860">
+    <title>node-junc-prov-to-field ➔ node-field-receive-dispatch</title>
+    <desc>Nhận lệnh trên xe (Condition: always)</desc>
+    <path d="M410,1505 L470,1512" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-field-receive-to-enroute" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-field-receive-dispatch" data-to="node-field-status-enroute" data-condition="depart_station == true" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L3855-3857">
+    <title>node-field-receive-dispatch ➔ node-field-status-enroute</title>
+    <desc>Xuất phát tiếp cận (Condition: depart_station == true)</desc>
+    <path d="M660,1512 L720,1512" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-field-enroute-to-onscene" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-field-status-enroute" data-to="node-field-status-onscene" data-condition="arrive_at_gps == true" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L3855-3857">
+    <title>node-field-status-enroute ➔ node-field-status-onscene</title>
+    <desc>Đến hiện trường (Condition: arrive_at_gps == true)</desc>
+    <path d="M870,1512 L930,1512" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-field-onscene-to-verify" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-field-status-onscene" data-to="node-field-decision-verify" data-condition="always" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="js/dispatcher.js#L12854-12857">
+    <title>node-field-status-onscene ➔ node-field-decision-verify</title>
+    <desc>Thẩm tra thực địa (Condition: always)</desc>
+    <path d="M1080,1512 L1140,1512" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-field-verify-yes-to-resolve" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-field-decision-verify" data-to="node-field-resolve" data-condition="incident_verified == true" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="server.js#L3855-3857">
+    <title>node-field-decision-verify ➔ node-field-resolve</title>
+    <desc>Cứu hộ thành công (Condition: incident_verified == true)</desc>
+    <path d="M1270,1512 L1780,1510" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-field-verify-no-to-fake" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-field-decision-verify" data-to="node-field-record-fake" data-condition="incident_is_hoax == true" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="js/dispatcher.js#L12855-12880">
+    <title>node-field-decision-verify ➔ node-field-record-fake</title>
+    <desc>Hiện trường giả (Condition: incident_is_hoax == true)</desc>
+    <path d="M1205,1465 L1205,1455 L1340,1455" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-field-fake-to-junc-blacklist" data-type="edge" data-edge-type="DATA_FLOW" data-from="node-field-record-fake" data-to="node-junc-fake-to-blacklist" data-condition="osint_trace_compiled" data-flow="FLOW_PROVINCE_DISPATCH" data-source-ref="js/dispatcher.js#L12870">
+    <title>node-field-record-fake ➔ node-junc-fake-to-blacklist</title>
+    <desc>Chuyển chứng cứ số sang Blacklist (Condition: osint_trace_compiled)</desc>
+    <path d="M1520,1465 L1595,1465 L1595,1650" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-field-resolve-to-citizen-closed" data-type="edge" data-edge-type="SYNC_FLOW" data-from="node-field-resolve" data-to="node-citizen-closed" data-condition="rescue_completed" data-flow="FLOW_CITIZEN_ACCESS" data-source-ref="server.js#L3855-3860">
+    <title>node-field-resolve ➔ node-citizen-closed</title>
+    <desc>Đồng bộ thông báo tới công dân (Condition: rescue_completed)</desc>
+    <path d="M1810,1480 L1810,270" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="2,2" marker-end="url(#marker-arrow-sync)" />
+  </g>
+  <g id="edge-nat-monitor-to-intervene" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-nat-monitor-all" data-to="node-nat-decision-intervene" data-condition="always" data-flow="FLOW_NATIONAL_OVERSIGHT" data-source-ref="server.js#L275">
+    <title>node-nat-monitor-all ➔ node-nat-decision-intervene</title>
+    <desc>Đánh giá an nguy quốc gia (Condition: always)</desc>
+    <path d="M660,1775 L730,1775" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-nat-intervene-yes-to-override" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-nat-decision-intervene" data-to="node-nat-override-dispatch" data-condition="national_crisis == true" data-flow="FLOW_NATIONAL_OVERSIGHT" data-source-ref="server.js#L275">
+    <title>node-nat-decision-intervene ➔ node-nat-override-dispatch</title>
+    <desc>Ban bố lệnh khẩn cấp (Condition: national_crisis == true)</desc>
+    <path d="M860,1775 L930,1775" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-nat-override-to-prov-intake" data-type="edge" data-edge-type="CONTROL_FLOW" data-from="node-nat-override-dispatch" data-to="node-prov-intake-event" data-condition="supreme_command_order" data-flow="FLOW_NATIONAL_OVERSIGHT" data-source-ref="server.js#L275">
+    <title>node-nat-override-dispatch ➔ node-prov-intake-event</title>
+    <desc>Chỉ đạo trực tiếp Tỉnh (Condition: supreme_command_order)</desc>
+    <path d="M1025,1730 L1025,1620 L350,1620 L350,985 L470,985" fill="none" stroke="#64748b" stroke-width="2"  marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-nat-monitor-to-excel-sync" data-type="edge" data-edge-type="DATA_FLOW" data-from="node-nat-monitor-all" data-to="node-nat-excel-sync" data-condition="directory_sync_requested" data-flow="FLOW_NATIONAL_OVERSIGHT" data-source-ref="services/accounts-excel-generator.js#L92-100">
+    <title>node-nat-monitor-all ➔ node-nat-excel-sync</title>
+    <desc>Đồng bộ 453 Tài khoản / 192 Trạm (Condition: directory_sync_requested)</desc>
+    <path d="M565,1820 L565,1850 L1270,1850 L1270,1815" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-nat-monitor-to-audit-log" data-type="edge" data-edge-type="DATA_FLOW" data-from="node-nat-monitor-all" data-to="node-nat-audit-log-store" data-condition="audit_event_logged" data-flow="FLOW_NATIONAL_OVERSIGHT" data-source-ref="services/security-firewall-middleware.js#L19-20">
+    <title>node-nat-monitor-all ➔ node-nat-audit-log-store</title>
+    <desc>Ghi Sổ Trực Ban Bất Biến (NĐ 30) (Condition: audit_event_logged)</desc>
+    <path d="M1120,1775 L1410,1775" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <g id="edge-junc-fake-to-blacklist-store" data-type="edge" data-edge-type="DATA_FLOW" data-from="node-junc-fake-to-blacklist" data-to="node-nat-blacklist-mgt" data-condition="persist_blacklist_record" data-flow="FLOW_NATIONAL_OVERSIGHT" data-source-ref="services/security-firewall-middleware.js#L20-21">
+    <title>node-junc-fake-to-blacklist ➔ node-nat-blacklist-mgt</title>
+    <desc>Cập nhật Danh Sách Đen Toàn Quốc (Condition: persist_blacklist_record)</desc>
+    <path d="M1595,1665 L1715,1665 L1715,1735" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#marker-arrow-solid)" />
+  </g>
+  <!-- Nodes Group -->
+  <g id="node-citizen-start" data-type="START" data-flow="FLOW_CITIZEN_ACCESS" data-status="defined" data-lane="CITIZEN_PUBLIC" data-source-ref="server.js#L1701-1710">
+    <title>Citizen Open App</title>
+    <desc>Công dân truy cập cổng báo nạn khẩn cấp index.html</desc>
+    <circle cx="310" cy="240" r="30" fill="#10b981" stroke="#f8fafc" stroke-width="3" filter="url(#shadow)" />
+    <text x="310" y="244" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">BẮT ĐẦU</text>
+  </g>
+  <g id="node-citizen-action-report" data-type="USER_ACTION" data-flow="FLOW_CITIZEN_ACCESS" data-status="defined" data-lane="CITIZEN_PUBLIC" data-source-ref="server.js#L3822-3845">
+    <title>Gửi Tin Báo SOS</title>
+    <desc>POST /api/incidents gửi GPS Kalman, viễn trắc User-Agent, video/ảnh</desc>
+    <rect x="420" y="190" width="180" height="100" rx="12" fill="#0c4a6e" stroke="#38bdf8" stroke-width="2" filter="url(#shadow)" />
+    <text x="510" y="234" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">GỬI TIN BÁO SOS</text>
+    <text x="510" y="254" fill="#94a3b8" font-size="10" text-anchor="middle">GPS Kalman + User-Agent</text>
+  </g>
+  <g id="node-citizen-token-issued" data-type="STATE" data-flow="FLOW_CITIZEN_ACCESS" data-status="defined" data-lane="CITIZEN_PUBLIC" data-source-ref="server.js#L1701-1715">
+    <title>Cấp Token Ẩn Danh</title>
+    <desc>Cấp phát x-sos-access-token bảo mật bằng mã băm SHA-256</desc>
+    <rect x="680" y="205" width="180" height="70" rx="35" fill="#1e1b4b" stroke="#818cf8" stroke-width="2" filter="url(#shadow)" />
+    <text x="770" y="236" fill="#e0e7ff" font-size="12" font-weight="bold" text-anchor="middle">PHIÊN BẢO MẬT</text>
+    <text x="770" y="254" fill="#a5b4fc" font-size="10" text-anchor="middle">x-sos-access-token</text>
+  </g>
+  <g id="node-citizen-call-init" data-type="USER_ACTION" data-flow="FLOW_CITIZEN_ACCESS" data-status="defined" data-lane="CITIZEN_PUBLIC" data-source-ref="server.js#L1596-1615">
+    <title>Gọi Thoại / Video 1-Chạm</title>
+    <desc>WebRTC Call Signal kết nối trực tiếp kíp trực ban điều phối</desc>
+    <rect x="940" y="190" width="180" height="100" rx="12" fill="#0c4a6e" stroke="#38bdf8" stroke-width="2" filter="url(#shadow)" />
+    <text x="1030" y="234" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">CUỘC GỌI KHẨN CẤP</text>
+    <text x="1030" y="254" fill="#94a3b8" font-size="10" text-anchor="middle">Voice/Video WebRTC</text>
+  </g>
+  <g id="node-citizen-closed" data-type="END" data-flow="FLOW_CITIZEN_ACCESS" data-status="defined" data-lane="CITIZEN_PUBLIC" data-source-ref="server.js#L3855-3860">
+    <title>Ca Báo Nạn Đóng</title>
+    <desc>Người dân được giải cứu an toàn, xác nhận hoàn tất ca</desc>
+    <circle cx="1810" cy="240" r="30" fill="#ef4444" stroke="#f8fafc" stroke-width="3" filter="url(#shadow)" />
+    <text x="1810" y="244" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">KẾT THÚC</text>
+  </g>
+  <g id="node-junc-citizen-to-waf" data-type="JUNCTION" data-flow="FLOW_CITIZEN_ACCESS" data-status="defined" data-lane="SECURITY_RBAC_WAF" data-source-ref="server.js#L3822">
+    <title>Junction Citizen-&gt;WAF</title>
+    <desc>Điểm chuyển tiếp request vào tầng kiểm tra bảo mật WAF</desc>
+    <circle cx="525" cy="435" r="15" fill="#f59e0b" stroke="#ffffff" stroke-width="2" filter="url(#shadow)" />
+    <text x="525" y="439" fill="#0f172a" font-size="10" font-weight="bold" text-anchor="middle">J1</text>
+  </g>
+  <g id="node-waf-inspect-request" data-type="SYSTEM_ACTION" data-flow="FLOW_SECURITY_RBAC" data-status="defined" data-lane="SECURITY_RBAC_WAF" data-source-ref="services/security-firewall-middleware.js#L158-188">
+    <title>WAF L7 Inspection</title>
+    <desc>Kiểm tra IP Blacklist, User-Agent Scraper/Bot, Honeypot Traps</desc>
+    <rect x="600" y="440" width="180" height="90" rx="8" fill="#2e1065" stroke="#8b5cf6" stroke-width="2" filter="url(#shadow)" />
+    <text x="690" y="479" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">WAF L7 SHIELD</text>
+    <text x="690" y="499" fill="#cbd5e1" font-size="10" text-anchor="middle">Kiểm tra Bot/IP/Honeypot</text>
+  </g>
+  <g id="node-waf-decision-bot" data-type="DECISION" data-flow="FLOW_SECURITY_RBAC" data-status="defined" data-lane="SECURITY_RBAC_WAF" data-source-ref="services/security-firewall-middleware.js#L162-177">
+    <title>Phát Hiện Bot/Banned?</title>
+    <desc>Đối chiếu 27 chữ ký AI Bot và danh sách IP đen toàn quốc</desc>
+    <polygon points="925,435 990,485 925,535 860,485" fill="#451a03" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)" />
+    <text x="925" y="481" fill="#fef3c7" font-size="11" font-weight="bold" text-anchor="middle">BOT HOẶC BAN?</text>
+    <text x="925" y="497" fill="#fde68a" font-size="9" text-anchor="middle">Chữ ký Scraper?</text>
+  </g>
+  <g id="node-waf-bot-denied" data-type="ERROR" data-flow="FLOW_SECURITY_RBAC" data-status="defined" data-lane="SECURITY_RBAC_WAF" data-source-ref="services/security-firewall-middleware.js#L165-176">
+    <title>Chặn 403 Forbidden</title>
+    <desc>403 AI_BOT_FORBIDDEN / IP_BANNED - Từ chối truy cập ngay lập tức</desc>
+    <rect x="845" y="560" width="160" height="50" rx="12" fill="#450a0a" stroke="#ef4444" stroke-width="2" filter="url(#shadow)" />
+    <text x="925" y="579" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">CHẶN 403 FORBIDDEN</text>
+    <text x="925" y="599" fill="#94a3b8" font-size="10" text-anchor="middle">Thu giữ viễn trắc IP</text>
+  </g>
+  <g id="node-waf-rbac-guard" data-type="SYSTEM_ACTION" data-flow="FLOW_SECURITY_RBAC" data-status="defined" data-lane="SECURITY_RBAC_WAF" data-source-ref="services/security-firewall-middleware.js#L327-365">
+    <title>Zero-Trust RBAC Guard</title>
+    <desc>Giải mã Session JWT, kiểm tra cấp bậc level và vai trò agency</desc>
+    <rect x="1070" y="440" width="190" height="90" rx="8" fill="#2e1065" stroke="#8b5cf6" stroke-width="2" filter="url(#shadow)" />
+    <text x="1165" y="479" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">ZERO-TRUST RBAC</text>
+    <text x="1165" y="499" fill="#cbd5e1" font-size="10" text-anchor="middle">Xác thực Session &amp; Role</text>
+  </g>
+  <g id="node-waf-rate-limit-check" data-type="DECISION" data-flow="FLOW_SECURITY_RBAC" data-status="defined" data-lane="SECURITY_RBAC_WAF" data-source-ref="services/security-firewall-middleware.js#L215-248">
+    <title>Vượt Rate Limit?</title>
+    <desc>Kiểm tra tầng rate limit (Login: 20/5m, SOS: 15/m, General: 600/m)</desc>
+    <polygon points="1405,435 1470,485 1405,535 1340,485" fill="#451a03" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)" />
+    <text x="1405" y="481" fill="#fef3c7" font-size="11" font-weight="bold" text-anchor="middle">QUÁ TẢI REQ?</text>
+    <text x="1405" y="497" fill="#fde68a" font-size="9" text-anchor="middle">Multi-tier Bucket</text>
+  </g>
+  <g id="node-waf-rate-limit-denied" data-type="ERROR" data-flow="FLOW_SECURITY_RBAC" data-status="defined" data-lane="SECURITY_RBAC_WAF" data-source-ref="services/security-firewall-middleware.js#L234-246">
+    <title>Chặn 429 Rate Exceeded</title>
+    <desc>429 RATE_LIMIT_EXCEEDED &amp; Tự động khóa IP 15 phút phòng thủ Brute-force</desc>
+    <rect x="1325" y="560" width="160" height="50" rx="12" fill="#450a0a" stroke="#ef4444" stroke-width="2" filter="url(#shadow)" />
+    <text x="1405" y="579" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">CHẶN 429 &amp; KHÓA IP</text>
+    <text x="1405" y="599" fill="#94a3b8" font-size="10" text-anchor="middle">Khóa tạm thời 15p</text>
+  </g>
+  <g id="node-waf-token-revoked" data-type="ERROR" data-flow="FLOW_SECURITY_RBAC" data-status="defined" data-lane="SECURITY_RBAC_WAF" data-source-ref="services/security-firewall-middleware.js#L336-341">
+    <title>Chặn 401 Revoked</title>
+    <desc>401 SESSION_REVOKED - Phiên làm việc đã bị thu hồi do đăng xuất</desc>
+    <rect x="1085" y="560" width="160" height="50" rx="12" fill="#450a0a" stroke="#ef4444" stroke-width="2" filter="url(#shadow)" />
+    <text x="1165" y="579" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">PHIÊN ĐÃ THU HỒI</text>
+    <text x="1165" y="599" fill="#94a3b8" font-size="10" text-anchor="middle">401 SESSION_REVOKED</text>
+  </g>
+  <g id="node-junc-waf-to-ward" data-type="JUNCTION" data-flow="FLOW_WARD_DISPATCH" data-status="defined" data-lane="WARD_DISPATCHER" data-source-ref="server.js#L1624">
+    <title>Junction WAF-&gt;Ward</title>
+    <desc>Chuyển giao tin báo hợp lệ tới Trực ban Xã/Phường quản lý địa bàn</desc>
+    <circle cx="395" cy="715" r="15" fill="#f59e0b" stroke="#ffffff" stroke-width="2" filter="url(#shadow)" />
+    <text x="395" y="719" fill="#0f172a" font-size="10" font-weight="bold" text-anchor="middle">J2</text>
+  </g>
+  <g id="node-ward-intake-event" data-type="EVENT" data-flow="FLOW_WARD_DISPATCH" data-status="defined" data-lane="WARD_DISPATCHER" data-source-ref="server.js#L1624-1629">
+    <title>Tiếp Nhận Ca Xã/Phường</title>
+    <desc>Lắng nghe SSE sos_new; thẩm tra trùng khớp Xã/Phường và Tỉnh</desc>
+    <rect x="470" y="680" width="190" height="90" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2" filter="url(#shadow)" />
+    <text x="565" y="719" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">TIẾP NHẬN CƠ SỞ</text>
+    <text x="565" y="739" fill="#cbd5e1" font-size="10" text-anchor="middle">273 Đơn vị Xã/Phường</text>
+  </g>
+  <g id="node-ward-decision-capacity" data-type="DECISION" data-flow="FLOW_WARD_DISPATCH" data-status="defined" data-lane="WARD_DISPATCHER" data-source-ref="server.js#L1598-1615">
+    <title>Đủ Năng Lực Tự Xử Lý?</title>
+    <desc>Đánh giá mức độ: Sự cố cơ sở tự giải quyết hay vượt quá thẩm quyền?</desc>
+    <polygon points="795,675 860,725 795,775 730,725" fill="#451a03" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)" />
+    <text x="795" y="721" fill="#fef3c7" font-size="11" font-weight="bold" text-anchor="middle">TỰ XỬ LÝ ĐƯỢC?</text>
+    <text x="795" y="737" fill="#fde68a" font-size="9" text-anchor="middle">Đánh giá quy mô</text>
+  </g>
+  <g id="node-ward-assign-local" data-type="SYSTEM_ACTION" data-flow="FLOW_WARD_DISPATCH" data-status="defined" data-lane="WARD_DISPATCHER" data-source-ref="server.js#L3853-3857">
+    <title>Điều Động Lực Lượng Xã</title>
+    <desc>Chuyển trạng thái stepIndex:2; điều động Công an xã, bảo vệ dân phố</desc>
+    <rect x="930" y="680" width="190" height="90" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2" filter="url(#shadow)" />
+    <text x="1025" y="719" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">ĐIỀU ĐỘNG CƠ SỞ</text>
+    <text x="1025" y="739" fill="#cbd5e1" font-size="10" text-anchor="middle">CA Xã, Dân phòng</text>
+  </g>
+  <g id="node-ward-escalate-action" data-type="SYSTEM_ACTION" data-flow="FLOW_ESCALATION" data-status="defined" data-lane="WARD_DISPATCHER" data-source-ref="server.js#L1599-1614">
+    <title>Kích Hoạt Leo Thang</title>
+    <desc>Chuyển cấp sự cố (isEscalated=true); bàn giao cuộc gọi &amp; quyền cho Tuyến Tỉnh</desc>
+    <rect x="700" y="800" width="190" height="70" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2" filter="url(#shadow)" />
+    <text x="795" y="829" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">LEO THANG / VƯỢT CẤP</text>
+    <text x="795" y="849" fill="#cbd5e1" font-size="10" text-anchor="middle">sos_escalate -&gt; Tuyến Tỉnh</text>
+  </g>
+  <g id="node-ward-fake-flag" data-type="SYSTEM_ACTION" data-flow="FLOW_WARD_DISPATCH" data-status="defined" data-lane="WARD_DISPATCHER" data-source-ref="js/dispatcher.js#L12850-12875">
+    <title>Phát Hiện Báo Khống</title>
+    <desc>Lập biên bản viễn trắc OSINT, xử phạt hành chính NĐ 144/2021/NĐ-CP</desc>
+    <rect x="1180" y="680" width="180" height="90" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="2" filter="url(#shadow)" />
+    <text x="1270" y="719" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">BÁO KHỐNG / TIN GIẢ</text>
+    <text x="1270" y="739" fill="#cbd5e1" font-size="10" text-anchor="middle">Lập hồ sơ số NĐ 144</text>
+  </g>
+  <g id="node-ward-resolved" data-type="STATE" data-flow="FLOW_WARD_DISPATCH" data-status="defined" data-lane="WARD_DISPATCHER" data-source-ref="server.js#L3855-3857">
+    <title>Cơ Sở Hoàn Thành</title>
+    <desc>Sự cố cơ sở đã được kiểm soát và đóng ca thành công</desc>
+    <rect x="1430" y="695" width="170" height="60" rx="30" fill="#1e1b4b" stroke="#818cf8" stroke-width="2" filter="url(#shadow)" />
+    <text x="1515" y="721" fill="#e0e7ff" font-size="12" font-weight="bold" text-anchor="middle">CƠ SỞ KIỂM SOÁT</text>
+    <text x="1515" y="739" fill="#a5b4fc" font-size="10" text-anchor="middle">Đóng ca tại xã/phường</text>
+  </g>
+  <g id="node-junc-escalation-to-prov" data-type="JUNCTION" data-flow="FLOW_ESCALATION" data-status="defined" data-lane="PROVINCE_DISPATCHER" data-source-ref="server.js#L1599-1606">
+    <title>Junction Escalate-&gt;Prov</title>
+    <desc>Bàn giao quyền tiếp nhận từ Xã/Phường lên Trung tâm Điều phối Tỉnh</desc>
+    <circle cx="395" cy="975" r="15" fill="#f59e0b" stroke="#ffffff" stroke-width="2" filter="url(#shadow)" />
+    <text x="395" y="979" fill="#0f172a" font-size="10" font-weight="bold" text-anchor="middle">J3</text>
+  </g>
+  <g id="node-prov-intake-event" data-type="EVENT" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="PROVINCE_DISPATCHER" data-source-ref="server.js#L1606-1613">
+    <title>Tiếp Nhận Tuyến Tỉnh</title>
+    <desc>Tiếp nhận tin báo toàn tỉnh (matchProvince) hoặc ca leo thang từ cơ sở</desc>
+    <rect x="470" y="940" width="190" height="90" rx="8" fill="#172554" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+    <text x="565" y="979" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">ĐIỀU PHỐI TUYẾN TỈNH</text>
+    <text x="565" y="999" fill="#cbd5e1" font-size="10" text-anchor="middle">141 Đơn vị CA/CSGT/PCCC/115</text>
+  </g>
+  <g id="node-prov-decision-agency" data-type="DECISION" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="PROVINCE_DISPATCHER" data-source-ref="server.js#L276-280">
+    <title>Lực Lượng Chuyên Trách?</title>
+    <desc>Phân nhánh theo lực lượng: CSGT, PCCC, Cấp cứu 115 hay Công an Tỉnh</desc>
+    <polygon points="795,935 860,985 795,1035 730,985" fill="#451a03" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)" />
+    <text x="795" y="981" fill="#fef3c7" font-size="11" font-weight="bold" text-anchor="middle">NGHIỆP VỤ NÀO?</text>
+    <text x="795" y="997" fill="#fde68a" font-size="9" text-anchor="middle">Phân luồng 113/114/115</text>
+  </g>
+  <g id="node-prov-dispatch-police" data-type="SYSTEM_ACTION" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="PROVINCE_DISPATCHER" data-source-ref="server.js#L276">
+    <title>CA Tỉnh (113 Tổng)</title>
+    <desc>Điều động lực lượng Cảnh sát Cơ động, Trật tự, Hình sự Tỉnh</desc>
+    <rect x="930" y="880" width="170" height="50" rx="8" fill="#172554" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+    <text x="1015" y="899" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">CÔNG AN TỈNH (113)</text>
+    <text x="1015" y="919" fill="#cbd5e1" font-size="10" text-anchor="middle">Cảnh sát Phản ứng nhanh</text>
+  </g>
+  <g id="node-prov-dispatch-traffic" data-type="SYSTEM_ACTION" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="PROVINCE_DISPATCHER" data-source-ref="server.js#L277">
+    <title>Phòng CSGT Tỉnh</title>
+    <desc>Điều xe tuần tra CSGT, điều tiết phân luồng giao thông trục chính</desc>
+    <rect x="930" y="940" width="170" height="50" rx="8" fill="#172554" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+    <text x="1015" y="959" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">CẢNH SÁT GIAO THÔNG</text>
+    <text x="1015" y="979" fill="#cbd5e1" font-size="10" text-anchor="middle">CSGT Tuyến Tỉnh</text>
+  </g>
+  <g id="node-prov-dispatch-fire" data-type="SYSTEM_ACTION" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="PROVINCE_DISPATCHER" data-source-ref="server.js#L278">
+    <title>PCCC &amp; CNCH (PC07)</title>
+    <desc>Huy động xe chữa cháy, xe thang cứu nạn, lực lượng PCCC tỉnh</desc>
+    <rect x="930" y="1000" width="170" height="50" rx="8" fill="#172554" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+    <text x="1015" y="1019" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">CẢNH SÁT PCCC (114)</text>
+    <text x="1015" y="1039" fill="#cbd5e1" font-size="10" text-anchor="middle">PC07 Chữa cháy &amp; CNCH</text>
+  </g>
+  <g id="node-prov-dispatch-med" data-type="SYSTEM_ACTION" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="PROVINCE_DISPATCHER" data-source-ref="server.js#L279">
+    <title>TT Cấp Cứu 115 / Viện Đầu Mối</title>
+    <desc>Điều phối xe cấp cứu chuyên dụng &amp; viện đa khoa tuyến tỉnh</desc>
+    <rect x="930" y="1060" width="170" height="50" rx="8" fill="#172554" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+    <text x="1015" y="1079" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">CẤP CỨU Y TẾ (115)</text>
+    <text x="1015" y="1099" fill="#cbd5e1" font-size="10" text-anchor="middle">Bệnh viện Tuyến Tỉnh</text>
+  </g>
+  <g id="node-prov-inter-agency" data-type="SYSTEM_ACTION" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="PROVINCE_DISPATCHER" data-source-ref="server.js#L1605-1613">
+    <title>Tác Chiến Liên Ngành Tỉnh</title>
+    <desc>Hiệp đồng tác chiến đa lực lượng cấp Tỉnh (PCCC phối hợp 115 &amp; CSGT)</desc>
+    <rect x="1180" y="945" width="190" height="85" rx="8" fill="#172554" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+    <text x="1275" y="981" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">TÁC CHIẾN LIÊN NGÀNH</text>
+    <text x="1275" y="1001" fill="#cbd5e1" font-size="10" text-anchor="middle">Hiệp đồng CA-PCCC-115</text>
+  </g>
+  <g id="node-ent-intake-event" data-type="EVENT" data-flow="FLOW_ENTERPRISE_RESCUE" data-status="defined" data-lane="ENTERPRISE_PARTNER" data-source-ref="server.js#L280">
+    <title>Tiếp Nhận Cứu Hộ Giao Thông</title>
+    <desc>Tiếp nhận sự cố nhóm traffic-rescue (cứu hộ phương tiện đường bộ)</desc>
+    <rect x="470" y="1230" width="190" height="85" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)" />
+    <text x="565" y="1266" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">CỨU HỘ ĐƯỜNG BỘ</text>
+    <text x="565" y="1286" fill="#cbd5e1" font-size="10" text-anchor="middle">38 Đơn vị Doanh nghiệp</text>
+  </g>
+  <g id="node-ent-decision-type" data-type="DECISION" data-flow="FLOW_ENTERPRISE_RESCUE" data-status="defined" data-lane="ENTERPRISE_PARTNER" data-source-ref="server.js#L340-350">
+    <title>Loại Sự Cố Phương Tiện?</title>
+    <desc>Xe hỏng cơ giới thông thường hay tai nạn giao thông nghiêm trọng?</desc>
+    <polygon points="795,1225 860,1272 795,1320 730,1272" fill="#451a03" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)" />
+    <text x="795" y="1268" fill="#fef3c7" font-size="11" font-weight="bold" text-anchor="middle">CẦU KÉO HAY TAI NẠN?</text>
+    <text x="795" y="1284" fill="#fde68a" font-size="9" text-anchor="middle">Phân loại cơ giới</text>
+  </g>
+  <g id="node-ent-dispatch-tow" data-type="SYSTEM_ACTION" data-flow="FLOW_ENTERPRISE_RESCUE" data-status="defined" data-lane="ENTERPRISE_PARTNER" data-source-ref="server.js#L280">
+    <title>Điều Xe Cẩu Kéo Gara</title>
+    <desc>Điều xe sàn trượt, xe cẩu cứu hộ di dời phương tiện chết máy/hỏng</desc>
+    <rect x="930" y="1210" width="180" height="60" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)" />
+    <text x="1020" y="1234" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">ĐIỀU XE CẨU KÉO</text>
+    <text x="1020" y="1254" fill="#cbd5e1" font-size="10" text-anchor="middle">Cứu hộ cơ giới đường bộ</text>
+  </g>
+  <g id="node-ent-collab-police" data-type="SYSTEM_ACTION" data-flow="FLOW_ENTERPRISE_RESCUE" data-status="defined" data-lane="ENTERPRISE_PARTNER" data-source-ref="server.js#L1620-1623">
+    <title>Báo Phối Hợp CSGT</title>
+    <desc>Báo cho CSGT phân luồng giải tỏa ách tắc hiện trường tai nạn</desc>
+    <rect x="930" y="1280" width="180" height="60" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)" />
+    <text x="1020" y="1304" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">PHỐI HỢP CSGT TỈNH</text>
+    <text x="1020" y="1324" fill="#cbd5e1" font-size="10" text-anchor="middle">Giải tỏa ách tắc tuyến</text>
+  </g>
+  <g id="node-junc-prov-to-field" data-type="JUNCTION" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="FIELD_RESPONDER" data-source-ref="server.js#L3860">
+    <title>Junction Prov-&gt;Field</title>
+    <desc>Chuyển giao lệnh tác chiến tới kíp xe cơ động thực địa</desc>
+    <circle cx="395" cy="1505" r="15" fill="#f59e0b" stroke="#ffffff" stroke-width="2" filter="url(#shadow)" />
+    <text x="395" y="1509" fill="#0f172a" font-size="10" font-weight="bold" text-anchor="middle">J4</text>
+  </g>
+  <g id="node-field-receive-dispatch" data-type="EVENT" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="FIELD_RESPONDER" data-source-ref="server.js#L3860">
+    <title>Kíp Cơ Động Nhận Lệnh</title>
+    <desc>Kíp trực ban trên xe nhận tọa độ GPS, thông tin nạn nhân và lộ trình</desc>
+    <rect x="470" y="1470" width="190" height="85" rx="8" fill="#1e293b" stroke="#475569" stroke-width="2" filter="url(#shadow)" />
+    <text x="565" y="1506" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">KÍP CƠ ĐỘNG NHẬN LỆNH</text>
+    <text x="565" y="1526" fill="#cbd5e1" font-size="10" text-anchor="middle">Xe 113, 114, 115, Cứu hộ</text>
+  </g>
+  <g id="node-field-status-enroute" data-type="STATE" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="FIELD_RESPONDER" data-source-ref="server.js#L3855-3857">
+    <title>Trạng Thái En Route</title>
+    <desc>Đang di chuyển khẩn cấp tiếp cận tọa độ hiện trường sự cố</desc>
+    <rect x="720" y="1480" width="150" height="65" rx="32" fill="#1e1b4b" stroke="#818cf8" stroke-width="2" filter="url(#shadow)" />
+    <text x="795" y="1508" fill="#e0e7ff" font-size="12" font-weight="bold" text-anchor="middle">ĐANG TIẾP CẬN</text>
+    <text x="795" y="1526" fill="#a5b4fc" font-size="10" text-anchor="middle">Status: enroute</text>
+  </g>
+  <g id="node-field-status-onscene" data-type="STATE" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="FIELD_RESPONDER" data-source-ref="server.js#L3855-3857">
+    <title>Trạng Thái On Scene</title>
+    <desc>Đã có mặt tại hiện trường; triển khai đội hình dập lửa, sơ cứu, tuần tra</desc>
+    <rect x="930" y="1480" width="150" height="65" rx="32" fill="#1e1b4b" stroke="#818cf8" stroke-width="2" filter="url(#shadow)" />
+    <text x="1005" y="1508" fill="#e0e7ff" font-size="12" font-weight="bold" text-anchor="middle">ĐÃ TỚI HIỆN TRƯỜNG</text>
+    <text x="1005" y="1526" fill="#a5b4fc" font-size="10" text-anchor="middle">Status: onscene</text>
+  </g>
+  <g id="node-field-decision-verify" data-type="DECISION" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="FIELD_RESPONDER" data-source-ref="js/dispatcher.js#L12854-12857">
+    <title>Có Sự Cố Thật Không?</title>
+    <desc>Kiểm tra thực tế hiện trường: Sự cố có thật hay báo khống phá hoại?</desc>
+    <polygon points="1205,1465 1270,1512 1205,1560 1140,1512" fill="#451a03" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)" />
+    <text x="1205" y="1508" fill="#fef3c7" font-size="11" font-weight="bold" text-anchor="middle">SỰ CỐ CÓ THẬT?</text>
+    <text x="1205" y="1524" fill="#fde68a" font-size="9" text-anchor="middle">Thẩm tra hiện trường</text>
+  </g>
+  <g id="node-field-record-fake" data-type="SYSTEM_ACTION" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="FIELD_RESPONDER" data-source-ref="js/dispatcher.js#L12855-12880">
+    <title>Lập Biên Bản Hiện Trường Giả</title>
+    <desc>Kết luận báo khống; chụp ảnh hiện trường trống; trích xuất dấu vết số OSINT</desc>
+    <rect x="1340" y="1430" width="180" height="70" rx="8" fill="#1e293b" stroke="#475569" stroke-width="2" filter="url(#shadow)" />
+    <text x="1430" y="1459" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">BIÊN BẢN BÁO KHỐNG</text>
+    <text x="1430" y="1479" fill="#cbd5e1" font-size="10" text-anchor="middle">OSINT + NĐ 144</text>
+  </g>
+  <g id="node-field-resolve" data-type="END" data-flow="FLOW_PROVINCE_DISPATCH" data-status="defined" data-lane="FIELD_RESPONDER" data-source-ref="server.js#L3855-3857">
+    <title>Cứu Hộ Thành Công</title>
+    <desc>Hoàn tất cứu hộ, bảo vệ an toàn tính mạng, phương tiện, tài sản</desc>
+    <circle cx="1810" cy="1510" r="30" fill="#ef4444" stroke="#f8fafc" stroke-width="3" filter="url(#shadow)" />
+    <text x="1810" y="1514" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">KẾT THÚC</text>
+  </g>
+  <g id="node-nat-monitor-all" data-type="SYSTEM_ACTION" data-flow="FLOW_NATIONAL_OVERSIGHT" data-status="defined" data-lane="NATIONAL_COMMAND" data-source-ref="server.js#L530-532">
+    <title>Giám Sát 3D Toàn Quốc</title>
+    <desc>Bản đồ số 3.321 xã/phường, 34 tỉnh thành và 192 trạm tác chiến thời gian thực</desc>
+    <rect x="470" y="1730" width="190" height="90" rx="8" fill="#450a0a" stroke="#ef4444" stroke-width="2" filter="url(#shadow)" />
+    <text x="565" y="1769" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">GIÁM SÁT TOÀN QUỐC</text>
+    <text x="565" y="1789" fill="#cbd5e1" font-size="10" text-anchor="middle">3D Map 34 Tỉnh / 3.321 Xã</text>
+  </g>
+  <g id="node-nat-decision-intervene" data-type="DECISION" data-flow="FLOW_NATIONAL_OVERSIGHT" data-status="defined" data-lane="NATIONAL_COMMAND" data-source-ref="server.js#L275">
+    <title>Can Thiệp Cấp Quốc Gia?</title>
+    <desc>Thảm họa thiên tai, khủng hoảng đa tỉnh hoặc tình huống đặc biệt nghiêm trọng?</desc>
+    <polygon points="795,1725 860,1775 795,1825 730,1775" fill="#451a03" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)" />
+    <text x="795" y="1771" fill="#fef3c7" font-size="11" font-weight="bold" text-anchor="middle">CAN THIỆP QUỐC GIA?</text>
+    <text x="795" y="1787" fill="#fde68a" font-size="9" text-anchor="middle">Thảm họa đa tỉnh?</text>
+  </g>
+  <g id="node-nat-override-dispatch" data-type="SYSTEM_ACTION" data-flow="FLOW_NATIONAL_OVERSIGHT" data-status="defined" data-lane="NATIONAL_COMMAND" data-source-ref="server.js#L275">
+    <title>Lệnh Chỉ Huy Tối Cao</title>
+    <desc>Điều động chi viện liên tỉnh, lực lượng Quân đội, Bộ Công an, Bộ Y tế</desc>
+    <rect x="930" y="1730" width="190" height="90" rx="8" fill="#450a0a" stroke="#ef4444" stroke-width="2" filter="url(#shadow)" />
+    <text x="1025" y="1769" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">LỆNH CHỈ HUY TỐI CAO</text>
+    <text x="1025" y="1789" fill="#cbd5e1" font-size="10" text-anchor="middle">Chi viện liên tỉnh</text>
+  </g>
+  <g id="node-nat-excel-sync" data-type="DATA_STORE" data-flow="FLOW_NATIONAL_OVERSIGHT" data-status="defined" data-lane="NATIONAL_COMMAND" data-source-ref="services/accounts-excel-generator.js#L92-100">
+    <title>CSDL 453 Tài Khoản &amp; 192 Trạm</title>
+    <desc>Đồng bộ hai chiều Excel 4 Sheet danh bạ tài khoản &amp; trạm tác chiến quốc gia</desc>
+    <rect x="1180" y="1735" width="180" height="80" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2" stroke-dasharray="2,2" filter="url(#shadow)" />
+    <ellipse cx="1270" cy="1747" rx="82" ry="8" fill="#0369a1" />
+    <text x="1270" y="1777" fill="#e0f2fe" font-size="12" font-weight="bold" text-anchor="middle">CSDL 453 TÀI KHOẢN</text>
+    <text x="1270" y="1793" fill="#7dd3fc" font-size="10" text-anchor="middle">Excel 4-Sheet Sync</text>
+  </g>
+  <g id="node-nat-audit-log-store" data-type="DATA_STORE" data-flow="FLOW_NATIONAL_OVERSIGHT" data-status="defined" data-lane="NATIONAL_COMMAND" data-source-ref="services/security-firewall-middleware.js#L19-20">
+    <title>Sổ Trực Ban Bất Biến</title>
+    <desc>Immutable Security Audit Log phục vụ thanh tra công vụ chuẩn Nghị định 30</desc>
+    <rect x="1410" y="1735" width="170" height="80" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2" stroke-dasharray="2,2" filter="url(#shadow)" />
+    <ellipse cx="1495" cy="1747" rx="77" ry="8" fill="#0369a1" />
+    <text x="1495" y="1777" fill="#e0f2fe" font-size="12" font-weight="bold" text-anchor="middle">NHẬT KÝ BẤT BIẾN</text>
+    <text x="1495" y="1793" fill="#7dd3fc" font-size="10" text-anchor="middle">Audit Log NĐ 30</text>
+  </g>
+  <g id="node-nat-blacklist-mgt" data-type="DATA_STORE" data-flow="FLOW_NATIONAL_OVERSIGHT" data-status="defined" data-lane="NATIONAL_COMMAND" data-source-ref="services/security-firewall-middleware.js#L20-21">
+    <title>Blacklist &amp; Dấu Vết OSINT</title>
+    <desc>Danh sách đen khóa chặn thiết bị báo khống toàn quốc và hồ sơ số vi phạm</desc>
+    <rect x="1630" y="1735" width="170" height="80" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2" stroke-dasharray="2,2" filter="url(#shadow)" />
+    <ellipse cx="1715" cy="1747" rx="77" ry="8" fill="#0369a1" />
+    <text x="1715" y="1777" fill="#e0f2fe" font-size="12" font-weight="bold" text-anchor="middle">CSDL BLACKLIST</text>
+    <text x="1715" y="1793" fill="#7dd3fc" font-size="10" text-anchor="middle">Khóa chặn toàn quốc</text>
+  </g>
+  <g id="node-junc-fake-to-blacklist" data-type="JUNCTION" data-flow="FLOW_NATIONAL_OVERSIGHT" data-status="defined" data-lane="NATIONAL_COMMAND" data-source-ref="js/dispatcher.js#L12870">
+    <title>Junction Fake-&gt;Blacklist</title>
+    <desc>Chuyển biên bản hiện trường giả vào CSDL Blacklist và khóa chặn IP</desc>
+    <circle cx="1595" cy="1665" r="15" fill="#f59e0b" stroke="#ffffff" stroke-width="2" filter="url(#shadow)" />
+    <text x="1595" y="1669" fill="#0f172a" font-size="10" font-weight="bold" text-anchor="middle">J5</text>
+  </g>
+  <g id="node-gap-de-escalation" data-type="SPEC_GAP" data-flow="FLOW_ESCALATION" data-status="unresolved_gap" data-lane="WARD_DISPATCHER" data-source-ref="spec_gap#no_de_escalation">
+    <title>GAP: Chưa Có Quy Trình Hạ Cấp</title>
+    <desc>Chưa có API/quy trình hạ cấp (De-escalation) chuyển trả ca từ Tỉnh về Phường sau cứu viện</desc>
+    <rect x="480" y="800" width="180" height="70" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="3" stroke-dasharray="6,3" filter="url(#shadow)" />
+    <text x="570" y="831" fill="#fca5a5" font-size="11" font-weight="bold" text-anchor="middle">⚠️ GAP: THIẾU HẠ CẤP</text>
+    <text x="570" y="849" fill="#f87171" font-size="9" text-anchor="middle">Không có Tỉnh -&gt; Phường</text>
+  </g>
+  <g id="node-decision-de-escalate-policy" data-type="OWNER_DECISION_REQUIRED" data-flow="FLOW_ESCALATION" data-status="owner_decision_required" data-lane="PROVINCE_DISPATCHER" data-source-ref="owner_decision#de_escalation_protocol">
+    <title>CẦN QUYẾT ĐỊNH OWNER</title>
+    <desc>Cấp Tỉnh có được quyền bàn giao sự cố trở lại Xã/Phường sau khi đã chi viện xong không?</desc>
+    <rect x="1410" y="880" width="200" height="80" rx="6" fill="#431407" stroke="#ea580c" stroke-width="3" filter="url(#shadow)" />
+    <text x="1510" y="916" fill="#fed7aa" font-size="11" font-weight="bold" text-anchor="middle">🔔 QUYẾT ĐỊNH OWNER</text>
+    <text x="1510" y="934" fill="#fdba74" font-size="9" text-anchor="middle">Chính sách bàn giao lại?</text>
+  </g>
+  <g id="node-gap-enterprise-territory" data-type="SPEC_GAP" data-flow="FLOW_ENTERPRISE_RESCUE" data-status="unresolved_gap" data-lane="ENTERPRISE_PARTNER" data-source-ref="spec_gap#enterprise_scoping">
+    <title>GAP: Thiếu Ranh Giới Doanh Nghiệp</title>
+    <desc>Doanh nghiệp cứu hộ chưa có ranh giới bán kính km hoặc phân vùng trạm cụ thể trong code</desc>
+    <rect x="1180" y="1225" width="180" height="75" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="3" stroke-dasharray="6,3" filter="url(#shadow)" />
+    <text x="1270" y="1258" fill="#fca5a5" font-size="11" font-weight="bold" text-anchor="middle">⚠️ GAP: RANH GIỚI XE CẨU</text>
+    <text x="1270" y="1276" fill="#f87171" font-size="9" text-anchor="middle">Chưa khoanh vùng km</text>
+  </g>
+  <g id="node-gap-field-direct-auth" data-type="SPEC_GAP" data-flow="FLOW_PROVINCE_DISPATCH" data-status="unresolved_gap" data-lane="FIELD_RESPONDER" data-source-ref="spec_gap#field_responder_auth">
+    <title>GAP: Xác Thực Kíp Xe Cơ Động</title>
+    <desc>Cán bộ trên xe hiện trường đang dùng chung token dispatcher, chưa có role riêng 'field_officer'</desc>
+    <rect x="1560" y="1430" width="180" height="70" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="3" stroke-dasharray="6,3" filter="url(#shadow)" />
+    <text x="1650" y="1461" fill="#fca5a5" font-size="11" font-weight="bold" text-anchor="middle">⚠️ GAP: ROLE KÍP XE</text>
+    <text x="1650" y="1479" fill="#f87171" font-size="9" text-anchor="middle">Chưa có auth riêng xe</text>
+  </g>
+  <!-- Machine-Readable Contract Metadata -->
+  <metadata id="spec-flow-map">
+{
+  &quot;feature&quot;: &quot;role-hierarchy&quot;,
+  &quot;source_spec&quot;: &quot;server.js, services/security-firewall-middleware.js, services/accounts-excel-generator.js, assets/agency-accounts.json&quot;,
+  &quot;version&quot;: &quot;1.0-draft&quot;,
+  &quot;reference_artifacts&quot;: [
+    {
+      &quot;path&quot;: &quot;server.js&quot;,
+      &quot;type&quot;: &quot;runtime_source&quot;,
+      &quot;scope&quot;: &quot;AGENCY_ACCOUNTS, resolveEffectiveLevel, SSE Dispatch Filtering, Citizen Access Token&quot;
+    },
+    {
+      &quot;path&quot;: &quot;services/security-firewall-middleware.js&quot;,
+      &quot;type&quot;: &quot;security_source&quot;,
+      &quot;scope&quot;: &quot;Layer 7 WAF, AI Bot Signatures, Rate Limiting, Zero-Trust RBAC&quot;
+    },
+    {
+      &quot;path&quot;: &quot;services/accounts-excel-generator.js&quot;,
+      &quot;type&quot;: &quot;directory_source&quot;,
+      &quot;scope&quot;: &quot;National Directory 4-Sheet Excel Export, 453 Accounts, 192 Stations&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/agency-accounts.json&quot;,
+      &quot;type&quot;: &quot;data_source&quot;,
+      &quot;scope&quot;: &quot;453 accounts: 1 National, 141 Province, 273 Ward, 38 Enterprise&quot;
+    }
+  ],
+  &quot;nodes&quot;: [
+    {
+      &quot;id&quot;: &quot;node-citizen-start&quot;,
+      &quot;type&quot;: &quot;START&quot;,
+      &quot;lane&quot;: &quot;CITIZEN_PUBLIC&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1701-1710&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-citizen-action-report&quot;,
+      &quot;type&quot;: &quot;USER_ACTION&quot;,
+      &quot;lane&quot;: &quot;CITIZEN_PUBLIC&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3822-3845&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-citizen-token-issued&quot;,
+      &quot;type&quot;: &quot;STATE&quot;,
+      &quot;lane&quot;: &quot;CITIZEN_PUBLIC&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1701-1715&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-citizen-call-init&quot;,
+      &quot;type&quot;: &quot;USER_ACTION&quot;,
+      &quot;lane&quot;: &quot;CITIZEN_PUBLIC&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1596-1615&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-citizen-closed&quot;,
+      &quot;type&quot;: &quot;END&quot;,
+      &quot;lane&quot;: &quot;CITIZEN_PUBLIC&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3860&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-junc-citizen-to-waf&quot;,
+      &quot;type&quot;: &quot;JUNCTION&quot;,
+      &quot;lane&quot;: &quot;SECURITY_RBAC_WAF&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3822&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-waf-inspect-request&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;SECURITY_RBAC_WAF&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L158-188&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-waf-decision-bot&quot;,
+      &quot;type&quot;: &quot;DECISION&quot;,
+      &quot;lane&quot;: &quot;SECURITY_RBAC_WAF&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L162-177&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-waf-bot-denied&quot;,
+      &quot;type&quot;: &quot;ERROR&quot;,
+      &quot;lane&quot;: &quot;SECURITY_RBAC_WAF&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L165-176&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-waf-rbac-guard&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;SECURITY_RBAC_WAF&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L327-365&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-waf-rate-limit-check&quot;,
+      &quot;type&quot;: &quot;DECISION&quot;,
+      &quot;lane&quot;: &quot;SECURITY_RBAC_WAF&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L215-248&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-waf-rate-limit-denied&quot;,
+      &quot;type&quot;: &quot;ERROR&quot;,
+      &quot;lane&quot;: &quot;SECURITY_RBAC_WAF&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L234-246&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-waf-token-revoked&quot;,
+      &quot;type&quot;: &quot;ERROR&quot;,
+      &quot;lane&quot;: &quot;SECURITY_RBAC_WAF&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L336-341&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-junc-waf-to-ward&quot;,
+      &quot;type&quot;: &quot;JUNCTION&quot;,
+      &quot;lane&quot;: &quot;WARD_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1624&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-ward-intake-event&quot;,
+      &quot;type&quot;: &quot;EVENT&quot;,
+      &quot;lane&quot;: &quot;WARD_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1624-1629&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-ward-decision-capacity&quot;,
+      &quot;type&quot;: &quot;DECISION&quot;,
+      &quot;lane&quot;: &quot;WARD_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1598-1615&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-ward-assign-local&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;WARD_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3853-3857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-ward-escalate-action&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;WARD_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_ESCALATION&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1599-1614&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-ward-fake-flag&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;WARD_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12850-12875&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-ward-resolved&quot;,
+      &quot;type&quot;: &quot;STATE&quot;,
+      &quot;lane&quot;: &quot;WARD_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-junc-escalation-to-prov&quot;,
+      &quot;type&quot;: &quot;JUNCTION&quot;,
+      &quot;lane&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_ESCALATION&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1599-1606&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-prov-intake-event&quot;,
+      &quot;type&quot;: &quot;EVENT&quot;,
+      &quot;lane&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1606-1613&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-prov-decision-agency&quot;,
+      &quot;type&quot;: &quot;DECISION&quot;,
+      &quot;lane&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L276-280&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-prov-dispatch-police&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L276&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-prov-dispatch-traffic&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L277&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-prov-dispatch-fire&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L278&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-prov-dispatch-med&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L279&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-prov-inter-agency&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1605-1613&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-ent-intake-event&quot;,
+      &quot;type&quot;: &quot;EVENT&quot;,
+      &quot;lane&quot;: &quot;ENTERPRISE_PARTNER&quot;,
+      &quot;flow&quot;: &quot;FLOW_ENTERPRISE_RESCUE&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L280&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-ent-decision-type&quot;,
+      &quot;type&quot;: &quot;DECISION&quot;,
+      &quot;lane&quot;: &quot;ENTERPRISE_PARTNER&quot;,
+      &quot;flow&quot;: &quot;FLOW_ENTERPRISE_RESCUE&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L340-350&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-ent-dispatch-tow&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;ENTERPRISE_PARTNER&quot;,
+      &quot;flow&quot;: &quot;FLOW_ENTERPRISE_RESCUE&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L280&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-ent-collab-police&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;ENTERPRISE_PARTNER&quot;,
+      &quot;flow&quot;: &quot;FLOW_ENTERPRISE_RESCUE&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1620-1623&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-junc-prov-to-field&quot;,
+      &quot;type&quot;: &quot;JUNCTION&quot;,
+      &quot;lane&quot;: &quot;FIELD_RESPONDER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3860&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-field-receive-dispatch&quot;,
+      &quot;type&quot;: &quot;EVENT&quot;,
+      &quot;lane&quot;: &quot;FIELD_RESPONDER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3860&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-field-status-enroute&quot;,
+      &quot;type&quot;: &quot;STATE&quot;,
+      &quot;lane&quot;: &quot;FIELD_RESPONDER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-field-status-onscene&quot;,
+      &quot;type&quot;: &quot;STATE&quot;,
+      &quot;lane&quot;: &quot;FIELD_RESPONDER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-field-decision-verify&quot;,
+      &quot;type&quot;: &quot;DECISION&quot;,
+      &quot;lane&quot;: &quot;FIELD_RESPONDER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12854-12857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-field-record-fake&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;FIELD_RESPONDER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12855-12880&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-field-resolve&quot;,
+      &quot;type&quot;: &quot;END&quot;,
+      &quot;lane&quot;: &quot;FIELD_RESPONDER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-nat-monitor-all&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;NATIONAL_COMMAND&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L530-532&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-nat-decision-intervene&quot;,
+      &quot;type&quot;: &quot;DECISION&quot;,
+      &quot;lane&quot;: &quot;NATIONAL_COMMAND&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L275&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-nat-override-dispatch&quot;,
+      &quot;type&quot;: &quot;SYSTEM_ACTION&quot;,
+      &quot;lane&quot;: &quot;NATIONAL_COMMAND&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L275&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-nat-excel-sync&quot;,
+      &quot;type&quot;: &quot;DATA_STORE&quot;,
+      &quot;lane&quot;: &quot;NATIONAL_COMMAND&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;services/accounts-excel-generator.js#L92-100&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-nat-audit-log-store&quot;,
+      &quot;type&quot;: &quot;DATA_STORE&quot;,
+      &quot;lane&quot;: &quot;NATIONAL_COMMAND&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L19-20&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-nat-blacklist-mgt&quot;,
+      &quot;type&quot;: &quot;DATA_STORE&quot;,
+      &quot;lane&quot;: &quot;NATIONAL_COMMAND&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L20-21&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-junc-fake-to-blacklist&quot;,
+      &quot;type&quot;: &quot;JUNCTION&quot;,
+      &quot;lane&quot;: &quot;NATIONAL_COMMAND&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;status&quot;: &quot;defined&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12870&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-gap-de-escalation&quot;,
+      &quot;type&quot;: &quot;SPEC_GAP&quot;,
+      &quot;lane&quot;: &quot;WARD_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_ESCALATION&quot;,
+      &quot;status&quot;: &quot;unresolved_gap&quot;,
+      &quot;source_ref&quot;: &quot;spec_gap#no_de_escalation&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-decision-de-escalate-policy&quot;,
+      &quot;type&quot;: &quot;OWNER_DECISION_REQUIRED&quot;,
+      &quot;lane&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;flow&quot;: &quot;FLOW_ESCALATION&quot;,
+      &quot;status&quot;: &quot;owner_decision_required&quot;,
+      &quot;source_ref&quot;: &quot;owner_decision#de_escalation_protocol&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-gap-enterprise-territory&quot;,
+      &quot;type&quot;: &quot;SPEC_GAP&quot;,
+      &quot;lane&quot;: &quot;ENTERPRISE_PARTNER&quot;,
+      &quot;flow&quot;: &quot;FLOW_ENTERPRISE_RESCUE&quot;,
+      &quot;status&quot;: &quot;unresolved_gap&quot;,
+      &quot;source_ref&quot;: &quot;spec_gap#enterprise_scoping&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-gap-field-direct-auth&quot;,
+      &quot;type&quot;: &quot;SPEC_GAP&quot;,
+      &quot;lane&quot;: &quot;FIELD_RESPONDER&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;status&quot;: &quot;unresolved_gap&quot;,
+      &quot;source_ref&quot;: &quot;spec_gap#field_responder_auth&quot;
+    }
+  ],
+  &quot;edges&quot;: [
+    {
+      &quot;id&quot;: &quot;edge-citizen-start-to-report&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-citizen-start&quot;,
+      &quot;to&quot;: &quot;node-citizen-action-report&quot;,
+      &quot;condition&quot;: &quot;always&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3822-3845&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-citizen-report-to-token&quot;,
+      &quot;type&quot;: &quot;DATA_FLOW&quot;,
+      &quot;from&quot;: &quot;node-citizen-action-report&quot;,
+      &quot;to&quot;: &quot;node-citizen-token-issued&quot;,
+      &quot;condition&quot;: &quot;incident_created&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1701-1715&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-citizen-token-to-call&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-citizen-token-issued&quot;,
+      &quot;to&quot;: &quot;node-citizen-call-init&quot;,
+      &quot;condition&quot;: &quot;citizen_call_button_pressed&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1596-1615&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-citizen-report-to-junc-waf&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-citizen-action-report&quot;,
+      &quot;to&quot;: &quot;node-junc-citizen-to-waf&quot;,
+      &quot;condition&quot;: &quot;http_post_received&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3822&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-junc-waf-to-inspect&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-junc-citizen-to-waf&quot;,
+      &quot;to&quot;: &quot;node-waf-inspect-request&quot;,
+      &quot;condition&quot;: &quot;always&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L158&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-waf-inspect-to-bot-decision&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-waf-inspect-request&quot;,
+      &quot;to&quot;: &quot;node-waf-decision-bot&quot;,
+      &quot;condition&quot;: &quot;always&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L162&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-waf-bot-yes-to-denied&quot;,
+      &quot;type&quot;: &quot;ERROR_FLOW&quot;,
+      &quot;from&quot;: &quot;node-waf-decision-bot&quot;,
+      &quot;to&quot;: &quot;node-waf-bot-denied&quot;,
+      &quot;condition&quot;: &quot;is_bot_or_banned == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L165-176&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-waf-bot-no-to-rbac&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-waf-decision-bot&quot;,
+      &quot;to&quot;: &quot;node-waf-rbac-guard&quot;,
+      &quot;condition&quot;: &quot;is_bot_or_banned == false&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L327&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-waf-rbac-to-rate-limit&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-waf-rbac-guard&quot;,
+      &quot;to&quot;: &quot;node-waf-rate-limit-check&quot;,
+      &quot;condition&quot;: &quot;token_valid_or_public&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L215&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-waf-rbac-to-revoked&quot;,
+      &quot;type&quot;: &quot;ERROR_FLOW&quot;,
+      &quot;from&quot;: &quot;node-waf-rbac-guard&quot;,
+      &quot;to&quot;: &quot;node-waf-token-revoked&quot;,
+      &quot;condition&quot;: &quot;token_is_revoked == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L336-341&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-waf-rate-limit-yes-to-denied&quot;,
+      &quot;type&quot;: &quot;ERROR_FLOW&quot;,
+      &quot;from&quot;: &quot;node-waf-rate-limit-check&quot;,
+      &quot;to&quot;: &quot;node-waf-rate-limit-denied&quot;,
+      &quot;condition&quot;: &quot;count &gt; max_limit&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L234-246&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-waf-rate-limit-pass-to-junc-ward&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-waf-rate-limit-check&quot;,
+      &quot;to&quot;: &quot;node-junc-waf-to-ward&quot;,
+      &quot;condition&quot;: &quot;count &lt;= max_limit&quot;,
+      &quot;flow&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L249&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-junc-ward-to-intake&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-junc-waf-to-ward&quot;,
+      &quot;to&quot;: &quot;node-ward-intake-event&quot;,
+      &quot;condition&quot;: &quot;always&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1624-1629&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-ward-intake-to-capacity&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-ward-intake-event&quot;,
+      &quot;to&quot;: &quot;node-ward-decision-capacity&quot;,
+      &quot;condition&quot;: &quot;incident_in_officer_ward == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1625-1629&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-ward-capacity-yes-to-local&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-ward-decision-capacity&quot;,
+      &quot;to&quot;: &quot;node-ward-assign-local&quot;,
+      &quot;condition&quot;: &quot;can_handle_locally == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3853-3857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-ward-capacity-no-to-escalate&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-ward-decision-capacity&quot;,
+      &quot;to&quot;: &quot;node-ward-escalate-action&quot;,
+      &quot;condition&quot;: &quot;can_handle_locally == false&quot;,
+      &quot;flow&quot;: &quot;FLOW_ESCALATION&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1599-1614&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-ward-escalate-to-junc-prov&quot;,
+      &quot;type&quot;: &quot;HANDOFF&quot;,
+      &quot;from&quot;: &quot;node-ward-escalate-action&quot;,
+      &quot;to&quot;: &quot;node-junc-escalation-to-prov&quot;,
+      &quot;condition&quot;: &quot;escalated_to_province&quot;,
+      &quot;flow&quot;: &quot;FLOW_ESCALATION&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1605-1613&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-ward-local-to-resolved&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-ward-assign-local&quot;,
+      &quot;to&quot;: &quot;node-ward-resolved&quot;,
+      &quot;condition&quot;: &quot;local_response_successful&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-ward-local-to-fake&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-ward-assign-local&quot;,
+      &quot;to&quot;: &quot;node-ward-fake-flag&quot;,
+      &quot;condition&quot;: &quot;scene_is_fake_hoax&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12850-12875&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-ward-fake-to-junc-blacklist&quot;,
+      &quot;type&quot;: &quot;DATA_FLOW&quot;,
+      &quot;from&quot;: &quot;node-ward-fake-flag&quot;,
+      &quot;to&quot;: &quot;node-junc-fake-to-blacklist&quot;,
+      &quot;condition&quot;: &quot;flagged_as_fake == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12870&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-junc-prov-to-intake&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-junc-escalation-to-prov&quot;,
+      &quot;to&quot;: &quot;node-prov-intake-event&quot;,
+      &quot;condition&quot;: &quot;always&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1606-1613&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-prov-intake-to-agency-decision&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-prov-intake-event&quot;,
+      &quot;to&quot;: &quot;node-prov-decision-agency&quot;,
+      &quot;condition&quot;: &quot;always&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L276-280&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-prov-decision-to-police&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-prov-decision-agency&quot;,
+      &quot;to&quot;: &quot;node-prov-dispatch-police&quot;,
+      &quot;condition&quot;: &quot;agency == 'police'&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L276&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-prov-decision-to-traffic&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-prov-decision-agency&quot;,
+      &quot;to&quot;: &quot;node-prov-dispatch-traffic&quot;,
+      &quot;condition&quot;: &quot;agency == 'csgt'&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L277&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-prov-decision-to-fire&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-prov-decision-agency&quot;,
+      &quot;to&quot;: &quot;node-prov-dispatch-fire&quot;,
+      &quot;condition&quot;: &quot;agency == 'fire'&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L278&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-prov-decision-to-med&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-prov-decision-agency&quot;,
+      &quot;to&quot;: &quot;node-prov-dispatch-med&quot;,
+      &quot;condition&quot;: &quot;agency == 'hospital'&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L279&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-prov-branches-to-inter-agency&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-prov-dispatch-fire&quot;,
+      &quot;to&quot;: &quot;node-prov-inter-agency&quot;,
+      &quot;condition&quot;: &quot;requires_inter_agency_support&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1605-1613&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-prov-inter-agency-to-junc-field&quot;,
+      &quot;type&quot;: &quot;HANDOFF&quot;,
+      &quot;from&quot;: &quot;node-prov-inter-agency&quot;,
+      &quot;to&quot;: &quot;node-junc-prov-to-field&quot;,
+      &quot;condition&quot;: &quot;dispatch_order_issued&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3860&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-prov-traffic-to-ent-intake&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-prov-dispatch-traffic&quot;,
+      &quot;to&quot;: &quot;node-ent-intake-event&quot;,
+      &quot;condition&quot;: &quot;vehicle_tow_required == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_ENTERPRISE_RESCUE&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L280&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-ent-intake-to-decision-type&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-ent-intake-event&quot;,
+      &quot;to&quot;: &quot;node-ent-decision-type&quot;,
+      &quot;condition&quot;: &quot;always&quot;,
+      &quot;flow&quot;: &quot;FLOW_ENTERPRISE_RESCUE&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L340-350&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-ent-decision-to-tow&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-ent-decision-type&quot;,
+      &quot;to&quot;: &quot;node-ent-dispatch-tow&quot;,
+      &quot;condition&quot;: &quot;is_standard_tow == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_ENTERPRISE_RESCUE&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L280&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-ent-decision-to-collab&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-ent-decision-type&quot;,
+      &quot;to&quot;: &quot;node-ent-collab-police&quot;,
+      &quot;condition&quot;: &quot;traffic_blocked == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_ENTERPRISE_RESCUE&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1620-1623&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-junc-field-to-receive&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-junc-prov-to-field&quot;,
+      &quot;to&quot;: &quot;node-field-receive-dispatch&quot;,
+      &quot;condition&quot;: &quot;always&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3860&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-field-receive-to-enroute&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-field-receive-dispatch&quot;,
+      &quot;to&quot;: &quot;node-field-status-enroute&quot;,
+      &quot;condition&quot;: &quot;depart_station == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-field-enroute-to-onscene&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-field-status-enroute&quot;,
+      &quot;to&quot;: &quot;node-field-status-onscene&quot;,
+      &quot;condition&quot;: &quot;arrive_at_gps == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-field-onscene-to-verify&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-field-status-onscene&quot;,
+      &quot;to&quot;: &quot;node-field-decision-verify&quot;,
+      &quot;condition&quot;: &quot;always&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12854-12857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-field-verify-yes-to-resolve&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-field-decision-verify&quot;,
+      &quot;to&quot;: &quot;node-field-resolve&quot;,
+      &quot;condition&quot;: &quot;incident_verified == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-field-verify-no-to-fake&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-field-decision-verify&quot;,
+      &quot;to&quot;: &quot;node-field-record-fake&quot;,
+      &quot;condition&quot;: &quot;incident_is_hoax == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12855-12880&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-field-fake-to-junc-blacklist&quot;,
+      &quot;type&quot;: &quot;DATA_FLOW&quot;,
+      &quot;from&quot;: &quot;node-field-record-fake&quot;,
+      &quot;to&quot;: &quot;node-junc-fake-to-blacklist&quot;,
+      &quot;condition&quot;: &quot;osint_trace_compiled&quot;,
+      &quot;flow&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12870&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-field-resolve-to-citizen-closed&quot;,
+      &quot;type&quot;: &quot;SYNC_FLOW&quot;,
+      &quot;from&quot;: &quot;node-field-resolve&quot;,
+      &quot;to&quot;: &quot;node-citizen-closed&quot;,
+      &quot;condition&quot;: &quot;rescue_completed&quot;,
+      &quot;flow&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3860&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-nat-monitor-to-intervene&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-nat-monitor-all&quot;,
+      &quot;to&quot;: &quot;node-nat-decision-intervene&quot;,
+      &quot;condition&quot;: &quot;always&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L275&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-nat-intervene-yes-to-override&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-nat-decision-intervene&quot;,
+      &quot;to&quot;: &quot;node-nat-override-dispatch&quot;,
+      &quot;condition&quot;: &quot;national_crisis == true&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L275&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-nat-override-to-prov-intake&quot;,
+      &quot;type&quot;: &quot;CONTROL_FLOW&quot;,
+      &quot;from&quot;: &quot;node-nat-override-dispatch&quot;,
+      &quot;to&quot;: &quot;node-prov-intake-event&quot;,
+      &quot;condition&quot;: &quot;supreme_command_order&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L275&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-nat-monitor-to-excel-sync&quot;,
+      &quot;type&quot;: &quot;DATA_FLOW&quot;,
+      &quot;from&quot;: &quot;node-nat-monitor-all&quot;,
+      &quot;to&quot;: &quot;node-nat-excel-sync&quot;,
+      &quot;condition&quot;: &quot;directory_sync_requested&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;source_ref&quot;: &quot;services/accounts-excel-generator.js#L92-100&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-nat-monitor-to-audit-log&quot;,
+      &quot;type&quot;: &quot;DATA_FLOW&quot;,
+      &quot;from&quot;: &quot;node-nat-monitor-all&quot;,
+      &quot;to&quot;: &quot;node-nat-audit-log-store&quot;,
+      &quot;condition&quot;: &quot;audit_event_logged&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L19-20&quot;
+    },
+    {
+      &quot;id&quot;: &quot;edge-junc-fake-to-blacklist-store&quot;,
+      &quot;type&quot;: &quot;DATA_FLOW&quot;,
+      &quot;from&quot;: &quot;node-junc-fake-to-blacklist&quot;,
+      &quot;to&quot;: &quot;node-nat-blacklist-mgt&quot;,
+      &quot;condition&quot;: &quot;persist_blacklist_record&quot;,
+      &quot;flow&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L20-21&quot;
+    }
+  ],
+  &quot;flow_manifest&quot;: [
+    {
+      &quot;flow_id&quot;: &quot;FLOW_CITIZEN_ACCESS&quot;,
+      &quot;source_name&quot;: &quot;Công dân Báo Nạn &amp; Xác thực Phiên Ẩn danh (x-sos-access-token)&quot;,
+      &quot;category&quot;: &quot;flow&quot;,
+      &quot;source_refs&quot;: [
+        &quot;server.js#L1701-1710&quot;,
+        &quot;server.js#L3822-3845&quot;
+      ],
+      &quot;described_entry&quot;: &quot;Người dân mở web citizen (index.html), gửi tọa độ GPS &amp; viễn trắc thiết bị&quot;,
+      &quot;described_exit_or_terminal&quot;: &quot;CITIZEN_TOKEN_ISSUED hoặc CITIZEN_CLOSED&quot;,
+      &quot;described_handoffs&quot;: [
+        &quot;CITIZEN_ACTION_REPORT -&gt; JUNC_CITIZEN_TO_WAF -&gt; WAF_INSPECT_REQUEST&quot;
+      ],
+      &quot;missing_handoffs_or_unknown_relations&quot;: [],
+      &quot;mapping_status&quot;: &quot;MAPPED&quot;,
+      &quot;planned_or_actual_svg_group_id&quot;: &quot;flow-citizen-access&quot;
+    },
+    {
+      &quot;flow_id&quot;: &quot;FLOW_SECURITY_RBAC&quot;,
+      &quot;source_name&quot;: &quot;Tường Lửa L7 WAF, Anti-AI Bot &amp; Zero-Trust RBAC Multi-Tier&quot;,
+      &quot;category&quot;: &quot;flow&quot;,
+      &quot;source_refs&quot;: [
+        &quot;services/security-firewall-middleware.js#L158-365&quot;
+      ],
+      &quot;described_entry&quot;: &quot;Mọi HTTP Request từ Client tới Endpoint API hệ thống&quot;,
+      &quot;described_exit_or_terminal&quot;: &quot;WAF_BOT_DENIED, WAF_RATE_LIMIT_DENIED, hoặc Chuyển tiếp luồng Điều phối&quot;,
+      &quot;described_handoffs&quot;: [
+        &quot;WAF_RBAC_GUARD -&gt; JUNC_WAF_TO_WARD -&gt; WARD_INTAKE_EVENT&quot;
+      ],
+      &quot;missing_handoffs_or_unknown_relations&quot;: [],
+      &quot;mapping_status&quot;: &quot;MAPPED&quot;,
+      &quot;planned_or_actual_svg_group_id&quot;: &quot;flow-security-rbac&quot;
+    },
+    {
+      &quot;flow_id&quot;: &quot;FLOW_WARD_DISPATCH&quot;,
+      &quot;source_name&quot;: &quot;Trực Ban Cơ Sở Cấp Xã / Phường (273 Đơn Vị Địa Bàn)&quot;,
+      &quot;category&quot;: &quot;flow&quot;,
+      &quot;source_refs&quot;: [
+        &quot;server.js#L564-572&quot;,
+        &quot;server.js#L1624-1629&quot;,
+        &quot;server.js#L3853-3857&quot;
+      ],
+      &quot;described_entry&quot;: &quot;Sự cố trong ranh giới Xã/Phường được phát SSE tới Trực ban Xã/Phường&quot;,
+      &quot;described_exit_or_terminal&quot;: &quot;WARD_RESOLVED hoặc WARD_ESCALATE_ACTION hoặc WARD_FAKE_FLAG&quot;,
+      &quot;described_handoffs&quot;: [
+        &quot;WARD_ESCALATE_ACTION -&gt; JUNC_ESCALATION_TO_PROV -&gt; PROV_INTAKE_EVENT&quot;
+      ],
+      &quot;missing_handoffs_or_unknown_relations&quot;: [
+        &quot;Thiếu luồng chuyển ngược Tỉnh -&gt; Phường sau khi xử lý (GAP)&quot;
+      ],
+      &quot;mapping_status&quot;: &quot;MAPPED&quot;,
+      &quot;planned_or_actual_svg_group_id&quot;: &quot;flow-ward-dispatch&quot;
+    },
+    {
+      &quot;flow_id&quot;: &quot;FLOW_ESCALATION&quot;,
+      &quot;source_name&quot;: &quot;Leo Thang Tác Chiến (Xã/Phường -&gt; Tuyến Tỉnh / Thành Phố)&quot;,
+      &quot;category&quot;: &quot;subflow&quot;,
+      &quot;source_refs&quot;: [
+        &quot;server.js#L1599-1614&quot;
+      ],
+      &quot;described_entry&quot;: &quot;Điều phối viên Xã/Phường bấm Chuyển cấp hoặc sự cố nghiêm trọng&quot;,
+      &quot;described_exit_or_terminal&quot;: &quot;PROV_INTAKE_EVENT (Tỉnh tiếp quản hoàn toàn cuộc gọi &amp; quyền chỉ huy)&quot;,
+      &quot;described_handoffs&quot;: [
+        &quot;WARD_ESCALATE_ACTION -&gt; JUNC_ESCALATION_TO_PROV -&gt; PROV_INTAKE_EVENT&quot;
+      ],
+      &quot;missing_handoffs_or_unknown_relations&quot;: [],
+      &quot;mapping_status&quot;: &quot;MAPPED&quot;,
+      &quot;planned_or_actual_svg_group_id&quot;: &quot;flow-escalation&quot;
+    },
+    {
+      &quot;flow_id&quot;: &quot;FLOW_PROVINCE_DISPATCH&quot;,
+      &quot;source_name&quot;: &quot;Điều Phối Tuyến Tỉnh / Thành Phố (141 Đơn Vị Nghiệp Vụ CA, CSGT, PCCC, 115)&quot;,
+      &quot;category&quot;: &quot;flow&quot;,
+      &quot;source_refs&quot;: [
+        &quot;server.js#L276-280&quot;,
+        &quot;server.js#L557-562&quot;,
+        &quot;server.js#L1606-1613&quot;
+      ],
+      &quot;described_entry&quot;: &quot;Sự cố cấp tỉnh hoặc ca leo thang từ Xã/Phường chuyển lên&quot;,
+      &quot;described_exit_or_terminal&quot;: &quot;PROV_INTER_AGENCY -&gt; Điều động phương tiện cơ động hiện trường&quot;,
+      &quot;described_handoffs&quot;: [
+        &quot;PROV_INTER_AGENCY -&gt; JUNC_PROV_TO_FIELD -&gt; FIELD_RECEIVE_DISPATCH&quot;
+      ],
+      &quot;missing_handoffs_or_unknown_relations&quot;: [],
+      &quot;mapping_status&quot;: &quot;MAPPED&quot;,
+      &quot;planned_or_actual_svg_group_id&quot;: &quot;flow-province-dispatch&quot;
+    },
+    {
+      &quot;flow_id&quot;: &quot;FLOW_ENTERPRISE_RESCUE&quot;,
+      &quot;source_name&quot;: &quot;Cứu Hộ Giao Thông &amp; Phương Tiện Đường Bộ (38 Đơn Vị Doanh Nghiệp)&quot;,
+      &quot;category&quot;: &quot;flow&quot;,
+      &quot;source_refs&quot;: [
+        &quot;server.js#L280&quot;,
+        &quot;server.js#L340-350&quot;
+      ],
+      &quot;described_entry&quot;: &quot;Tiếp nhận tin báo sự cố nhóm traffic-rescue (xe hỏng, cẩu kéo, cứu nạn giao thông)&quot;,
+      &quot;described_exit_or_terminal&quot;: &quot;ENT_DISPATCH_TOW hoặc ENT_COLLAB_POLICE&quot;,
+      &quot;described_handoffs&quot;: [
+        &quot;ENT_COLLAB_POLICE -&gt; PROV_DISPATCH_TRAFFIC&quot;
+      ],
+      &quot;missing_handoffs_or_unknown_relations&quot;: [
+        &quot;Chưa có thuật toán khoanh vùng ranh giới chi tiết ngoài tỉnh (GAP)&quot;
+      ],
+      &quot;mapping_status&quot;: &quot;MAPPED&quot;,
+      &quot;planned_or_actual_svg_group_id&quot;: &quot;flow-enterprise-rescue&quot;
+    },
+    {
+      &quot;flow_id&quot;: &quot;FLOW_NATIONAL_OVERSIGHT&quot;,
+      &quot;source_name&quot;: &quot;Chỉ Huy Tác Chiến Quốc Gia &amp; Quản Trị Tối Cao (SuperAdmin National)&quot;,
+      &quot;category&quot;: &quot;flow&quot;,
+      &quot;source_refs&quot;: [
+        &quot;server.js#L275,530&quot;,
+        &quot;services/accounts-excel-generator.js#L92-100&quot;,
+        &quot;services/security-firewall-middleware.js#L19-21&quot;
+      ],
+      &quot;described_entry&quot;: &quot;Giám sát 24/7 toàn bộ 34 tỉnh thành và 3.321 xã phường trên bản đồ 3D&quot;,
+      &quot;described_exit_or_terminal&quot;: &quot;NAT_OVERRIDE_DISPATCH (Chỉ huy tối cao) &amp; Ghi sổ Kiểm toán Bất biến&quot;,
+      &quot;described_handoffs&quot;: [
+        &quot;NAT_OVERRIDE_DISPATCH -&gt; PROV_INTAKE_EVENT&quot;,
+        &quot;FIELD_RECORD_FAKE -&gt; JUNC_FAKE_TO_BLACKLIST -&gt; NAT_BLACKLIST_MGT&quot;
+      ],
+      &quot;missing_handoffs_or_unknown_relations&quot;: [],
+      &quot;mapping_status&quot;: &quot;MAPPED&quot;,
+      &quot;planned_or_actual_svg_group_id&quot;: &quot;flow-national-oversight&quot;
+    }
+  ],
+  &quot;source_inventory&quot;: [
+    {
+      &quot;source_item&quot;: &quot;actor.citizen&quot;,
+      &quot;category&quot;: &quot;actors&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1701-1710&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-citizen-start&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;role.ward_dispatcher&quot;,
+      &quot;category&quot;: &quot;roles&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1624-1629&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-ward-intake-event&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;role.province_dispatcher&quot;,
+      &quot;category&quot;: &quot;roles&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1606-1613&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-prov-intake-event&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;role.enterprise_partner&quot;,
+      &quot;category&quot;: &quot;roles&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L280&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-ent-intake-event&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;role.national_superadmin&quot;,
+      &quot;category&quot;: &quot;roles&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L275,530&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-nat-monitor-all&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;role.field_responder&quot;,
+      &quot;category&quot;: &quot;roles&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3860&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-field-receive-dispatch&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;agency.police&quot;,
+      &quot;category&quot;: &quot;roles&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L276&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-prov-dispatch-police&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;agency.csgt&quot;,
+      &quot;category&quot;: &quot;roles&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L277&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-prov-dispatch-traffic&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;agency.fire&quot;,
+      &quot;category&quot;: &quot;roles&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L278&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-prov-dispatch-fire&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;agency.hospital&quot;,
+      &quot;category&quot;: &quot;roles&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L279&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-prov-dispatch-med&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;agency.traffic_rescue&quot;,
+      &quot;category&quot;: &quot;roles&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L280&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-ent-dispatch-tow&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;scope.ward_territory&quot;,
+      &quot;category&quot;: &quot;scopes&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L564-572&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-ward-assign-local&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;scope.province_territory&quot;,
+      &quot;category&quot;: &quot;scopes&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L557-562&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-prov-inter-agency&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;scope.national_territory&quot;,
+      &quot;category&quot;: &quot;scopes&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L530-532&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-nat-override-dispatch&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;guard.waf_layer7_bot_check&quot;,
+      &quot;category&quot;: &quot;guards&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L158-188&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-waf-inspect-request&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;guard.rate_limiter_multitier&quot;,
+      &quot;category&quot;: &quot;guards&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L215-248&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-waf-rate-limit-check&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;guard.zero_trust_rbac_token&quot;,
+      &quot;category&quot;: &quot;guards&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L327-365&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-waf-rbac-guard&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;guard.token_revocation_blacklist&quot;,
+      &quot;category&quot;: &quot;guards&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L303-313&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-waf-token-revoked&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;command.citizen_post_sos&quot;,
+      &quot;category&quot;: &quot;runtime commands&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3822-3845&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-citizen-action-report&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;command.citizen_call_signal&quot;,
+      &quot;category&quot;: &quot;runtime commands&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1596-1615&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-citizen-call-init&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;command.escalate_incident&quot;,
+      &quot;category&quot;: &quot;runtime commands&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1599-1614&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-ward-escalate-action&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;command.flag_fake_osint&quot;,
+      &quot;category&quot;: &quot;runtime commands&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12850-12880&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-ward-fake-flag&quot;,
+        &quot;node-field-record-fake&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;command.excel_sync_directory&quot;,
+      &quot;category&quot;: &quot;runtime commands&quot;,
+      &quot;source_ref&quot;: &quot;services/accounts-excel-generator.js#L92-100&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_DATA_STORE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-nat-excel-sync&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;store.agency_accounts_store&quot;,
+      &quot;category&quot;: &quot;stores&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L231-268&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-nat-excel-sync&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;store.immutable_audit_logs&quot;,
+      &quot;category&quot;: &quot;stores&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L19-20&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_DATA_STORE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-nat-audit-log-store&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;store.banned_ips_blacklist&quot;,
+      &quot;category&quot;: &quot;stores&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L20-21&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_DATA_STORE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-nat-blacklist-mgt&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;state.citizen_token_active&quot;,
+      &quot;category&quot;: &quot;lifecycle states&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1701-1715&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-citizen-token-issued&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;state.field_enroute&quot;,
+      &quot;category&quot;: &quot;lifecycle states&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-field-status-enroute&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;state.field_onscene&quot;,
+      &quot;category&quot;: &quot;lifecycle states&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-field-status-onscene&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;terminal.citizen_resolved&quot;,
+      &quot;category&quot;: &quot;terminal states&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3860&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_TERMINAL&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-citizen-closed&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;terminal.waf_bot_denied&quot;,
+      &quot;category&quot;: &quot;terminal states&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L165-176&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_TERMINAL&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-waf-bot-denied&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;terminal.waf_rate_limited&quot;,
+      &quot;category&quot;: &quot;terminal states&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L234-246&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_TERMINAL&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-waf-rate-limit-denied&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;terminal.field_success_resolved&quot;,
+      &quot;category&quot;: &quot;terminal states&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3855-3857&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_TERMINAL&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-field-resolve&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;junction.citizen_to_waf&quot;,
+      &quot;category&quot;: &quot;junctions&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3822&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_JUNCTION&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-junc-citizen-to-waf&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;junction.waf_to_ward&quot;,
+      &quot;category&quot;: &quot;junctions&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1624&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_JUNCTION&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-junc-waf-to-ward&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;junction.ward_to_province_escalate&quot;,
+      &quot;category&quot;: &quot;junctions&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1599-1606&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_JUNCTION&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-junc-escalation-to-prov&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;junction.province_to_field_dispatch&quot;,
+      &quot;category&quot;: &quot;junctions&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L3860&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_JUNCTION&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-junc-prov-to-field&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;junction.fake_report_to_blacklist&quot;,
+      &quot;category&quot;: &quot;junctions&quot;,
+      &quot;source_ref&quot;: &quot;js/dispatcher.js#L12870&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_JUNCTION&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-junc-fake-to-blacklist&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;invariant.ward_officer_restricted_to_ward&quot;,
+      &quot;category&quot;: &quot;invariants&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L564-572,1625-1629&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-ward-intake-event&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;invariant.superadmin_exempt_from_rate_limit&quot;,
+      &quot;category&quot;: &quot;invariants&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L201-209&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-waf-rbac-guard&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;negative_rule.ward_cannot_receive_escalated_call&quot;,
+      &quot;category&quot;: &quot;negative rules&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1602-1604&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_NODE&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-ward-escalate-action&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;gap.no_de_escalation_protocol&quot;,
+      &quot;category&quot;: &quot;spec gaps&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1599-1639&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_GAP&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-gap-de-escalation&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;gap.enterprise_jurisdiction_scoping_rule&quot;,
+      &quot;category&quot;: &quot;spec gaps&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L525-573&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_GAP&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-gap-enterprise-territory&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;gap.field_responder_independent_auth&quot;,
+      &quot;category&quot;: &quot;spec gaps&quot;,
+      &quot;source_ref&quot;: &quot;services/security-firewall-middleware.js#L264&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_GAP&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-gap-field-direct-auth&quot;
+      ]
+    },
+    {
+      &quot;source_item&quot;: &quot;owner_decision.de_escalation_policy&quot;,
+      &quot;category&quot;: &quot;owner decision&quot;,
+      &quot;source_ref&quot;: &quot;server.js#L1600&quot;,
+      &quot;mapping_status&quot;: &quot;MAPPED_AS_GAP&quot;,
+      &quot;mapped_ids&quot;: [
+        &quot;node-decision-de-escalate-policy&quot;
+      ]
+    }
+  ],
+  &quot;coverage_summary&quot;: {
+    &quot;total_source_items&quot;: 45,
+    &quot;mapped_items&quot;: 45,
+    &quot;missing_items&quot;: 0,
+    &quot;collapse_violations&quot;: 0
+  },
+  &quot;missing_source_items&quot;: [],
+  &quot;collapse_violations&quot;: [],
+  &quot;gaps&quot;: [
+    {
+      &quot;gap_id&quot;: &quot;GAP_DE_ESCALATION&quot;,
+      &quot;type&quot;: &quot;SPEC_GAP&quot;,
+      &quot;location&quot;: &quot;WARD_DISPATCHER / PROVINCE_DISPATCHER&quot;,
+      &quot;source_ref&quot;: &quot;spec_gap#no_de_escalation&quot;,
+      &quot;why_it_blocks_coding&quot;: &quot;server.js mới chỉ hỗ trợ chuyển cấp lên Tỉnh khi isEscalated=true; chưa có cơ chế hoặc API hạ cấp trả ca về Xã/Phường&quot;,
+      &quot;required_spec_fix&quot;: &quot;Quy định rõ điều kiện và API hạ cấp deEscalateIncident() kèm quyền hạn của điều phối viên cấp tỉnh&quot;
+    },
+    {
+      &quot;gap_id&quot;: &quot;GAP_ENTERPRISE_TERRITORY&quot;,
+      &quot;type&quot;: &quot;SPEC_GAP&quot;,
+      &quot;location&quot;: &quot;ENTERPRISE_PARTNER&quot;,
+      &quot;source_ref&quot;: &quot;spec_gap#enterprise_scoping&quot;,
+      &quot;why_it_blocks_coding&quot;: &quot;Đơn vị cứu hộ doanh nghiệp (enterprise level) chưa có cấu trúc phân vùng bán kính hoạt động (km) trên bản đồ&quot;,
+      &quot;required_spec_fix&quot;: &quot;Bổ sung trường operatingRadiusKm và danh sách các quận/huyện đối tác phụ trách trong agency-accounts.json&quot;
+    },
+    {
+      &quot;gap_id&quot;: &quot;GAP_FIELD_DIRECT_AUTH&quot;,
+      &quot;type&quot;: &quot;SPEC_GAP&quot;,
+      &quot;location&quot;: &quot;FIELD_RESPONDER&quot;,
+      &quot;source_ref&quot;: &quot;spec_gap#field_responder_auth&quot;,
+      &quot;why_it_blocks_coding&quot;: &quot;Cán bộ trên xe cơ động thực địa đang dùng chung phiên điều phối viên dispatcher; chưa có quyền 'field_officer' chuyên biệt&quot;,
+      &quot;required_spec_fix&quot;: &quot;Tạo role 'field_officer' có giao diện tối giản trên máy tính bảng/điện thoại chỉ cho phép cập nhật trạng thái enroute/onscene/resolved&quot;
+    },
+    {
+      &quot;gap_id&quot;: &quot;DECISION_DE_ESCALATE_POLICY&quot;,
+      &quot;type&quot;: &quot;OWNER_DECISION_REQUIRED&quot;,
+      &quot;location&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;source_ref&quot;: &quot;owner_decision#de_escalation_protocol&quot;,
+      &quot;why_it_blocks_coding&quot;: &quot;Cần quyết định chính sách nghiệp vụ: Sau khi Tỉnh can thiệp chi viện, ca sự cố do Tỉnh đóng ca hay bàn giao lại Xã/Phường đóng ca?&quot;,
+      &quot;required_spec_fix&quot;: &quot;Owner phê duyệt quy trình đóng ca sự cố đã leo thang&quot;
+    }
+  ],
+  &quot;terminal_states&quot;: [
+    {
+      &quot;id&quot;: &quot;node-citizen-closed&quot;,
+      &quot;description&quot;: &quot;Công dân được cứu hộ an toàn và đóng phiên&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-waf-bot-denied&quot;,
+      &quot;description&quot;: &quot;Chặn 403 Bot AI Scraper hoặc IP vi phạm&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-waf-rate-limit-denied&quot;,
+      &quot;description&quot;: &quot;Chặn 429 và khóa IP do vượt tần suất&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-field-resolve&quot;,
+      &quot;description&quot;: &quot;Lực lượng cơ động hoàn tất xử lý hiện trường sự cố&quot;
+    }
+  ],
+  &quot;junctions&quot;: [
+    {
+      &quot;id&quot;: &quot;node-junc-citizen-to-waf&quot;,
+      &quot;from&quot;: &quot;CITIZEN_PUBLIC&quot;,
+      &quot;to&quot;: &quot;SECURITY_RBAC_WAF&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-junc-waf-to-ward&quot;,
+      &quot;from&quot;: &quot;SECURITY_RBAC_WAF&quot;,
+      &quot;to&quot;: &quot;WARD_DISPATCHER&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-junc-escalation-to-prov&quot;,
+      &quot;from&quot;: &quot;WARD_DISPATCHER&quot;,
+      &quot;to&quot;: &quot;PROVINCE_DISPATCHER&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-junc-prov-to-field&quot;,
+      &quot;from&quot;: &quot;PROVINCE_DISPATCHER&quot;,
+      &quot;to&quot;: &quot;FIELD_RESPONDER&quot;
+    },
+    {
+      &quot;id&quot;: &quot;node-junc-fake-to-blacklist&quot;,
+      &quot;from&quot;: &quot;FIELD_RESPONDER/WARD&quot;,
+      &quot;to&quot;: &quot;NATIONAL_COMMAND&quot;
+    }
+  ],
+  &quot;legend&quot;: {
+    &quot;visible_legend_id&quot;: &quot;legend-end&quot;,
+    &quot;shape_meaning&quot;: {
+      &quot;circle&quot;: &quot;START / END / TERMINAL STATE&quot;,
+      &quot;rounded_rectangle&quot;: &quot;USER_ACTION (Hành động người dùng) hoặc SCREEN&quot;,
+      &quot;rectangle&quot;: &quot;SYSTEM_ACTION (Hành động hệ thống / Tác chiến)&quot;,
+      &quot;diamond&quot;: &quot;DECISION (Điểm rẽ nhánh điều kiện)&quot;,
+      &quot;pill&quot;: &quot;STATE (Trạng thái tác chiến / Phiên bảo mật)&quot;,
+      &quot;cylinder&quot;: &quot;DATA_STORE (CSDL / Nhật ký / Kho dữ liệu)&quot;,
+      &quot;small_circle&quot;: &quot;JUNCTION (Điểm nối chuyển tiếp liên tầng)&quot;,
+      &quot;thick_red_border_rect&quot;: &quot;SPEC_GAP (Khoảng trống đặc tả kỹ thuật)&quot;,
+      &quot;thick_orange_border_rect&quot;: &quot;OWNER_DECISION_REQUIRED (Cần quyết định của Chủ quản hệ thống)&quot;
+    },
+    &quot;color_meaning&quot;: {
+      &quot;green&quot;: &quot;Cơ sở Xã/Phường / Tiến trình tác chiến bình thường&quot;,
+      &quot;blue&quot;: &quot;Dữ liệu / Tuyến Tỉnh / Bệnh viện 115 / Công an 113&quot;,
+      &quot;purple&quot;: &quot;Bảo mật Zero-Trust / WAF / Ranh giới phân quyền RBAC&quot;,
+      &quot;yellow&quot;: &quot;Chờ / Đối tác Cứu hộ giao thông doanh nghiệp&quot;,
+      &quot;red&quot;: &quot;Chỉ huy Tối cao Quốc gia / Lỗi 403-429 / Báo khống / Cảnh báo nguy hiểm&quot;,
+      &quot;orange&quot;: &quot;Quyết định Chủ quản / Leo thang vượt cấp / Điểm rẽ nhánh&quot;
+    },
+    &quot;arrow_meaning&quot;: {
+      &quot;solid_arrow&quot;: &quot;CONTROL_FLOW (Luồng điều khiển trực tiếp)&quot;,
+      &quot;dashed_arrow&quot;: &quot;DATA_FLOW / ASYNC_EVENT (Truyền tải dữ liệu / Bất đồng bộ)&quot;,
+      &quot;double_arrow&quot;: &quot;SYNC_FLOW (Đồng bộ hai chiều thời gian thực)&quot;
+    }
+  }
+}
+  </metadata>
+  <!-- Mandatory Human-Readable Visible Legend -->
+  <g id="legend-end" data-type="legend" data-position="end">
+    <title>Bảng Chú Giải Hình Dạng, Màu Sắc và Ký Hiệu Luồng (Legend)</title>
+    <desc>Giải thích toàn bộ quy ước visual: Shapes, Colors, Line Styles và Arrows theo chuẩn Spec-to-SVG-Flow-Map</desc>
+    <rect x="40" y="1980" width="1880" height="240" rx="12" fill="#020617" stroke="#334155" stroke-width="2" />
+    <text x="60" y="2010" fill="#f8fafc" font-size="16" font-weight="bold">BẢNG CHÚ GIẢI THỰC ĐỊA &amp; QUY ƯỚC ĐỒNG BỘ DỮ LIỆU (CANVAS LEGEND - SPECS v1.0)</text>
+    <g transform="translate(60, 2030)">
+      <circle cx="15" cy="15" r="14" fill="#10b981" stroke="#f8fafc" stroke-width="1.5" />
+      <text x="35" y="19" fill="#e2e8f0" font-size="12">START / END (Khởi tạo / Hoàn tất ca)</text>
+      <rect x="270" y="2" width="26" height="26" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1.5" />
+      <text x="305" y="19" fill="#e2e8f0" font-size="12">SYSTEM_ACTION (Nghiệp vụ tác chiến)</text>
+      <polygon points="560,2 575,15 560,28 545,15" fill="#451a03" stroke="#f59e0b" stroke-width="1.5" />
+      <text x="585" y="19" fill="#e2e8f0" font-size="12">DECISION (Rẽ nhánh điều kiện)</text>
+      <rect x="800" y="4" width="30" height="22" rx="11" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" />
+      <text x="840" y="19" fill="#e2e8f0" font-size="12">STATE (Phiên / Trạng thái điều động)</text>
+      <rect x="1110" y="2" width="26" height="26" rx="4" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2,2" />
+      <text x="1145" y="19" fill="#e2e8f0" font-size="12">DATA_STORE (CSDL / Nhật ký / Blacklist)</text>
+      <circle cx="1435" cy="15" r="10" fill="#f59e0b" stroke="#ffffff" stroke-width="1.5" />
+      <text x="1455" y="19" fill="#e2e8f0" font-size="12">JUNCTION (Chuyển giao liên tầng)</text>
+    </g>
+    <g transform="translate(60, 2080)">
+      <rect x="0" y="2" width="28" height="26" rx="4" fill="#450a0a" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2" />
+      <text x="38" y="19" fill="#fca5a5" font-size="12" font-weight="bold">SPEC_GAP (Khoảng trống kỹ thuật)</text>
+      <rect x="270" y="2" width="28" height="26" rx="4" fill="#431407" stroke="#ea580c" stroke-width="2" />
+      <text x="308" y="19" fill="#fdba74" font-size="12" font-weight="bold">OWNER_DECISION (Cần quyết định Chủ quản)</text>
+      <rect x="580" y="2" width="28" height="26" rx="4" fill="#450a0a" stroke="#ef4444" stroke-width="2" />
+      <text x="618" y="19" fill="#f87171" font-size="12">ERROR / DENIED (Chặn 403, 429, Thu hồi)</text>
+      <rect x="860" y="2" width="28" height="26" rx="8" fill="#0c4a6e" stroke="#38bdf8" stroke-width="1.5" />
+      <text x="898" y="19" fill="#7dd3fc" font-size="12">USER_ACTION (Thao tác Công dân / Trực ban)</text>
+    </g>
+    <g transform="translate(60, 2130)">
+      <line x1="0" y1="15" x2="45" y2="15" stroke="#64748b" stroke-width="2.5" marker-end="url(#marker-arrow-solid)" />
+      <text x="55" y="19" fill="#cbd5e1" font-size="12">CONTROL_FLOW (Luồng điều khiển lệnh trực tiếp)</text>
+      <line x1="360" y1="15" x2="405" y2="15" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="4,3" marker-end="url(#marker-arrow-solid)" />
+      <text x="415" y="19" fill="#7dd3fc" font-size="12">DATA_FLOW / OSINT (Truyền tải dữ liệu viễn trắc số)</text>
+      <line x1="730" y1="15" x2="775" y2="15" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#marker-arrow-handoff)" />
+      <text x="785" y="19" fill="#fde68a" font-size="12">HANDOFF (Leo thang / Vượt cấp chỉ huy)</text>
+      <line x1="1100" y1="15" x2="1145" y2="15" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="4,4" marker-end="url(#marker-arrow-error)" />
+      <text x="1155" y="19" fill="#fca5a5" font-size="12">ERROR_FLOW (Từ chối truy cập / Phát hiện tin giả)</text>
+      <line x1="1470" y1="15" x2="1515" y2="15" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="2,2" marker-end="url(#marker-arrow-sync)" />
+      <text x="1525" y="19" fill="#38bdf8" font-size="12">SYNC_FLOW (Đồng bộ hai chiều thời gian thực)</text>
+    </g>
+  </g>
+</svg>

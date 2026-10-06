@@ -1,0 +1,3 @@
+
+# Encrypt sensitive files on git push
+.env.example filter=sos-crypto
