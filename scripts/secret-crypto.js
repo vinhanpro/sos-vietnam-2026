@@ -29,6 +29,8 @@ import { securityCryptoService } from '../services/security-crypto-service.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import crypto from 'crypto';
+
 const HEADER_MARKER = '-----BEGIN SOS-ENCRYPTED-PAYLOAD-----';
 const FOOTER_MARKER = '-----END SOS-ENCRYPTED-PAYLOAD-----';
 
@@ -36,7 +38,20 @@ export function encryptPayload(rawText) {
   if (rawText.includes(HEADER_MARKER)) {
     return rawText; // Already encrypted
   }
-  const box = securityCryptoService.encryptAES256GCM(rawText);
+  const key = securityCryptoService.aesKey;
+  // Deterministic 12-byte IV for stable Git clean filter diffs
+  const iv = crypto.createHmac('sha256', key).update(rawText, 'utf8').digest().subarray(0, 12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+  let encrypted = cipher.update(rawText, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  const authTag = cipher.getAuthTag().toString('hex');
+
+  const box = {
+    ciphertext: encrypted,
+    iv: iv.toString('hex'),
+    authTag: authTag,
+    algo: 'aes-256-gcm'
+  };
   return `${HEADER_MARKER}\n${JSON.stringify(box, null, 2)}\n${FOOTER_MARKER}\n`;
 }
 
